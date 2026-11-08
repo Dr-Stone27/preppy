@@ -5,8 +5,8 @@ import styles from "./Add.module.css";
 
 type Platform = "iphone" | "android";
 
-/** The shared iPhone Shortcut, once it's published to iCloud. */
-const SHORTCUT = process.env.NEXT_PUBLIC_IOS_SHORTCUT_URL;
+/** The signed iPhone Shortcut (built by tools/build-shortcut.py); an iCloud link can replace it. */
+const SHORTCUT = process.env.NEXT_PUBLIC_IOS_SHORTCUT_URL || "/save-to-preppy.shortcut";
 
 const noop = () => () => {};
 const guess = (): Platform => (/android/i.test(navigator.userAgent) ? "android" : "iphone");
@@ -38,10 +38,18 @@ export function FromInstagram() {
           <>
             <p className="t-small">Add the Preppy shortcut once. After that, any post comes in with its caption already filled.</p>
             <ol className={styles.steps}>
-              <li>{SHORTCUT ? <a href={SHORTCUT}>Get the Preppy shortcut</a> : "Get the Preppy shortcut (link coming soon)"} and tap Add Shortcut.</li>
+              <li>
+                <a href={SHORTCUT} download="Save to Preppy.shortcut">
+                  Get the Preppy shortcut
+                </a>
+                , open it, and tap Add Shortcut.
+              </li>
               <li>In Instagram, tap the share button on a post, then Preppy. You may need to tap More to find it the first time.</li>
               <li>Preppy opens with the link and caption in. Tap Read recipe.</li>
             </ol>
+            <p className="t-label t-muted">
+              The shortcut opens Preppy in Safari. If you added Preppy to your home screen, sign in in Safari too, since iPhone keeps the two signed in separately.
+            </p>
           </>
         ) : (
           <>

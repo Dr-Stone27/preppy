@@ -135,8 +135,8 @@
 }
 
 .errorBox {
-  display: flex;
-  gap: var(--space-3);
+  display: grid;
+  gap: var(--space-4);
   padding: var(--space-4);
   border-radius: var(--radius-card);
   background: var(--color-danger-soft);
@@ -145,8 +145,25 @@
   font-weight: 600;
 }
 
-.errorBox svg {
+.errorHead {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.errorHead svg {
   flex: none;
+}
+
+.errorBox > button {
+  justify-self: start;
+}
+
+.inlineSignIn {
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-weight: 400;
 }
 
 .link {

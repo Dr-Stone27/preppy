@@ -14,6 +14,7 @@ import type { Recipe } from "@/domain/recipes/types";
 import { authHeader } from "@/lib/supabase";
 import { saveRecipe, useData } from "@/state/store";
 import { useSync } from "@/state/sync";
+import { AccountPanel } from "@/components/account/AccountPanel";
 import { FromInstagram } from "./FromInstagram";
 import { RecipeForm } from "./RecipeForm";
 import styles from "./Add.module.css";
@@ -31,7 +32,7 @@ const ERRORS: Record<number, string> = {
   503: "Reading posts isn’t switched on yet. You can type the recipe in instead.",
   429: "The recipe reader is busy right now. Try again in a minute, or type it in.",
   400: "Paste the caption or type a short note first.",
-  401: "Sign in to read recipes from posts. It’s free, and keeps your recipes on every device.",
+  401: "Sign in to read recipes from posts. It’s free, and your post stays here while you do.",
   402: "You’ve read a lot of posts today. Try again tomorrow, or type this one in.",
 };
 
@@ -74,6 +75,25 @@ function sharedFromHref(): string | null {
   }
 }
 
+const DRAFT = "preppy:add-draft";
+
+/** The link and caption being added, kept so leaving the page (to sign in, say) doesn't lose them. */
+function loadDraft(): { link: string; text: string } {
+  try {
+    const d = typeof window === "undefined" ? null : JSON.parse(sessionStorage.getItem(DRAFT) ?? "null");
+    return d && typeof d.link === "string" && typeof d.text === "string" ? d : { link: "", text: "" };
+  } catch {
+    return { link: "", text: "" };
+  }
+}
+
+function saveDraft(d: { link: string; text: string } | null) {
+  try {
+    if (d && (d.link || d.text)) sessionStorage.setItem(DRAFT, JSON.stringify(d));
+    else sessionStorage.removeItem(DRAFT);
+  } catch {}
+}
+
 function fromAddress(params: URLSearchParams): { link: string; text: string } {
   const shared = params.has("shared") ? sharedFromHref() ?? params.get("shared") ?? "" : null;
   const raw = shared != null ? decode(shared) : [params.get("url"), params.get("text")].filter(Boolean).join("\n");
@@ -87,7 +107,11 @@ function fromAddress(params: URLSearchParams): { link: string; text: string } {
 export function AddRecipe() {
   const data = useData();
   const params = useSearchParams();
-  const [arrived] = useState(() => fromAddress(params));
+  // What arrived from Instagram or TikTok, or failing that, whatever was being added before (e.g. before signing in).
+  const [arrived] = useState(() => {
+    const a = fromAddress(params);
+    return a.link || a.text ? a : loadDraft();
+  });
   const source = /tiktok/i.test(arrived.link) ? "TikTok" : "Instagram";
   const [mode, setMode] = useState<Mode>("post");
   const [link, setLink] = useState(arrived.link);
@@ -131,6 +155,17 @@ export function AddRecipe() {
     }
   };
 
+  useEffect(() => saveDraft({ link, text }), [link, text]);
+
+  // Signing in from the box below picks up where it stopped: read the post again.
+  const waitingForSignIn = state.s === "error" && state.signIn;
+  const retried = useRef(false);
+  useEffect(() => {
+    if (!waitingForSignIn || retried.current || !sync.email || sync.status === "loading") return;
+    retried.current = true; // once: each read counts against the day's allowance
+    setTimeout(read, 0);
+  });
+
   // A post shared from Instagram or TikTok with its caption reads straight away, once sign-in has loaded.
   useEffect(() => {
     if (autoRead.current || !arrived.text || !data || sync.status === "loading") return;
@@ -145,6 +180,7 @@ export function AddRecipe() {
     setState({ s: "saved", recipe: r });
     setLink("");
     setText("");
+    saveDraft(null);
     window.scrollTo({ top: 0 });
   };
 
@@ -257,20 +293,20 @@ export function AddRecipe() {
 
           {state.s === "error" && (
             <div className={styles.errorBox} role="alert">
-              <Icon name="alert" size={20} />
-              <div>
+              <div className={styles.errorHead}>
+                <Icon name="alert" size={20} />
                 <p>{state.message}</p>
-                {state.signIn && (
-                  <Link href="/account" className={styles.link}>
-                    Sign in
-                  </Link>
-                )}
-                {state.offerTyping && (
-                  <button type="button" className={styles.link} onClick={() => setMode("type")}>
-                    Type it in
-                  </button>
-                )}
               </div>
+              {state.signIn && (
+                <div className={styles.inlineSignIn}>
+                  <AccountPanel />
+                </div>
+              )}
+              {state.offerTyping && !state.signIn && (
+                <Button variant="secondary" size="sm" onClick={() => setMode("type")}>
+                  Type the recipe in instead
+                </Button>
+              )}
             </div>
           )}
 

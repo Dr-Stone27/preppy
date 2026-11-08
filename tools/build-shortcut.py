@@ -20,25 +20,31 @@ def tokens(parts):
 import sys
 DEBUG = "--debug" in sys.argv  # ends on the finished address instead of opening it, for testing with `shortcuts run`
 SITE = next((x.split("=", 1)[1] for x in sys.argv if x.startswith("--site=")), "https://preppy-liart.vercel.app")
-U = {k: str(uuid.uuid4()).upper() for k in "ARMEFG"}
+U = {k: str(uuid.uuid4()).upper() for k in "ARMTNEFG"}
 # Tested with `shortcuts run` against a page shaped like an Instagram post (8–9 Nov 2026). Two things matter:
 #  - The fetched page is renamed to page.txt before matching; otherwise Shortcuts turns it into readable text and the
 #    <meta> tags holding the caption are gone.
 #  - URL Encode and Open URLs take their input as a text token string. As a plain variable attachment they came out empty.
-CAPTION = r'(?<=og:description" content=")[^"]*|(?<=content=")[^"]*(?="\s+property="og:description")'
+def meta(attr, name):
+  # The content of <meta attr="name" content="…">, whichever order the attributes come in.
+  return rf'(?<={attr}="{name}" content=")[^"]*|(?<=content=")[^"]*(?="\s+{attr}="{name}")'
+# Instagram trims the caption in og:description but often keeps more of it in og:title, so all three are sent
+# and Preppy keeps the longest. SEP must match SHARED_SEP in src/domain/recipes/import.ts.
+SEP = "\n---preppy---\n"
 actions = [
   # 1. Fetch the shared post's page, as the phone, and keep it as raw text.
   {"WFWorkflowActionIdentifier": "is.workflow.actions.downloadurl",
    "WFWorkflowActionParameters": {"UUID": U["A"], "WFURL": tokens([INPUT])}},
   {"WFWorkflowActionIdentifier": "is.workflow.actions.setitemname",
    "WFWorkflowActionParameters": {"UUID": U["R"], "WFName": "page.txt", "WFInput": attach(out(U["A"], "Contents of URL"))}},
-  # 2. The caption: the content of the og:description tag, whichever order its attributes come in.
-  {"WFWorkflowActionIdentifier": "is.workflow.actions.text.match",
-   "WFWorkflowActionParameters": {"UUID": U["M"], "WFMatchTextPattern": CAPTION, "WFMatchTextCaseSensitive": False,
-                                  "text": tokens([out(U["R"], "Renamed Item")])}},
+  # 2. The caption, from the three places post pages carry it.
+  *[{"WFWorkflowActionIdentifier": "is.workflow.actions.text.match",
+     "WFWorkflowActionParameters": {"UUID": U[k], "WFMatchTextPattern": meta(attr, name), "WFMatchTextCaseSensitive": False,
+                                    "text": tokens([out(U["R"], "Renamed Item")])}}
+    for k, attr, name in [("M", "property", "og:description"), ("T", "property", "og:title"), ("N", "name", "description")]],
   # 3. "link<newline>caption", URL-encoded, inside the Preppy address.
   {"WFWorkflowActionIdentifier": "is.workflow.actions.gettext",
-   "WFWorkflowActionParameters": {"UUID": U["E"], "WFTextActionText": tokens([INPUT, "\n", out(U["M"], "Matches")])}},
+   "WFWorkflowActionParameters": {"UUID": U["E"], "WFTextActionText": tokens([INPUT, "\n", out(U["M"], "Matches"), SEP, out(U["T"], "Matches"), SEP, out(U["N"], "Matches")])}},
   {"WFWorkflowActionIdentifier": "is.workflow.actions.urlencode",
    "WFWorkflowActionParameters": {"UUID": U["F"], "WFEncodeMode": "Encode", "WFInput": tokens([out(U["E"], "Text")])}},
   {"WFWorkflowActionIdentifier": "is.workflow.actions.gettext",

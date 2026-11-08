@@ -8,7 +8,7 @@ import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { findBySource, recipeHref } from "@/domain/recipes/library";
-import { parseShared, recipeFromAi } from "@/domain/recipes/import";
+import { parseShared, POST_LINK, recipeFromAi } from "@/domain/recipes/import";
 import { ruleWarnings, warningSentence } from "@/domain/recipes/rules";
 import type { Recipe } from "@/domain/recipes/types";
 import { authHeader } from "@/lib/supabase";
@@ -39,7 +39,7 @@ const ERRORS: Record<number, string> = {
  * What arrived in the address: the iPhone Shortcut sends `shared` ("link\ncaption"),
  * Android's share button sends `text` and sometimes `url` when Preppy is installed.
  */
-/** The Shortcut passes Instagram's page summary as-is, so quotes and emoji arrive as HTML entities. */
+/** The Shortcut passes the post page's summary as-is, so quotes and emoji arrive as HTML entities. */
 function decode(s: string) {
   return s
     .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
@@ -57,7 +57,7 @@ function fromAddress(params: URLSearchParams): { link: string; text: string } {
   if (!raw.trim()) return { link: "", text: "" };
   const post = parseShared(raw.trim());
   if (post) return { link: post.link, text: post.caption };
-  const url = raw.match(/https?:\/\/(www\.)?instagram\.com\/\S+/i)?.[0];
+  const url = raw.match(POST_LINK)?.[0];
   return url ? { link: url.split("?")[0], text: raw.replace(url, "").trim() } : { link: "", text: raw.trim() };
 }
 
@@ -65,6 +65,7 @@ export function AddRecipe() {
   const data = useData();
   const params = useSearchParams();
   const [arrived] = useState(() => fromAddress(params));
+  const source = /tiktok/i.test(arrived.link) ? "TikTok" : "Instagram";
   const [mode, setMode] = useState<Mode>("post");
   const [link, setLink] = useState(arrived.link);
   const [text, setText] = useState(arrived.text);
@@ -107,7 +108,7 @@ export function AddRecipe() {
     }
   };
 
-  // A post shared from Instagram with its caption reads straight away, once sign-in has loaded.
+  // A post shared from Instagram or TikTok with its caption reads straight away, once sign-in has loaded.
   useEffect(() => {
     if (autoRead.current || !arrived.text || !data || sync.status === "loading") return;
     autoRead.current = true;
@@ -192,12 +193,12 @@ export function AddRecipe() {
         <>
           {arrived.link && state.s === "idle" && (
             <p className={styles.arrived} role="status">
-              {arrived.text ? "Got the post from Instagram." : "Got the link, but not the caption. Copy the caption in Instagram and paste it below."}
+              {arrived.text ? `Got the post from ${source}.` : `Got the link, but not the caption. Copy the caption in ${source} and paste it below.`}
             </p>
           )}
           <label className={styles.field}>
-            <span>Instagram link</span>
-            <input type="url" inputMode="url" value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://www.instagram.com/reel/…" />
+            <span>Instagram or TikTok link</span>
+            <input type="url" inputMode="url" value={link} onChange={(e) => setLink(e.target.value)} placeholder="Paste the post link" />
           </label>
           <label className={styles.field}>
             <span>Caption</span>

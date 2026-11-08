@@ -109,7 +109,7 @@ export function RecipeView({ recipe: r, never, footer }: { recipe: Recipe; never
           )}
           {href && (
             <a className={styles.sourceLink} href={href} target="_blank" rel="noopener noreferrer">
-              View original{host ? ` on ${host.split(".")[0] === "instagram" ? "Instagram" : host}` : ""}
+              View original{host ? ` on ${/instagram/.test(host) ? "Instagram" : /tiktok/.test(host) ? "TikTok" : host}` : ""}
               <Icon name="chevron" size={18} />
             </a>
           )}

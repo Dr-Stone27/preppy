@@ -1,11 +1,13 @@
 import { slug } from "@/domain/plan/week";
 import type { Ingredient, Macros, Recipe } from "./types";
 
-/** The iOS Shortcut shares "link\ncaption". Returns null for anything else. */
+/** The iOS Shortcut shares "link\ncaption" for an Instagram or TikTok post. Returns null for anything else. */
+export const POST_LINK = /https?:\/\/((www|m|vm|vt)\.)?(instagram|tiktok)\.com\/\S+/i;
+
 export function parseShared(raw: string): { link: string; caption: string } | null {
   const lines = raw.replace(/\r/g, "").split("\n");
   const first = (lines[0] ?? "").trim();
-  if (!/^https?:\/\/(www\.)?instagram\.com\//i.test(first)) return null;
+  if (POST_LINK.exec(first)?.index !== 0) return null;
   const caption = lines
     .slice(1)
     .join("\n")

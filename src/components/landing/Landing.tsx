@@ -177,7 +177,7 @@ export function Landing() {
           title="A library to start from"
           body={
             <>
-              {count} dishes, from jollof and efo riro to Korean and Chinese favourites. Save your own from Instagram: share a post to Preppy, or paste its caption.
+              {count} dishes, from jollof and efo riro to Korean and Chinese favourites. Save your own from Instagram or TikTok: share a post to Preppy, or paste its caption.
             </>
           }
         >

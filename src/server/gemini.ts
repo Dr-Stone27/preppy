@@ -50,7 +50,7 @@ export async function geminiJson(prompt: string, signal?: AbortSignal): Promise<
     const attempt = last ? signal : AbortSignal.any([...(signal ? [signal] : []), AbortSignal.timeout(20_000)]);
     try {
       res = await once(model, key, prompt, attempt);
-    } catch (e) {
+    } catch {
       if (last || signal?.aborted) {
         console.error(`[ai] ${model} took too long`);
         throw new AiUnavailable("busy");

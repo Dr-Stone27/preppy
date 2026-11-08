@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Installs as "Save to Preppy" on iPhone rather than taking the file's name.
+        source: "/save-to-preppy.shortcut",
+        headers: [{ key: "Content-Disposition", value: 'attachment; filename="Save to Preppy.shortcut"' }],
+      },
+      {
         source: "/:path*",
         headers: [
           { key: "X-Frame-Options", value: "DENY" },

@@ -51,8 +51,31 @@ function decode(s: string) {
     .replace(/&amp;/g, "&");
 }
 
+/**
+ * Everything after "shared=" in the address. If the Shortcut leaves an "&" or "#" from a caption unencoded,
+ * the normal reading would cut the caption there, so take the rest of the address and decode what can be decoded.
+ */
+function sharedFromHref(): string | null {
+  if (typeof window === "undefined") return null;
+  const href = window.location.href;
+  const at = href.indexOf("shared=");
+  if (at < 0) return null;
+  const rest = href.slice(at + "shared=".length);
+  try {
+    return decodeURIComponent(rest);
+  } catch {
+    return rest.replace(/(%[0-9a-f]{2})+/gi, (m) => {
+      try {
+        return decodeURIComponent(m);
+      } catch {
+        return m;
+      }
+    });
+  }
+}
+
 function fromAddress(params: URLSearchParams): { link: string; text: string } {
-  const shared = params.get("shared");
+  const shared = params.has("shared") ? sharedFromHref() ?? params.get("shared") ?? "" : null;
   const raw = shared != null ? decode(shared) : [params.get("url"), params.get("text")].filter(Boolean).join("\n");
   if (!raw.trim()) return { link: "", text: "" };
   const post = parseShared(raw.trim());

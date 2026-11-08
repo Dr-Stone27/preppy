@@ -1,12 +1,13 @@
-import { ComingSoon } from "@/components/shell/ComingSoon";
+import { AddRecipe } from "@/components/add/AddRecipe";
+import { ScreenHeader, Stack } from "@/components/ui/Layout";
 
 export const metadata = { title: "Add a recipe · Preppy" };
 
 export default function AddPage() {
   return (
-    <ComingSoon
-      title="Add a recipe"
-      body="Paste an Instagram link and save the recipe straight to your library."
-    />
+    <Stack gap={4}>
+      <ScreenHeader title="Add a recipe" />
+      <AddRecipe />
+    </Stack>
   );
 }

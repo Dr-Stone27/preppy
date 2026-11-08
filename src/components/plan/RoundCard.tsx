@@ -2,9 +2,9 @@
 
 import { BowlCollage } from "@/components/bowl/BowlCollage";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
-import { Button } from "@/components/ui/Button";
+import { Button, ButtonLink } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Chip";
-import { addDays, DAY_FULL, DAYS } from "@/domain/plan/dates";
+import { addDays, DAY_FULL, DAYS, weekKey } from "@/domain/plan/dates";
 import type { Round, SlotId, Week } from "@/domain/plan/types";
 import { cellKey, eggCount, recipesFor, roundAverage, roundLabel, roundRange, roundStatus, SLOTS } from "@/domain/plan/week";
 import { recipeById } from "@/domain/recipes/library";
@@ -101,9 +101,16 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
             ))}
           </div>
 
-          <Button variant="secondary" size="sm" onClick={onPlan}>
-            Edit round
-          </Button>
+          <div className={styles.roundActions}>
+            <Button variant="secondary" size="sm" onClick={onPlan}>
+              Edit round
+            </Button>
+            {R.confirmed && (
+              <ButtonLink href={`/plan/cook?week=${weekKey(weekStart)}&round=${R.id}`} size="sm" variant={R.cooked ? "secondary" : "primary"}>
+                {R.cooked ? "Cooked · open again" : "Cook day"}
+              </ButtonLink>
+            )}
+          </div>
         </>
       )}
     </section>

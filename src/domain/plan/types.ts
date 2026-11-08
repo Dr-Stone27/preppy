@@ -14,7 +14,20 @@ export type Round = {
   sweets: string[];
   confirmed?: boolean;
   cooked?: boolean;
+  cookPlan?: CookPlan;
 };
+
+export type CookStep = {
+  title: string;
+  detail: string;
+  appliance: string;
+  recipe: string;
+  minutes: number | null;
+  meanwhile: string | null;
+};
+
+/** `ordered` is false when the steps are each recipe in turn rather than a merged session. */
+export type CookPlan = { minutes: number | null; steps: CookStep[]; storeTips: string[]; ordered: boolean };
 
 export type Week = {
   rounds: Round[];

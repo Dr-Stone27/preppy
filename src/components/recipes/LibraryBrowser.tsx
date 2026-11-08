@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Layout";
 import type { CuisineFamily } from "@/domain/bowl/types";
 import { CUISINE_LABEL, cuisinesIn, filterRecipes, type LibraryFilter } from "@/domain/recipes/search";
+import { myRecipes } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
+import { useData } from "@/state/store";
 import { RecipeCard } from "./RecipeCard";
 import cardStyles from "./RecipeCard.module.css";
 import styles from "./LibraryBrowser.module.css";
@@ -20,7 +22,10 @@ const KINDS: { value: LibraryFilter["kind"]; label: string }[] = [
 
 const EMPTY: LibraryFilter = { query: "", kind: "all", cuisine: "all" };
 
-export function LibraryBrowser({ recipes }: { recipes: Recipe[] }) {
+export function LibraryBrowser({ recipes: exported }: { recipes: Recipe[] }) {
+  const data = useData();
+  // Saved recipes register with the library once the store loads in the browser.
+  const recipes = useMemo(() => (data ? myRecipes() : exported), [data, exported]);
   const [filter, setFilter] = useState<LibraryFilter>(EMPTY);
   const query = useDeferredValue(filter.query);
   const cuisines = useMemo(() => cuisinesIn(recipes), [recipes]);

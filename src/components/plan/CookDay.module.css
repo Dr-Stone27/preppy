@@ -1,0 +1,89 @@
+.card {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.notice {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-input);
+  background: var(--color-warning-soft);
+  color: var(--color-warning-ink);
+  font-size: var(--text-small);
+}
+
+.bar {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-action);
+  transition: width var(--dur-base) var(--ease);
+}
+
+.stepHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.dish {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.detail {
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.meanwhile {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-input);
+  background: var(--color-action-soft);
+  font-size: var(--text-small);
+}
+
+.timer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.timer > span:nth-child(2) {
+  flex: 1;
+}
+
+.clock {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2);
+}

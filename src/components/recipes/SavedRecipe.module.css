@@ -1,0 +1,12 @@
+.delete {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.row {
+  display: flex;
+  gap: var(--space-2);
+}

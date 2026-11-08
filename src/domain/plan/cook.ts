@@ -1,0 +1,60 @@
+import { recipeById } from "@/domain/recipes/library";
+import type { Recipe } from "@/domain/recipes/types";
+import { DAYS } from "./dates";
+import type { Cell, CookPlan, Round } from "./types";
+import { cellKey, SLOTS, usesOf } from "./week";
+
+/** Mains cooked today and how many portions each. Sweets are made fresh, so they're left out. */
+export function cookDishes(R: Round, cells: Record<string, Cell>): { recipe: Recipe; portions: number }[] {
+  return [...usesOf(R, cells).rec]
+    .map(([id, n]) => ({ recipe: recipeById(id)!, portions: n }))
+    .filter((d) => d.recipe && d.recipe.kind !== "sweet");
+}
+
+/** Without the AI ordering: each recipe's own steps, one dish after another. */
+export function fallbackPlan(R: Round, cells: Record<string, Cell>): CookPlan {
+  const steps = cookDishes(R, cells).flatMap(({ recipe: r }) =>
+    r.steps.map((detail, i) => ({
+      title: i === 0 ? `Start the ${r.title}` : `${r.title}: step ${i + 1}`,
+      detail,
+      appliance: "",
+      recipe: r.title,
+      minutes: null,
+      meanwhile: null,
+    })),
+  );
+  return { minutes: null, steps, storeTips: [], ordered: false };
+}
+
+/** Shape-check the AI's plan. Throws if there's nothing usable. */
+export function planFromAi(d: unknown): CookPlan {
+  const x = d as { minutes?: unknown; steps?: unknown; storeTips?: unknown };
+  if (!x || !Array.isArray(x.steps) || !x.steps.length) throw new Error("shape");
+  return {
+    minutes: Number(x.minutes) || null,
+    steps: (x.steps as Record<string, unknown>[]).map((s) => ({
+      title: String(s.title ?? ""),
+      detail: String(s.detail ?? ""),
+      appliance: String(s.appliance ?? ""),
+      recipe: String(s.recipe ?? ""),
+      minutes: Number(s.minutes) || null,
+      meanwhile: s.meanwhile ? String(s.meanwhile) : null,
+    })),
+    storeTips: Array.isArray(x.storeTips) ? x.storeTips.map(String) : [],
+    ordered: true,
+  };
+}
+
+/** Meals within two days of cooking go in the fridge; later ones go in the freezer. */
+export function storePlan(R: Round, cells: Record<string, Cell>) {
+  return cookDishes(R, cells).map(({ recipe }) => {
+    const fridge: string[] = [];
+    const freezer: string[] = [];
+    for (const d of R.days)
+      for (const s of SLOTS) {
+        if (cells[cellKey(d, s.id)]?.r !== recipe.id) continue;
+        (d - R.cook <= 2 ? fridge : freezer).push(`${DAYS[d]} ${s.label.toLowerCase()}`);
+      }
+    return { recipe, fridge, freezer };
+  });
+}

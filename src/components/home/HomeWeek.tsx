@@ -9,7 +9,7 @@ import { Tag } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { addDays, DAY_FULL, dateLabel, daysBetween, sundayOf, today0, weekKey } from "@/domain/plan/dates";
 import { cellKey, dayMacros, nextRound, recipesFor, roundDates, roundRange, SLOTS } from "@/domain/plan/week";
-import { recipeById } from "@/domain/recipes/library";
+import { recipeById, recipeHref } from "@/domain/recipes/library";
 import { shopLines } from "@/domain/shop/list";
 import { getWeek, useData } from "@/state/store";
 import styles from "./HomeWeek.module.css";
@@ -60,9 +60,15 @@ export function HomeWeek() {
               </div>
             </div>
             <div className={styles.actions}>
-              <ButtonLink href={`/shop?round=${R.id}`} block>
-                Go shopping
-              </ButtonLink>
+              {n === 0 ? (
+                <ButtonLink href={`/plan/cook?round=${R.id}`} block>
+                  Start cooking
+                </ButtonLink>
+              ) : (
+                <ButtonLink href={`/shop?round=${R.id}`} block>
+                  Go shopping
+                </ButtonLink>
+              )}
               <ButtonLink href="/plan" variant="secondary" block>
                 See the plan
               </ButtonLink>
@@ -109,7 +115,7 @@ export function HomeWeek() {
             const r = c && recipeById(c.r);
             return (
               <li key={s.id}>
-                <Link href={r ? `/library/${r.id}` : "/plan"} className={styles.meal}>
+                <Link href={r ? recipeHref(r) : "/plan"} className={styles.meal}>
                   {r ? <BowlIllustration recipe={r} size={44} decorative /> : <span className={styles.emptyBowl} />}
                   <span className={styles.mealText}>
                     <span className="t-label t-muted">{s.label}</span>

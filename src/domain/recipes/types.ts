@@ -22,5 +22,7 @@ export type Recipe = {
   macros?: Macros;
   macrosSource?: "post" | "estimate" | "you";
   credit?: { name: string; url: string };
-  origin?: "owner-library" | "preppy-starter";
+  /** "you" marks a recipe saved on this device. */
+  origin?: "owner-library" | "preppy-starter" | "you";
+  createdAt?: string;
 };

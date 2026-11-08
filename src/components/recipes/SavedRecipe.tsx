@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Layout";
 import { recipeById } from "@/domain/recipes/library";
+import { track } from "@/lib/analytics";
 import { deleteRecipe, useData } from "@/state/store";
 import { RecipeView } from "./RecipeView";
 import styles from "./SavedRecipe.module.css";
@@ -49,6 +50,7 @@ export function SavedRecipe() {
                     size="sm"
                     onClick={() => {
                       deleteRecipe(r.id);
+                      track("recipe_deleted");
                       router.replace("/library");
                     }}
                   >

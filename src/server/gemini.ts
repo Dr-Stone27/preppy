@@ -1,4 +1,7 @@
+import { after } from "next/server";
+import { flushPostHogLogs, logPostHog } from "../../instrumentation";
 import { accountsOn, SUPABASE_KEY, SUPABASE_URL } from "@/lib/supabase";
+import { captureGeminiGeneration, type AiContext } from "./ai-observability";
 import { accountFrom, sameOrigin, secretHeaders } from "./admin";
 /**
  * Minimal Gemini call over REST. The key stays on the server.
@@ -43,8 +46,25 @@ async function once(model: string, key: string, prompt: string, signal?: AbortSi
   return res;
 }
 
-export async function geminiJson(prompt: string, signal?: AbortSignal, images?: Image[]): Promise<unknown> {
+function logGeminiOutcome(
+  body: "gemini_generation_completed" | "gemini_generation_failed",
+  model: string,
+  status: number,
+  startedAt: number,
+  imageCount: number,
+) {
+  logPostHog(body, {
+    model,
+    status,
+    duration_ms: Math.round(performance.now() - startedAt),
+    image_count: imageCount,
+  });
+  after(flushPostHogLogs);
+}
+
+export async function geminiJson(prompt: string, context: AiContext, signal?: AbortSignal, images?: Image[]): Promise<unknown> {
   const key = process.env.GEMINI_API_KEY || process.env.Gemini_API_Key;
+  const startedAt = performance.now();
   if (!key) throw new AiUnavailable("not-configured");
   let res: Response | null = null;
   let model = MODELS[0];
@@ -68,11 +88,15 @@ export async function geminiJson(prompt: string, signal?: AbortSignal, images?: 
   }
   if (!res || res.status === 503 || res.status === 429) throw new AiUnavailable("busy");
   if (!res.ok) {
+    await captureGeminiGeneration(context, model, prompt, images ?? [], res.status, performance.now() - startedAt);
+    logGeminiOutcome("gemini_generation_failed", model, res.status, startedAt, images?.length ?? 0);
     // Google's error text names the problem (bad model, quota) and never echoes the key.
     const detail = (await res.text()).slice(0, 300).replace(/\s+/g, " ");
     throw new Error(`gemini ${res.status} ${model}: ${detail}`);
   }
-  const body = (await res.json()) as { candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] } }[] };
+  const body = (await res.json()) as { candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] }; finishReason?: string }[]; usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } };
+  await captureGeminiGeneration(context, model, prompt, images ?? [], res.status, performance.now() - startedAt, body);
+  logGeminiOutcome("gemini_generation_completed", model, res.status, startedAt, images?.length ?? 0);
   const text = body.candidates?.[0]?.content?.parts?.filter((p) => !p.thought).map((p) => p.text ?? "").join("") ?? "";
   try {
     return JSON.parse(text.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, ""));
@@ -88,7 +112,7 @@ const hits = new Map<string, number[]>();
  * Checks the token with Supabase Auth, then counts one AI call against that account with the server's secret key.
  * use_ai(uuid) is only callable with that key, so people can't touch their own counter from the browser.
  */
-async function allowance(auth: string): Promise<boolean | "sign-in" | "error"> {
+async function allowance(auth: string): Promise<{ allowed: boolean; distinctId: string } | "sign-in" | "error"> {
   const signal = AbortSignal.timeout(5_000);
   try {
     const who = await accountFrom(auth, signal);
@@ -108,13 +132,13 @@ async function allowance(auth: string): Promise<boolean | "sign-in" | "error"> {
         body: "{}",
         signal,
       });
-      return old.ok ? (await old.json()) === true : "error";
+      return { allowed: old.ok ? (await old.json()) === true : false, distinctId: id };
     }
     if (!res.ok) {
       console.error("[ai] allowance", res.status, (await res.text().catch(() => "")).slice(0, 200));
       return "error";
     }
-    return (await res.json()) === true;
+    return { allowed: (await res.json()) === true, distinctId: id };
   } catch (e) {
     console.error("[ai] allowance", e instanceof Error ? e.message : e);
     return "error";
@@ -125,7 +149,7 @@ async function allowance(auth: string): Promise<boolean | "sign-in" | "error"> {
  * Same-origin, a per-address burst limit, and — once accounts are switched on —
  * a signed-in account with AI allowance left today (counted by use_ai() in the database).
  */
-export async function guard(req: Request): Promise<Response | null> {
+export async function guard(req: Request): Promise<Response | { distinctId?: string }> {
   if (!sameOrigin(req)) return Response.json({ error: "forbidden" }, { status: 403 });
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "local";
   const now = Date.now();
@@ -133,14 +157,14 @@ export async function guard(req: Request): Promise<Response | null> {
   if (recent.length >= 8) return Response.json({ error: "busy" }, { status: 429 });
   hits.set(ip, [...recent, now]);
 
-  if (!accountsOn) return null;
+  if (!accountsOn) return {};
   const auth = req.headers.get("authorization");
   if (!auth?.startsWith("Bearer ")) return Response.json({ error: "sign-in" }, { status: 401 });
-  const ok = await allowance(auth);
-  if (ok === "sign-in") return Response.json({ error: "sign-in" }, { status: 401 });
-  if (ok === "error") return Response.json({ error: "busy" }, { status: 429 });
-  if (!ok) return Response.json({ error: "limit" }, { status: 402 });
-  return null;
+  const allowanceResult = await allowance(auth);
+  if (allowanceResult === "sign-in") return Response.json({ error: "sign-in" }, { status: 401 });
+  if (allowanceResult === "error") return Response.json({ error: "busy" }, { status: 429 });
+  if (!allowanceResult.allowed) return Response.json({ error: "limit" }, { status: 402 });
+  return { distinctId: allowanceResult.distinctId };
 }
 
 export function aiError(e: unknown): Response {

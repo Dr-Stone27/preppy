@@ -101,7 +101,6 @@ function Steam() {
 export function Landing() {
   const root = useRef<HTMLDivElement>(null);
   useReveal(root);
-  useEffect(() => track("landing_viewed"), []);
 
   const hero = recipeById(HERO);
   const orbit = ORBIT.map(recipeById).filter((r): r is Recipe => !!r);

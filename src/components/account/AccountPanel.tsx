@@ -5,6 +5,7 @@ import { type FormEvent, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { track } from "@/lib/analytics";
 import { sendCode, signOut, useSync } from "@/state/sync";
 import form from "@/components/add/Add.module.css";
 import styles from "./AccountPanel.module.css";
@@ -77,6 +78,7 @@ export function AccountPanel() {
         onSubmit={(e) =>
           run(e, async () => {
             await sendCode(email.trim());
+            track("sign_in_link_requested");
             setSent(true);
           })
         }

@@ -1,5 +1,6 @@
-import { aiError, geminiJson, guard, type Image } from "@/server/gemini";
 import { GROUPS, pantryItems } from "@/domain/shop/pantry";
+import { aiContext } from "@/server/ai-observability";
+import { aiError, geminiJson, guard, type Image } from "@/server/gemini";
 
 const MAX = 8000;
 const MAX_IMAGES = 4;
@@ -34,8 +35,8 @@ ${text}
 }
 
 export async function POST(req: Request) {
-  const blocked = await guard(req);
-  if (blocked) return blocked;
+  const access = await guard(req);
+  if (access instanceof Response) return access;
   let body: { text?: unknown; link?: unknown; never?: unknown; images?: unknown };
   try {
     body = await req.json();
@@ -53,7 +54,7 @@ export async function POST(req: Request) {
   if (raw.length > MAX_IMAGES || images.length !== raw.length) return Response.json({ error: "bad-image" }, { status: 413 });
   if (!text && !images.length) return Response.json({ error: "empty" }, { status: 400 });
   try {
-    return Response.json({ recipe: await geminiJson(prompt(link, text || "(the caption is in the screenshots)", never, images.length), AbortSignal.timeout(55_000), images) });
+    return Response.json({ recipe: await geminiJson(prompt(link, text || "(the caption is in the screenshots)", never, images.length), aiContext(access.distinctId), AbortSignal.timeout(55_000), images) });
   } catch (e) {
     return aiError(e);
   }

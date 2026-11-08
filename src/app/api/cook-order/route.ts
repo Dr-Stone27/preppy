@@ -1,3 +1,4 @@
+import { aiContext } from "@/server/ai-observability";
 import { aiError, geminiJson, guard } from "@/server/gemini";
 
 type Dish = { title: string; portions: number; servings: number; ingredients: string[]; steps: string[] };
@@ -17,8 +18,8 @@ Use 8 to 16 steps.`;
 }
 
 export async function POST(req: Request) {
-  const blocked = await guard(req);
-  if (blocked) return blocked;
+  const access = await guard(req);
+  if (access instanceof Response) return access;
   let dishes: Dish[];
   try {
     const body = (await req.json()) as { dishes?: Dish[] };
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
   }
   if (!dishes.length) return Response.json({ error: "empty" }, { status: 400 });
   try {
-    return Response.json({ plan: await geminiJson(prompt(dishes), AbortSignal.timeout(55_000)) });
+    return Response.json({ plan: await geminiJson(prompt(dishes), aiContext(access.distinctId), AbortSignal.timeout(55_000)) });
   } catch (e) {
     return aiError(e);
   }

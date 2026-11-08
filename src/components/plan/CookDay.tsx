@@ -47,8 +47,6 @@ export function CookDay() {
     document.getElementById("cook-scroll")?.scrollTo(0, 0);
   }, [i]);
 
-  useEffect(() => track("cook_day_opened"), []);
-
   if (!data) return <div style={{ minHeight: "60vh" }} aria-busy="true" />;
 
   const key = params.get("week") ?? weekKey(weekStartFor(data.weeks, data.prefs, today0()));
@@ -84,6 +82,7 @@ export function CookDay() {
       });
       if (!res.ok) throw new Error(String(res.status));
       savePlan(planFromAi((await res.json()).plan));
+      track("cook_order_generated", { dish_count: dishes.length });
     } catch (e) {
       savePlan(fallbackPlan(R, week.cells));
       setNotice(
@@ -104,6 +103,7 @@ export function CookDay() {
       w.rounds.find((x) => x.id === R.id)!.cooked = true;
       return w;
     });
+    track("cooking_completed", { dish_count: dishes.length });
     router.push("/plan");
   };
 

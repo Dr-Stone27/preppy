@@ -10,6 +10,7 @@ import type { Prefs, SlotId, Week } from "@/domain/plan/types";
 import { cellKey, recipesFor, roundOfDay, SLOTS } from "@/domain/plan/week";
 import { libraryRecipes } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
+import { track } from "@/lib/analytics";
 import { updateWeek } from "@/state/store";
 import styles from "./Plan.module.css";
 
@@ -49,7 +50,10 @@ export function MealSheet({ weekKey, week, prefs, meal, onClose }: Props) {
       type="button"
       className={styles.option}
       aria-pressed={cell?.r === r.id}
-      onClick={() => set((c) => ({ ...c, r: r.id }))}
+      onClick={() => {
+        set((c) => ({ ...c, r: r.id }));
+        track("meal_customized", { change: "recipe" });
+      }}
     >
       <BowlIllustration recipe={r} size={44} decorative />
       <span className={styles.optionText}>
@@ -73,6 +77,7 @@ export function MealSheet({ weekKey, week, prefs, meal, onClose }: Props) {
               size="sm"
               onClick={() => {
                 set(() => undefined);
+                track("meal_customized", { change: "cleared" });
                 onClose();
               }}
             >
@@ -105,7 +110,14 @@ export function MealSheet({ weekKey, week, prefs, meal, onClose }: Props) {
               <span className="t-eyebrow">Serve with</span>
               <div className={styles.chips}>
                 {prefs.bases.map((b) => (
-                  <FilterChip key={b} selected={cell.base === b} onClick={() => set((c) => (c ? { ...c, base: c.base === b ? undefined : b } : c))}>
+                  <FilterChip
+                    key={b}
+                    selected={cell.base === b}
+                    onClick={() => {
+                      set((c) => (c ? { ...c, base: c.base === b ? undefined : b } : c));
+                      track("meal_customized", { change: "side" });
+                    }}
+                  >
                     {b}
                   </FilterChip>
                 ))}

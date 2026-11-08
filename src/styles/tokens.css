@@ -1,0 +1,104 @@
+/*
+ * Preppy design tokens.
+ * Source: design handoff v1.0 (PREPPY_TOKENS.css), with three agreed changes:
+ *  - teal is the action colour (buttons, active tab); orange is the warm accent
+ *  - basil green marks "done" instead of turquoise
+ *  - text colours that failed WCAG AA on cream were darkened (ratios noted)
+ * Components use these variables only; no raw hex values outside this file and the bowl palette.
+ */
+:root {
+  color-scheme: light;
+
+  /* Surfaces */
+  --color-canvas: #fffdf9;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #f7f2ea;
+  --color-border: #eae5dc;
+  --color-border-strong: #d9d2c5;
+
+  /* Text */
+  --color-ink: #1e1b18; /* 16.6:1 on canvas */
+  --color-muted: #646962; /* 5.6:1 on canvas, 5.0:1 on subtle (handoff #767B75 was 4.3:1) */
+
+  /* Action: teal */
+  --color-action: #2f4d52; /* white text 9.1:1 */
+  --color-action-pressed: #253e42;
+  --color-action-soft: #e3eeec;
+  --color-on-action: #ffffff;
+
+  /* Accent: orange (fills and highlights; not for small text) */
+  --color-accent: #ff6b35; /* espresso text on it 6.0:1; white only 2.8:1 */
+  --color-accent-soft: #fff0e8;
+  --color-accent-ink: #b5461c; /* orange-family text, 5.4:1 on canvas */
+
+  /* Status */
+  --color-success: #4c7656; /* basil, 5.2:1 on canvas */
+  --color-success-soft: #eaf2ec;
+  --color-warning: #ff9f1c; /* saffron fill only */
+  --color-warning-soft: #fff4df;
+  --color-warning-ink: #8a5a0b; /* 5.8:1 on canvas */
+  --color-danger: #b23a21;
+  --color-danger-soft: #fbe6de;
+
+  /* Typography */
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --text-display: 2.25rem;
+  --text-h1: 1.875rem;
+  --text-h2: 1.5rem;
+  --text-h3: 1.25rem;
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-label: 0.75rem;
+  --text-eyebrow: 0.6875rem;
+
+  /* Spacing (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Shape */
+  --radius-chip: 10px;
+  --radius-input: 14px;
+  --radius-button: 16px;
+  --radius-card: 20px;
+  --radius-feature: 24px;
+  --radius-sheet: 28px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-card: 0 4px 20px rgba(30, 27, 24, 0.05);
+  --shadow-floating: 0 8px 28px rgba(30, 27, 24, 0.09);
+
+  /* Layout */
+  --gutter: 20px;
+  --content-max: 560px;
+  --nav-height: 64px;
+  --touch: 48px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-fast: 140ms;
+  --dur-base: 200ms;
+}
+
+@media (max-width: 360px) {
+  :root {
+    --gutter: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+  }
+}

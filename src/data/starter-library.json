@@ -1,0 +1,4448 @@
+{
+ "_about": "Preppy starter library. 'owner-library' recipes come from the owner's Prep Week app (saved from Instagram; each keeps its source link). 'preppy-starter' recipes were written for Preppy. Pantry is the shared Nigerian pantry list.",
+ "recipes": [
+  {
+   "flags": [],
+   "flavour": "Tex-Mex",
+   "ingredients": [
+    {
+     "name": "Chicken breast",
+     "qty": 900,
+     "unit": "g"
+    },
+    {
+     "name": "Bell peppers",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Fajita seasoning",
+     "qty": 2,
+     "unit": "packets"
+    },
+    {
+     "name": "Cooking spray",
+     "qty": 5,
+     "unit": "g"
+    },
+    {
+     "name": "Rice",
+     "qty": 600,
+     "unit": "g cooked"
+    },
+    {
+     "name": "Greek yogurt",
+     "qty": 100,
+     "unit": "g"
+    },
+    {
+     "name": "Sriracha",
+     "qty": 25,
+     "unit": "g"
+    },
+    {
+     "name": "Limes",
+     "qty": 0.5,
+     "unit": ""
+    },
+    {
+     "name": "Garlic powder",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "kind": "main",
+   "macros": {
+    "carbs": 52,
+    "fat": 5,
+    "kcal": 500,
+    "protein": 58
+   },
+   "macrosSource": "post",
+   "note": "Post says about 500 kcal and 58 g protein per bowl.",
+   "protein": "Chicken",
+   "servings": 4,
+   "source": "https://www.instagram.com/reel/DeIbXHrRVgd/",
+   "steps": [
+    "Start the rice cooking.",
+    "Dice the chicken and peppers and toss with the fajita seasoning.",
+    "Spray the air fryer basket, add chicken and peppers, and air fry at 200°C for about 20 minutes, tossing halfway, until the chicken reaches 75°C inside.",
+    "Mix the Greek yogurt, sriracha, lime juice and garlic powder into a sauce.",
+    "Divide rice, chicken and peppers between 4 containers and top with the sauce."
+   ],
+   "title": "Air Fryer Chicken Fajita Bowls",
+   "withCarb": true,
+   "id": "air-fryer-chicken-fajita-bowls",
+   "origin": "owner-library"
+  },
+  {
+   "flavour": "Banana",
+   "ingredients": [
+    {
+     "name": "Eggs",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Bananas",
+     "qty": 0.5,
+     "unit": ""
+    },
+    {
+     "name": "Rolled oats",
+     "qty": 0.25,
+     "unit": "cup"
+    },
+    {
+     "name": "Baking powder",
+     "qty": 0.5,
+     "unit": "tsp"
+    },
+    {
+     "name": "Vanilla extract",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Cinnamon",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "kind": "sweet",
+   "note": "From your Gemini chat, which said 2–3 eggs. Set to 2 here.",
+   "protein": "Eggs",
+   "servings": 1,
+   "source": "",
+   "steps": [
+    "Blend everything for 20 seconds.",
+    "Pour into a greased ramekin and air fry at 165°C for 10–12 minutes until set.",
+    "Top with peanut butter or honey."
+   ],
+   "title": "Banana Oat Soufflé Pancake",
+   "id": "banana-oat-souffle-pancake",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "Indian",
+   "ingredients": [
+    {
+     "name": "Chicken thighs",
+     "qty": 700,
+     "unit": "g"
+    },
+    {
+     "name": "Greek yogurt",
+     "qty": 150,
+     "unit": "g"
+    },
+    {
+     "name": "Lemon juice",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Garlic",
+     "qty": 6,
+     "unit": "cloves"
+    },
+    {
+     "name": "Ginger",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Garam masala",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Cumin",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Ground coriander",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Smoked paprika",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Cayenne pepper",
+     "qty": 0.5,
+     "unit": "tsp"
+    },
+    {
+     "name": "Salt",
+     "qty": 1.5,
+     "unit": "tsp"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Butter",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Onions",
+     "qty": 2,
+     "unit": "medium"
+    },
+    {
+     "name": "Tomato paste",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Tomatoes",
+     "qty": 400,
+     "unit": "g"
+    },
+    {
+     "name": "Evaporated milk",
+     "qty": 150,
+     "unit": "ml"
+    },
+    {
+     "name": "Sweet paprika",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Spring onions",
+     "qty": null,
+     "unit": "to garnish"
+    }
+   ],
+   "kind": "main",
+   "note": "The post didn't spell out the full recipe, so Claude filled in a standard version. Check the amounts.",
+   "protein": "Chicken thighs",
+   "servings": 4,
+   "source": "https://www.instagram.com/reel/Dd96pEFS7YC/",
+   "steps": [
+    "Mix the Greek yogurt, lemon juice, half the garlic and ginger, half the garam masala, cumin, coriander, smoked paprika, cayenne and 1 tsp salt. Add the cubed chicken and marinate for at least 1 hour, ideally overnight.",
+    "Grill, broil or pan-sear the chicken in batches until charred at the edges and nearly cooked through. Set aside.",
+    "Heat the oil and butter in a large pan. Cook the chopped onions until soft and golden.",
+    "Add the remaining garlic and ginger and cook for 1 minute. Stir in the tomato paste and sweet paprika and cook for 2 minutes.",
+    "Add the blended tomatoes and the remaining garam masala and salt. Simmer for 15 to 20 minutes until thick and the oil separates.",
+    "Stir in the evaporated milk and the chicken. Simmer for 8 to 10 minutes until the chicken is cooked through and the sauce is creamy.",
+    "Garnish with chopped spring onions and serve with rice or flatbread."
+   ],
+   "title": "Chicken Tikka Masala",
+   "withCarb": false,
+   "id": "chicken-tikka-masala-d58i",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "Spicy Garlic",
+   "ingredients": [
+    {
+     "name": "Chicken thighs",
+     "qty": 300,
+     "unit": "g"
+    },
+    {
+     "name": "Garlic",
+     "qty": 1,
+     "unit": "tsp garlic paste"
+    },
+    {
+     "name": "Kashmiri chilli powder",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Chili flakes",
+     "qty": 0.5,
+     "unit": "tsp"
+    },
+    {
+     "name": "Black pepper",
+     "qty": 0.5,
+     "unit": "tsp"
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": "to taste"
+    },
+    {
+     "name": "Peri peri seasoning",
+     "qty": 1,
+     "unit": "tsp (optional)"
+    },
+    {
+     "name": "Tomato paste",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Honey",
+     "qty": 1.5,
+     "unit": "tsp (1 tsp marinade + ½ tsp sauce)"
+    },
+    {
+     "name": "Olive oil",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Lemon juice",
+     "qty": 0.5,
+     "unit": "lemon, juiced"
+    },
+    {
+     "name": "Greek yogurt",
+     "qty": 0.5,
+     "unit": "cup"
+    },
+    {
+     "name": "Cucumbers",
+     "qty": 1,
+     "unit": "whole, grated and squeezed dry"
+    },
+    {
+     "name": "Garlic",
+     "qty": 1,
+     "unit": "small clove, grated"
+    },
+    {
+     "name": "Black pepper",
+     "qty": null,
+     "unit": "to taste (sauce)"
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": "to taste (sauce)"
+    },
+    {
+     "name": "Fresh coriander",
+     "qty": null,
+     "unit": "chopped"
+    }
+   ],
+   "kind": "main",
+   "macros": {
+    "carbs": 11,
+    "fat": 14,
+    "kcal": 290,
+    "protein": 31
+   },
+   "macrosSource": "post",
+   "protein": "Chicken thighs",
+   "servings": 2,
+   "source": "https://www.instagram.com/reel/DZB_IGVJ3Ai/",
+   "steps": [
+    "Marinate the cubed chicken thighs with garlic paste, Kashmiri chilli powder, chilli flakes, black pepper, salt, peri peri seasoning (if using), tomato paste, honey, olive oil and lemon juice for 10-15 minutes.",
+    "Pan fry on high heat for 9-10 minutes until golden brown and crispy, or air fry at 200°C for 7-8 minutes.",
+    "Mix the grated, squeezed cucumber into the Greek yogurt with grated garlic, salt, pepper, honey and chopped coriander.",
+    "Spoon the cucumber yogurt sauce onto a plate and top with the crispy chicken bites.",
+    "Eat as is or with a roti."
+   ],
+   "title": "Chilli Garlic Chicken Bites with Cucumber Yogurt Sauce",
+   "withCarb": false,
+   "id": "chilli-garlic-chicken-bites-with-cucumber-yogurt-sauce-2bzm",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "Chocolate",
+   "ingredients": [
+    {
+     "name": "Makhana",
+     "qty": 15,
+     "unit": "g"
+    },
+    {
+     "name": "Cashew nuts",
+     "qty": 9,
+     "unit": "g"
+    },
+    {
+     "name": "Protein powder",
+     "qty": 1.25,
+     "unit": "scoops"
+    },
+    {
+     "name": "Cocoa powder",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Vanilla extract",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Skim milk",
+     "qty": 150,
+     "unit": "ml"
+    },
+    {
+     "name": "Sweetener",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Sugar-free dark chocolate",
+     "qty": 15,
+     "unit": "g"
+    },
+    {
+     "name": "Cornflakes",
+     "qty": 8,
+     "unit": "g"
+    }
+   ],
+   "kind": "sweet",
+   "macros": {
+    "carbs": 21,
+    "fat": 8,
+    "kcal": 225,
+    "protein": 20
+   },
+   "macrosSource": "post",
+   "note": "Post says 225 kcal and 20 g protein per serving. No eggs; the protein comes from protein powder.",
+   "protein": "Protein powder",
+   "servings": 2,
+   "source": "https://www.instagram.com/reel/DbXYzzppSxS/",
+   "steps": [
+    "Blend the makhana, cashews, protein powder, cocoa, vanilla, milk and sweetener until thick.",
+    "Divide between two jars and set in the fridge for a few hours, or the freezer for 15–20 minutes.",
+    "Melt the chocolate and stir in the cornflakes.",
+    "Spoon over the mousse and freeze 5–10 minutes until the chocolate sets."
+   ],
+   "title": "Choco Crunch Protein Mousse",
+   "withCarb": false,
+   "id": "choco-crunch-protein-mousse",
+   "origin": "owner-library"
+  },
+  {
+   "flavour": "BBQ",
+   "ingredients": [
+    {
+     "name": "Chicken thighs",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Light soy sauce",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Cornstarch",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Smoked paprika",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Garlic powder",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "BBQ sauce",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "kind": "main",
+   "macros": {
+    "carbs": 18,
+    "fat": 18,
+    "kcal": 385,
+    "protein": 35
+   },
+   "macrosSource": "estimate",
+   "note": "From your Gemini plan. The amount of chicken wasn't given.",
+   "protein": "Chicken",
+   "servings": 5,
+   "source": "",
+   "steps": [
+    "Toss the chicken in soy sauce, cornstarch, smoked paprika, garlic powder and BBQ sauce.",
+    "Lay in a single layer in the air fryer at 190°C for 18–20 minutes, flipping halfway."
+   ],
+   "title": "Crispy BBQ & Paprika Chicken",
+   "id": "crispy-bbq-paprika-chicken",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "Nigerian",
+   "ingredients": [
+    {
+     "name": "Chicken breast",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "All-purpose flour",
+     "qty": 1.5,
+     "unit": "cups"
+    },
+    {
+     "name": "Baking powder",
+     "qty": 1,
+     "unit": "teaspoon"
+    },
+    {
+     "name": "Chili flakes",
+     "qty": 1,
+     "unit": "tablespoon"
+    },
+    {
+     "name": "Garlic powder",
+     "qty": 0.5,
+     "unit": "teaspoon"
+    },
+    {
+     "name": "Ginger powder",
+     "qty": 0.5,
+     "unit": "teaspoon"
+    },
+    {
+     "name": "Salt",
+     "qty": 1,
+     "unit": "teaspoon"
+    },
+    {
+     "name": "Eggs",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "All-purpose flour",
+     "qty": 2,
+     "unit": "cups"
+    },
+    {
+     "name": "Cornstarch",
+     "qty": 2,
+     "unit": "tablespoons"
+    },
+    {
+     "name": "Salt",
+     "qty": 1,
+     "unit": "teaspoon"
+    },
+    {
+     "name": "Garlic powder",
+     "qty": 0.5,
+     "unit": "teaspoon"
+    },
+    {
+     "name": "Ginger powder",
+     "qty": 0.5,
+     "unit": "teaspoon"
+    },
+    {
+     "name": "Chili flakes",
+     "qty": 1,
+     "unit": "teaspoon"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": null,
+     "unit": "for deep frying"
+    }
+   ],
+   "kind": "main",
+   "protein": "Chicken breast",
+   "servings": 4,
+   "source": "https://www.instagram.com/reel/DbkisAGNBzJ/",
+   "steps": [
+    "Slice the boneless chicken breast.",
+    "Make the wet batter: whisk 1½ cups flour, baking powder, chili pepper, garlic and ginger powder, salt, eggs and 2 cups water until smooth.",
+    "Make the dry coating: mix 2 cups flour, cornflour, salt, garlic and ginger powder, and chili pepper.",
+    "Dip each chicken slice in the wet batter, then press it into the dry coating until fully covered.",
+    "Deep fry in hot oil until golden brown, crispy and cooked through.",
+    "Drain and serve."
+   ],
+   "title": "Crispy Fried Chicken",
+   "withCarb": false,
+   "id": "crispy-fried-chicken-9jni",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "Japanese",
+   "ingredients": [
+    {
+     "name": "Chicken thighs",
+     "qty": 14,
+     "unit": "oz"
+    },
+    {
+     "name": "Salt",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Black pepper",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Cornstarch",
+     "qty": 0.25,
+     "unit": "cup"
+    },
+    {
+     "name": "Cooking spray",
+     "qty": null,
+     "unit": "as needed"
+    },
+    {
+     "name": "Light soy sauce",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Oyster sauce",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Honey",
+     "qty": 1.5,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Garlic",
+     "qty": 1.5,
+     "unit": "tbsp minced"
+    },
+    {
+     "name": "Cucumbers",
+     "qty": 3,
+     "unit": "Persian"
+    },
+    {
+     "name": "Salt",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Rice vinegar",
+     "qty": 1.5,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Brown sugar",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Light soy sauce",
+     "qty": 0.5,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Sesame seeds",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Rice",
+     "qty": 1.5,
+     "unit": "cup cooked"
+    },
+    {
+     "name": "Spring onions",
+     "qty": null,
+     "unit": "optional, for topping"
+    }
+   ],
+   "kind": "main",
+   "protein": "Chicken thighs",
+   "servings": 2,
+   "source": "https://www.instagram.com/reel/DbW_xO_P0_K/",
+   "steps": [
+    "Slice the cucumbers into thin circles.",
+    "Lay the chicken thighs flat, season with salt and pepper, and coat evenly with cornstarch on both sides.",
+    "In a bowl, mix soy sauce, oyster sauce, honey and minced garlic to make the glaze.",
+    "Heat a pan coated with cooking spray over medium heat and cook the chicken until golden brown and crispy on both sides and cooked through.",
+    "Remove the chicken from the pan. Pour in the sauce and simmer for 45 seconds, then add the chicken back and coat in the sauce for about a minute. Remove quickly.",
+    "Toss the sliced cucumbers with salt in a bowl and let sit for 15 minutes until the excess liquid drains out.",
+    "Drain the cucumbers and rinse them with water.",
+    "Pat the cucumbers dry and mix with rice vinegar, brown sugar, soy sauce and sesame seeds to make the salad.",
+    "Divide into two meal prep containers: half the steamed rice, half the cucumber salad and half the chicken. Optionally top with sesame seeds and sliced spring onions.",
+    "To reheat, store the salad and meat in separate bags from the rice. Microwave the rice with a wet paper towel to steam it, add the meat and microwave until warm, then add the salad last to keep it crunchy."
+   ],
+   "title": "Crispy Soy Glazed Chicken with Japanese Cucumber Salad and Rice",
+   "withCarb": true,
+   "id": "crispy-soy-glazed-chicken-with-japanese-cucumber-salad-and-r-2j1y",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "Korean",
+   "ingredients": [
+    {
+     "name": "Chicken thighs",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Gochujang",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Light soy sauce",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Garlic",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Ginger",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Sesame oil",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Brown sugar",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "kind": "main",
+   "note": "The post didn't spell out the full recipe, so Claude filled in a standard version. Check the amounts.",
+   "protein": "Chicken",
+   "servings": 4,
+   "source": "https://www.instagram.com/reel/DdmRpkYJTc8/",
+   "steps": [
+    "The post only lists the five marinade names and does not give the recipes, so this entry is a standard Korean BBQ chicken marinade (the first one listed). The other four (Sweet & Sour, Fajita, Teriyaki, Jamaican Jerk) would need to be added as separate entries.",
+    "Mix the gochujang, light soy sauce, grated garlic and ginger, sesame oil and brown sugar into a marinade.",
+    "Coat the chicken thighs in the marinade, place in a freezer bag and freeze flat.",
+    "Thaw in the fridge, then bake, grill or pan-cook until the chicken is cooked through (internal temperature 75°C).",
+    "Serve with rice and vegetables."
+   ],
+   "title": "Freezer Chicken Marinades (Korean BBQ, Sweet & Sour, Fajita, Teriyaki, Jamaican Jerk)",
+   "withCarb": false,
+   "id": "freezer-chicken-marinades-korean-bbq-sweet-sour-fajita-teriy-ubdz",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "Shawarma",
+   "ingredients": [
+    {
+     "name": "Chicken thighs",
+     "qty": 2.1,
+     "unit": "kg"
+    },
+    {
+     "name": "Greek yogurt",
+     "qty": 200,
+     "unit": "g"
+    },
+    {
+     "name": "Olive oil",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Garlic",
+     "qty": 4,
+     "unit": "cloves"
+    },
+    {
+     "name": "Lemon juice",
+     "qty": 0.25,
+     "unit": "cup"
+    },
+    {
+     "name": "Ground coriander",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Cumin",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Cardamom",
+     "qty": 4,
+     "unit": "tsp"
+    },
+    {
+     "name": "Cayenne pepper",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Smoked paprika",
+     "qty": 4,
+     "unit": "tsp"
+    },
+    {
+     "name": "Salt",
+     "qty": 4,
+     "unit": "tsp"
+    }
+   ],
+   "kind": "main",
+   "macros": {
+    "carbs": 4,
+    "fat": 15,
+    "kcal": 367,
+    "protein": 55
+   },
+   "macrosSource": "post",
+   "protein": "Chicken thighs",
+   "servings": 8,
+   "source": "https://www.instagram.com/reel/Da5mvRLN_H3/",
+   "steps": [
+    "Combine Greek yogurt, olive oil, minced garlic, lemon juice, coriander, cumin, cardamom, cayenne, smoked paprika and salt in a large bowl to make the marinade.",
+    "Add the boneless skinless chicken thighs and toss until fully coated.",
+    "Divide into 8 portions and place in freezer bags. Marinate for 3–20 hours before cooking or freezing.",
+    "To freeze, freeze the marinated chicken raw for up to 3–4 months.",
+    "When ready to cook, thaw the chicken and cook fresh until cooked through.",
+    "Serve with rice or pita, sumac salad and a Greek yogurt dip."
+   ],
+   "title": "Freezer-Friendly Chicken Shawarma",
+   "withCarb": false,
+   "id": "freezer-friendly-chicken-shawarma-x3rk",
+   "origin": "owner-library"
+  },
+  {
+   "flavour": "Chocolate",
+   "ingredients": [
+    {
+     "name": "Eggs",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Cocoa powder",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "All-purpose flour",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Peanut butter",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Honey",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Whole milk",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "kind": "sweet",
+   "note": "From your Gemini chat, using the no-whey version from the later plan (flour or oats in place of protein powder).",
+   "protein": "Eggs",
+   "servings": 1,
+   "source": "",
+   "steps": [
+    "Whisk everything in a mug with a fork until glossy and smooth.",
+    "Microwave on high for 60–75 seconds. Stop while the centre is still slightly gooey."
+   ],
+   "title": "Fudgy Brownie Mug Cake",
+   "id": "fudgy-brownie-mug-cake",
+   "origin": "owner-library"
+  },
+  {
+   "flavour": "Cinnamon",
+   "ingredients": [
+    {
+     "name": "Eggs",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Greek yogurt",
+     "qty": 3,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Vanilla extract",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Honey",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Cinnamon",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Bread",
+     "qty": 2,
+     "unit": "slices"
+    }
+   ],
+   "kind": "sweet",
+   "note": "From your Gemini chat.",
+   "protein": "Eggs",
+   "servings": 1,
+   "source": "",
+   "steps": [
+    "Whisk eggs, yogurt, vanilla, honey and cinnamon until silky.",
+    "Press a well into the centre of each bread slice and pour the custard in.",
+    "Air fry at 175°C for 6–8 minutes."
+   ],
+   "title": "Greek Yogurt Custard Toast",
+   "id": "greek-yogurt-custard-toast",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [
+    "Oyster sauce"
+   ],
+   "flavour": "Chinese",
+   "ingredients": [
+    {
+     "name": "Beef",
+     "qty": 800,
+     "unit": "g"
+    },
+    {
+     "name": "Light soy sauce",
+     "qty": 20,
+     "unit": "ml"
+    },
+    {
+     "name": "Black pepper",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Cornstarch",
+     "qty": 20,
+     "unit": "g"
+    },
+    {
+     "name": "Baking soda",
+     "qty": 5,
+     "unit": "g"
+    },
+    {
+     "name": "Cooking spray",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Light soy sauce",
+     "qty": 60,
+     "unit": "ml"
+    },
+    {
+     "name": "Sriracha",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Oyster sauce",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Hoisin sauce",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Sweetener",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Cornstarch",
+     "qty": 5,
+     "unit": "g"
+    },
+    {
+     "name": "Rice",
+     "qty": 200,
+     "unit": "g"
+    },
+    {
+     "name": "Garlic",
+     "qty": 2,
+     "unit": "cloves"
+    },
+    {
+     "name": "Bell peppers",
+     "qty": 1,
+     "unit": "medium red"
+    },
+    {
+     "name": "Onions",
+     "qty": 1,
+     "unit": "medium white"
+    },
+    {
+     "name": "Sesame seeds",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "kind": "main",
+   "macros": {
+    "carbs": 56,
+    "fat": 10,
+    "kcal": 535,
+    "protein": 53
+   },
+   "macrosSource": "post",
+   "protein": "Beef",
+   "servings": 4,
+   "source": "https://www.instagram.com/reel/DdUeOfOSy9h/",
+   "steps": [
+    "Put the steaks in the freezer for 30 minutes to firm them up, then slice into thin strips against the grain.",
+    "Toss the beef strips with 20ml soy sauce, black pepper, 20g cornflour and baking soda.",
+    "Cook the beef in a pan on high heat with cooking spray until golden and crispy on both sides, then set aside.",
+    "Cook the rice according to the packet instructions.",
+    "Mix the glaze: 60ml soy sauce, 120ml water, sriracha, oyster sauce, hoisin and sweetener.",
+    "Stir 5g cornflour into a tbsp of water and add it to the glaze to thicken it.",
+    "Cook the garlic, red bell pepper and onion until softened, then add the glaze and simmer until thickened.",
+    "Return the beef to the pan and toss to coat in the sauce.",
+    "Divide the rice and beef into 4 meal prep boxes and garnish with sesame seeds if desired.",
+    "Store in the fridge for up to 5 days. To reheat, add a tsp of water to the box and microwave for 3 minutes until heated through, then mix with the rice."
+   ],
+   "title": "High Protein Beijing Beef Rice Bowls",
+   "withCarb": true,
+   "id": "high-protein-beijing-beef-rice-bowls-bjd6",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "Nigerian",
+   "ingredients": [
+    {
+     "name": "Bone-in goat meat",
+     "qty": 3,
+     "unit": "lb"
+    },
+    {
+     "name": "Onions",
+     "qty": 1,
+     "unit": "medium"
+    },
+    {
+     "name": "Bell peppers",
+     "qty": 1,
+     "unit": "red"
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 2,
+     "unit": "whole"
+    },
+    {
+     "name": "Garlic",
+     "qty": 4,
+     "unit": "cloves"
+    },
+    {
+     "name": "Ginger",
+     "qty": 2,
+     "unit": "inch piece"
+    },
+    {
+     "name": "Nigerian pepper soup spice",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Cameroon pepper",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Salt",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Scent leaves",
+     "qty": 1,
+     "unit": "handful"
+    },
+    {
+     "name": "Water",
+     "qty": 4,
+     "unit": "cups"
+    },
+    {
+     "name": "Beef bone broth",
+     "qty": 16.9,
+     "unit": "oz carton"
+    }
+   ],
+   "kind": "main",
+   "macros": {
+    "carbs": 8,
+    "fat": 6,
+    "kcal": 310,
+    "protein": 51
+   },
+   "macrosSource": "post",
+   "protein": "Goat meat",
+   "servings": 4,
+   "source": "https://www.instagram.com/reel/DeDGvNrsQ1B/",
+   "steps": [
+    "Add the goat meat to a large pot with the pepper soup spice, Cameroon pepper, seasoning cubes and salt.",
+    "Blend the onion, bell pepper, Scotch bonnet, garlic and ginger with a little water until smooth, then pour it over the goat.",
+    "Add enough water to cook the goat and simmer until the meat is tender. Don't rush this step, as the meat releases a lot of flavour into the broth.",
+    "Once the goat is tender, pour in the beef bone broth.",
+    "Add the scent leaves toward the end, adjust the seasoning and simmer together for a few more minutes.",
+    "Serve hot on its own, or with rice on the side for a fuller meal."
+   ],
+   "title": "High-Protein Nigerian Goat Meat Pepper Soup",
+   "withCarb": false,
+   "id": "high-protein-nigerian-goat-meat-pepper-soup-qt1g",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "Chinese",
+   "ingredients": [
+    {
+     "name": "Chicken breast",
+     "qty": 1050,
+     "unit": "g"
+    },
+    {
+     "name": "Light soy sauce",
+     "qty": 135,
+     "unit": "ml"
+    },
+    {
+     "name": "Garlic",
+     "qty": 7,
+     "unit": "cloves"
+    },
+    {
+     "name": "Black pepper",
+     "qty": 0.5,
+     "unit": "tsp"
+    },
+    {
+     "name": "Onion powder",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Potato starch",
+     "qty": 100,
+     "unit": "g"
+    },
+    {
+     "name": "Frozen mixed vegetables",
+     "qty": 500,
+     "unit": "g"
+    },
+    {
+     "name": "Eggs",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Egg whites",
+     "qty": 200,
+     "unit": "g"
+    },
+    {
+     "name": "Rice",
+     "qty": 980,
+     "unit": "g cooked"
+    },
+    {
+     "name": "Spring onions",
+     "qty": 20,
+     "unit": "g"
+    },
+    {
+     "name": "Ketchup",
+     "qty": 100,
+     "unit": "g"
+    },
+    {
+     "name": "Rice vinegar",
+     "qty": 25,
+     "unit": "ml"
+    },
+    {
+     "name": "Sesame oil",
+     "qty": 20,
+     "unit": "ml"
+    },
+    {
+     "name": "Honey",
+     "qty": 80,
+     "unit": "g"
+    }
+   ],
+   "kind": "main",
+   "macros": {
+    "carbs": 66,
+    "fat": 7,
+    "kcal": 546,
+    "protein": 51
+   },
+   "macrosSource": "post",
+   "note": "Post says 546 kcal and 51 g protein per serving. The eggs are scrambled into the rice. Cornstarch can stand in for potato starch.",
+   "protein": "Chicken",
+   "servings": 7,
+   "source": "https://www.instagram.com/reel/Ddtk9nyzBHE/",
+   "steps": [
+    "Toss the diced chicken with 35 ml soy sauce, 2 minced garlic cloves, black pepper and onion powder, then shake in a bag with the potato starch until coated.",
+    "Spread on a lined tray, spray with oil and air fry at 200°C for 14–18 minutes, flipping halfway, until crispy.",
+    "Cook the frozen vegetables in a pan, add the eggs and egg whites and scramble. Stir in the white part of the spring onion, the day-old rice and 40 ml soy sauce, then the green part.",
+    "Sauce: cook 5 minced garlic cloves briefly, add 60 ml soy sauce, 60 ml water, the ketchup and rice vinegar. Stir in 1 tsp potato starch mixed with 80 ml cold water and cook until thick.",
+    "Off the heat, add the honey and sesame oil and coat the chicken.",
+    "Divide the chicken and fried rice into 7 containers."
+   ],
+   "title": "Honey Sesame Chicken Fried Rice",
+   "withCarb": true,
+   "id": "honey-sesame-chicken-fried-rice",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [
+    "The post contains five marinades. Only the first, Korean BBQ Chicken, was converted. The Sweet & Sour Chicken marinade contains oyster sauce (seafood), so check it before converting that one."
+   ],
+   "flavour": "Korean",
+   "ingredients": [
+    {
+     "name": "Chicken breast",
+     "qty": 450,
+     "unit": "g"
+    },
+    {
+     "name": "Gochujang",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Gochugaru",
+     "qty": 1.5,
+     "unit": "tsp"
+    },
+    {
+     "name": "Light soy sauce",
+     "qty": 1.5,
+     "unit": "tsp"
+    },
+    {
+     "name": "Brown sugar",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Garlic",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Ginger",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Rice vinegar",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Sesame oil",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Black pepper",
+     "qty": 0.5,
+     "unit": "tsp"
+    }
+   ],
+   "kind": "main",
+   "protein": "Chicken breast",
+   "servings": 3,
+   "source": "",
+   "steps": [
+    "Whisk the gochujang, gochugaru, soy sauce, brown sugar (or honey), minced garlic, minced ginger, rice vinegar, sesame oil and black pepper together. Add 2 tbsp water if you want a thinner marinade.",
+    "Add the chicken and coat it well in the marinade.",
+    "Marinate in the fridge for at least 30 minutes, or freeze: put the chicken and marinade in a gallon-size freezer bag, squeeze out the air, label it with the name and date, and freeze for up to 3 months.",
+    "To cook from frozen, thaw fully first, either overnight on the bottom shelf of the fridge or in a bowl of cold water changed every 30 minutes.",
+    "Grill or air fry until the internal temperature reaches 74°C (165°F).",
+    "Serve with a starchy carb such as rice or potatoes and some vegetables."
+   ],
+   "title": "Korean BBQ Chicken (freezer marinade)",
+   "withCarb": false,
+   "id": "korean-bbq-chicken-freezer-marinade-mum9",
+   "origin": "owner-library"
+  },
+  {
+   "flavour": "Korean",
+   "ingredients": [
+    {
+     "name": "Minced beef",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Light soy sauce",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Gochujang",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Brown sugar",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Sesame oil",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Garlic",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Ginger",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Sesame seeds",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Spring onions",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "kind": "main",
+   "note": "From your Gemini plan. The amount of beef wasn't given.",
+   "protein": "Beef",
+   "servings": 4,
+   "source": "",
+   "steps": [
+    "Whisk the sauce: soy sauce, gochujang, brown sugar, sesame oil.",
+    "Heat the oil on high and sauté minced garlic and ginger.",
+    "Add the beef and brown for about 6 minutes.",
+    "Pour over the sauce and reduce until glazed, 8–10 minutes in total.",
+    "Top with sesame seeds and spring onions."
+   ],
+   "title": "Korean Sweet-Chili Minced Beef",
+   "id": "korean-sweet-chili-minced-beef",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [
+    "Oyster sauce"
+   ],
+   "flavour": "Chinese",
+   "ingredients": [
+    {
+     "name": "Chicken thighs",
+     "qty": 4,
+     "unit": "pieces"
+    },
+    {
+     "name": "Cornstarch",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Baking soda",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Salt",
+     "qty": 1,
+     "unit": "pinch"
+    },
+    {
+     "name": "Spring onions",
+     "qty": 2,
+     "unit": "stalks"
+    },
+    {
+     "name": "Garlic",
+     "qty": 4,
+     "unit": "cloves"
+    },
+    {
+     "name": "Ginger",
+     "qty": 1,
+     "unit": "inch piece"
+    },
+    {
+     "name": "Onions",
+     "qty": 1,
+     "unit": "whole"
+    },
+    {
+     "name": "Dried red chilies",
+     "qty": 10,
+     "unit": "pieces"
+    },
+    {
+     "name": "Sichuan peppercorns",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Roasted peanuts",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Light soy sauce",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Dark soy sauce",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Oyster sauce",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Chinese black vinegar",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "White sugar",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Shaoxing wine",
+     "qty": 0.5,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": null,
+     "unit": "as needed"
+    }
+   ],
+   "kind": "main",
+   "macros": {
+    "carbs": 22,
+    "fat": 32,
+    "kcal": 520,
+    "protein": 38
+   },
+   "macrosSource": "estimate",
+   "protein": "Chicken thighs",
+   "servings": 2,
+   "source": "https://www.instagram.com/p/Dd5M_folN_a/",
+   "steps": [
+    "Cube chicken into 1-inch pieces. Mix with 1 tbsp cornstarch, baking soda, and salt. Rest 15 min.",
+    "Chop spring onions, garlic, ginger, and onion. Cut dried chilies and remove most seeds.",
+    "Heat oil in a wok until lightly smoking. Add chicken in one layer and leave untouched 2-3 min to develop a crust.",
+    "Toss and cook until about 90% done. Remove and set aside.",
+    "Roast peanuts in a little oil until golden. Set aside.",
+    "Add a little oil, then Sichuan peppercorns and dried chilies. Add onion, spring onions, ginger, and garlic. Stir-fry until fragrant.",
+    "Add chicken and peanuts back to the wok and toss.",
+    "Add light soy, dark soy, oyster sauce, black vinegar, and sugar. Toss until evenly coated.",
+    "Mix 1 tbsp cornstarch with 2 tbsp water, add the slurry and toss until the sauce thickens.",
+    "Finish with Shaoxing wine. Toss briefly until fragrant, then serve."
+   ],
+   "title": "Kung Pao Chicken",
+   "withCarb": false,
+   "id": "kung-pao-chicken-p5km",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "Nigerian",
+   "ingredients": [
+    {
+     "name": "Chicken breast",
+     "qty": 1.5,
+     "unit": "kg"
+    },
+    {
+     "name": "All-purpose chicken seasoning",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Garlic powder",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Black pepper",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Salt",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 3,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Rice",
+     "qty": 600,
+     "unit": "g"
+    },
+    {
+     "name": "Water",
+     "qty": 1.2,
+     "unit": "litres"
+    },
+    {
+     "name": "Sweet potatoes",
+     "qty": 800,
+     "unit": "g"
+    },
+    {
+     "name": "Bell peppers",
+     "qty": 3,
+     "unit": "whole"
+    },
+    {
+     "name": "Onions",
+     "qty": 2,
+     "unit": "whole"
+    },
+    {
+     "name": "Spinach",
+     "qty": 300,
+     "unit": "g"
+    },
+    {
+     "name": "Tomatoes",
+     "qty": 4,
+     "unit": "whole"
+    },
+    {
+     "name": "Garlic",
+     "qty": 6,
+     "unit": "cloves"
+    },
+    {
+     "name": "Olive oil",
+     "qty": 2,
+     "unit": "tbsp"
+    }
+   ],
+   "kind": "main",
+   "note": "The post didn't spell out the full recipe, so Claude filled in a standard version. Check the amounts.",
+   "protein": "Chicken breast",
+   "servings": 6,
+   "source": "https://www.instagram.com/reel/DcMGZQOxuyc/",
+   "steps": [
+    "Heat the oven to 200°C. Chop all vegetables and the sweet potatoes first so every component is ready to cook.",
+    "Cut the chicken breast into even pieces or strips. Toss with chicken seasoning, garlic powder, black pepper, salt and vegetable oil.",
+    "Spread the sweet potatoes on one tray and the chicken on another. Roast the sweet potatoes about 25 to 30 minutes and the chicken about 18 to 22 minutes, until cooked through (74°C inside).",
+    "While the oven works, rinse the rice and cook it in the water until tender and fluffy.",
+    "Saute the onions, bell peppers and garlic in olive oil until softened. Add the tomatoes and cook down into a simple sauce, then wilt in the spinach.",
+    "Cool every component completely, then store each one separately in airtight containers (chicken, rice, sweet potatoes, cooked vegetables).",
+    "Keep in the fridge up to 4 days. Each night, mix and match components into a bowl, plate or wrap and reheat until piping hot."
+   ],
+   "title": "One-Hour Component Meal Prep (Fridge Set-Up Like a Restaurant)",
+   "withCarb": true,
+   "id": "one-hour-component-meal-prep-fridge-set-up-like-a-restaurant-qt36",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "BBQ",
+   "ingredients": [
+    {
+     "name": "Beef",
+     "qty": 2,
+     "unit": "racks beef back ribs"
+    },
+    {
+     "name": "Garlic powder",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Sweet paprika",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Black pepper",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 1,
+     "unit": "tbsp beef bouillon powder"
+    },
+    {
+     "name": "Mustard",
+     "qty": 0.25,
+     "unit": "cup"
+    },
+    {
+     "name": "Ketchup",
+     "qty": 0.25,
+     "unit": "cup"
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": "to sprinkle"
+    },
+    {
+     "name": "Worcestershire sauce",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "BBQ sauce",
+     "qty": null,
+     "unit": "for brushing"
+    },
+    {
+     "name": "Butter",
+     "qty": 6,
+     "unit": "tbsp unsalted"
+    }
+   ],
+   "kind": "main",
+   "protein": "Beef",
+   "servings": 4,
+   "source": "https://www.instagram.com/reel/Dcbt7fSJTLR/",
+   "steps": [
+    "Preheat the oven to 425°F (about 220°C).",
+    "Mix the garlic powder, paprika, black pepper and beef bouillon powder into a rub.",
+    "Coat the ribs with the mustard, ketchup and Worcestershire sauce, then season with the rub and sprinkle with salt.",
+    "Place the ribs on a baking tray and brush with BBQ sauce, then top with 6 tbsp unsalted butter.",
+    "Put 3 cups of water in a separate container in the oven to keep the environment moist.",
+    "Bake at 425°F (about 220°C) for 3 hours.",
+    "Broil on high for 3 minutes to finish.",
+    "Rest briefly, then slice and serve."
+   ],
+   "title": "Oven-Baked Beef Ribs",
+   "withCarb": false,
+   "id": "oven-baked-beef-ribs-2ejg",
+   "origin": "owner-library"
+  },
+  {
+   "flavour": "Peanut butter",
+   "ingredients": [
+    {
+     "name": "Rolled oats",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Whole milk",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Peanut butter",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Bananas",
+     "qty": 1,
+     "unit": ""
+    },
+    {
+     "name": "Honey",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "kind": "sweet",
+   "note": "Gemini's everyday breakfast base. It gave no amounts for the oats or milk.",
+   "protein": "Oats",
+   "servings": 1,
+   "source": "",
+   "steps": [
+    "Cook the oats in whole milk.",
+    "Stir in peanut butter, top with sliced banana and honey."
+   ],
+   "title": "Peanut Butter Banana Oats",
+   "id": "peanut-butter-banana-oats",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "American",
+   "ingredients": [
+    {
+     "name": "Beef",
+     "qty": 1.5,
+     "unit": "pounds"
+    },
+    {
+     "name": "Olive oil",
+     "qty": 3,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Sweet paprika",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Garlic powder",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Onions",
+     "qty": 1,
+     "unit": "whole, sliced"
+    },
+    {
+     "name": "Bell peppers",
+     "qty": 2,
+     "unit": "whole, sliced (1 green, 1 red)"
+    },
+    {
+     "name": "Salt",
+     "qty": 1.5,
+     "unit": "tsp"
+    },
+    {
+     "name": "Black pepper",
+     "qty": null,
+     "unit": "to taste"
+    },
+    {
+     "name": "Provolone cheese",
+     "qty": null,
+     "unit": "to melt into sandwiches"
+    }
+   ],
+   "kind": "main",
+   "protein": "Beef",
+   "servings": 4,
+   "source": "https://www.instagram.com/reel/Dbd5Sscp6Uj/",
+   "steps": [
+    "Slice the beef thinly against the grain. Ribeye is the original choice, and sirloin is a cheaper option.",
+    "Slice the onion, green bell pepper and red bell pepper.",
+    "Combine the beef, olive oil, paprika, garlic powder, salt and black pepper in a freezer bag.",
+    "Add the sliced onion and bell peppers to the bag, seal, and freeze flat.",
+    "On the morning of cooking day, move the bag from the freezer to thaw.",
+    "Cook the beef, onion and peppers in a hot pan until the beef is browned and the vegetables are tender.",
+    "Melt provolone over the cooked mixture and serve in sandwiches."
+   ],
+   "title": "Philly Cheesesteak (freezer marinade beef)",
+   "withCarb": false,
+   "id": "philly-cheesesteak-freezer-marinade-beef-k22h",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "Sweet chili",
+   "ingredients": [
+    {
+     "name": "Chicken breast",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Garlic powder",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Ginger powder",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Pineapple juice",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Pineapple slices",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Ketchup",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Light soy sauce",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Sweet chili sauce",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Bell peppers",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Garlic",
+     "qty": null,
+     "unit": "minced"
+    },
+    {
+     "name": "Cameroon pepper",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "kind": "main",
+   "note": "The post didn't spell out the full recipe, so Claude filled in a standard version. Check the amounts.",
+   "protein": "Chicken",
+   "servings": 4,
+   "source": "https://www.instagram.com/reel/Dc0Vqjmt5bR/",
+   "steps": [
+    "Cut the chicken into bite-sized pieces and season with salt, crumbled seasoning cube, garlic powder and ginger powder.",
+    "Heat the vegetable oil in a pan and cook the chicken until browned and cooked through. Remove and set aside.",
+    "In the same pan, sauté the minced garlic and onions until soft and fragrant.",
+    "Add the bell peppers and cook briefly so they stay slightly crisp.",
+    "Stir in the pineapple juice, ketchup, soy sauce and sweet chili sauce. Add the Cameroon pepper and simmer until the sauce thickens slightly.",
+    "Return the chicken to the pan, add the pineapple slices, and toss until coated and heated through.",
+    "Adjust salt and heat to taste, then serve."
+   ],
+   "title": "Pineapple Chicken Sauce",
+   "withCarb": false,
+   "id": "pineapple-chicken-sauce-d6je",
+   "origin": "owner-library"
+  },
+  {
+   "flavour": "Nigerian",
+   "ingredients": [
+    {
+     "name": "Brown beans (oloyin)",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Palm oil",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "kind": "main",
+   "note": "From your Gemini plan. Gemini didn't give amounts, so those are blank. Fill them in after your first cook.",
+   "protein": "Beans",
+   "servings": 5,
+   "source": "",
+   "steps": [
+    "Add washed beans, water, chopped onions and palm oil to a pot.",
+    "Simmer on medium-low, hands-off, for 45–60 minutes until soft.",
+    "Season and portion into containers."
+   ],
+   "title": "Rich Honey Beans",
+   "id": "rich-honey-beans",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [],
+   "flavour": "Suya",
+   "ingredients": [
+    {
+     "name": "Beef",
+     "qty": 600,
+     "unit": "g"
+    },
+    {
+     "name": "Salt",
+     "qty": 0.5,
+     "unit": "tsp"
+    },
+    {
+     "name": "Onions",
+     "qty": 1,
+     "unit": "handful, sliced"
+    },
+    {
+     "name": "Curry powder",
+     "qty": 0.5,
+     "unit": "tsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 1,
+     "unit": "cube (beef)"
+    },
+    {
+     "name": "Dried thyme",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": null,
+     "unit": "for frying or air-frying"
+    },
+    {
+     "name": "Tomatoes",
+     "qty": 300,
+     "unit": "g"
+    },
+    {
+     "name": "Bell peppers",
+     "qty": 250,
+     "unit": "g"
+    },
+    {
+     "name": "Onions",
+     "qty": 0.5,
+     "unit": "red onion"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": null,
+     "unit": "for drizzling if roasting"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 60,
+     "unit": "ml"
+    },
+    {
+     "name": "Onions",
+     "qty": 1,
+     "unit": "medium, chopped"
+    },
+    {
+     "name": "Tomato paste",
+     "qty": 170,
+     "unit": "g"
+    },
+    {
+     "name": "Suya spice (yaji)",
+     "qty": null,
+     "unit": "to taste"
+    },
+    {
+     "name": "Salt",
+     "qty": 1.25,
+     "unit": "tsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 0.5,
+     "unit": "tsp crushed"
+    },
+    {
+     "name": "Dried thyme",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Bay leaf",
+     "qty": 1,
+     "unit": "leaf"
+    },
+    {
+     "name": "Curry powder",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Beef bone broth",
+     "qty": 240,
+     "unit": "ml (beef or chicken stock)"
+    },
+    {
+     "name": "Rice",
+     "qty": 600,
+     "unit": "g (sella basmati)"
+    },
+    {
+     "name": "Cabbage",
+     "qty": null,
+     "unit": "finely shredded, to taste"
+    },
+    {
+     "name": "Onions",
+     "qty": null,
+     "unit": "sliced, to taste"
+    },
+    {
+     "name": "Tomatoes",
+     "qty": null,
+     "unit": "firm, sliced, to taste"
+    },
+    {
+     "name": "Beef",
+     "qty": 454,
+     "unit": "g (ribeye steak)"
+    },
+    {
+     "name": "Beef",
+     "qty": 454,
+     "unit": "g (New York strip steak)"
+    },
+    {
+     "name": "Suya spice (yaji)",
+     "qty": 4,
+     "unit": "tbsp, plus extra for sprinkling"
+    },
+    {
+     "name": "Salt",
+     "qty": 0.5,
+     "unit": "tsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 0.5,
+     "unit": "tsp crushed beef"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": null,
+     "unit": "enough to lightly coat the beef"
+    },
+    {
+     "name": "Skewers",
+     "qty": null,
+     "unit": "wooden or metal"
+    }
+   ],
+   "kind": "main",
+   "protein": "Beef",
+   "servings": 6,
+   "source": "https://www.instagram.com/reel/DeFUjuRP9EW/",
+   "steps": [
+    "Optional beef and stock: season the 600 g beef with salt, sliced onion, curry powder, crumbled beef bouillon cube and thyme. Add ½ to 1 cup water and cook until tender, then fry or air-fry in a little oil. Reserve the stock for the rice.",
+    "Pepper mix: blend or roast the tomatoes, red bell peppers and ½ red onion (drizzle with oil if roasting), then cook down to a reduced pepper mix.",
+    "Rice base: heat ¼ cup oil, fry the chopped onion, then add the tomato paste and cook it down.",
+    "Stir in ¾ to 1 cup reduced pepper mix, suya spice, salt, crushed bouillon, thyme, bay leaf and curry powder, and cook until thick.",
+    "Add 1 cup stock and 1 cup water and bring to a boil. Add the washed sella basmati rice, adding more water as needed, cover and cook until the rice is tender.",
+    "Beef suya: coat the ribeye and New York strip steaks with 4 tbsp suya spice, salt, crushed beef bouillon and enough oil to lightly coat. Thread onto skewers.",
+    "Cook the skewers (grill, pan or air-fry) to desired doneness and sprinkle with extra suya spice.",
+    "Serve the rice with the beef suya, finely shredded cabbage, sliced onion and sliced firm fresh tomatoes."
+   ],
+   "title": "Suya Jollof Rice with Beef Suya",
+   "withCarb": true,
+   "id": "suya-jollof-rice-with-beef-suya-npq6",
+   "origin": "owner-library"
+  },
+  {
+   "flavour": "Vanilla",
+   "ingredients": [
+    {
+     "name": "Eggs",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Whole milk",
+     "qty": 0.5,
+     "unit": "cup"
+    },
+    {
+     "name": "Sweetened condensed milk",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Vanilla extract",
+     "qty": 1,
+     "unit": "tsp"
+    }
+   ],
+   "kind": "sweet",
+   "note": "From your Gemini chat. Gemini estimated about 18–20 g protein.",
+   "protein": "Eggs",
+   "servings": 1,
+   "source": "",
+   "steps": [
+    "Whisk eggs, milk, vanilla and condensed milk until fully smooth. Strain for a glassy texture.",
+    "Microwave at 50% power for 2–2.5 minutes until just set with a slight jiggle.",
+    "Chill 20 minutes, or eat warm."
+   ],
+   "title": "Vanilla-Caramel Flan Cup",
+   "id": "vanilla-caramel-flan-cup",
+   "origin": "owner-library"
+  },
+  {
+   "flags": [
+    "Oyster sauce"
+   ],
+   "flavour": "Vietnamese",
+   "ingredients": [
+    {
+     "name": "Beef",
+     "qty": 500,
+     "unit": "g"
+    },
+    {
+     "name": "Light soy sauce",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Oyster sauce",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Oyster sauce",
+     "qty": 1,
+     "unit": "tbsp (optional, for deglazing)"
+    },
+    {
+     "name": "Garlic",
+     "qty": 4,
+     "unit": "cloves"
+    },
+    {
+     "name": "Cornstarch",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Butter",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Onions",
+     "qty": 1,
+     "unit": "whole"
+    },
+    {
+     "name": "Bell peppers",
+     "qty": 1,
+     "unit": "green"
+    },
+    {
+     "name": "Rice",
+     "qty": 1,
+     "unit": "cup"
+    },
+    {
+     "name": "Watercress",
+     "qty": null,
+     "unit": "for side salad"
+    },
+    {
+     "name": "Cucumbers",
+     "qty": null,
+     "unit": "for side salad"
+    },
+    {
+     "name": "Tomatoes",
+     "qty": null,
+     "unit": "for side salad"
+    }
+   ],
+   "kind": "main",
+   "macros": {
+    "carbs": 0,
+    "fat": 0,
+    "kcal": 761,
+    "protein": 58
+   },
+   "macrosSource": "post",
+   "protein": "Beef",
+   "servings": 2,
+   "source": "https://www.instagram.com/reel/Dd6hmsEodlV/",
+   "steps": [
+    "Cut the steak into roughly 1 inch cubes and marinate with the soy sauce, oyster sauce, minced garlic and cornstarch (not the butter).",
+    "Let the beef marinate briefly while you prep the vegetables and cook the rice.",
+    "Cook the beef in a hot pan for 3-4 minutes until medium rare, then remove and set aside.",
+    "Add the onion and bell pepper to the pan and cook until soft. Add an extra tablespoon of oyster sauce and a little water if needed to deglaze the beef residue.",
+    "Return the beef to the pan and add the butter to bring everything together.",
+    "Serve over white jasmine rice with a side salad of watercress, cucumber and tomato."
+   ],
+   "title": "Vietnamese Shaken Beef",
+   "withCarb": true,
+   "id": "vietnamese-shaken-beef-i2bf",
+   "origin": "owner-library"
+  },
+  {
+   "id": "party-jollof-rice-chicken",
+   "title": "Party Jollof Rice with Chicken",
+   "kind": "main",
+   "protein": "Chicken",
+   "flavour": "Nigerian",
+   "servings": 6,
+   "withCarb": true,
+   "credit": {
+    "name": "TSpices Kitchen",
+    "url": "https://www.instagram.com/tspices_kitchen/"
+   },
+   "ingredients": [
+    {
+     "name": "Chicken thighs",
+     "qty": 1.2,
+     "unit": "kg"
+    },
+    {
+     "name": "Rice",
+     "qty": 750,
+     "unit": "g"
+    },
+    {
+     "name": "Tatashe",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Tomatoes",
+     "qty": 5,
+     "unit": ""
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Tomato paste",
+     "qty": 140,
+     "unit": "g"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 150,
+     "unit": "ml"
+    },
+    {
+     "name": "Curry powder",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Dried thyme",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Bay leaf",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Season the chicken with curry, thyme, 2 seasoning cubes, salt and half an onion. Boil with a cup of water for 20 minutes, keep the stock, then air fry or grill the chicken until browned.",
+    "Blend the tatashe, tomatoes, scotch bonnet and 2 onions until smooth.",
+    "Heat the oil, fry the remaining sliced onion, then fry the tomato paste for 5 minutes until it darkens.",
+    "Add the blended pepper and cook on medium heat, stirring now and then, for 25–30 minutes until the oil rises to the top.",
+    "Add the chicken stock, bay leaves, remaining seasoning and salt. Wash the rice until the water runs clear and stir it in.",
+    "Cover with foil and the lid and cook on low heat for 30–35 minutes, adding a splash of water only if it starts to stick. Let the bottom catch slightly for the party flavour.",
+    "Cool, then portion with the chicken."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "nigerian-fried-rice-chicken",
+   "title": "Nigerian Fried Rice with Chicken",
+   "kind": "main",
+   "protein": "Chicken",
+   "flavour": "Nigerian",
+   "servings": 6,
+   "withCarb": true,
+   "credit": {
+    "name": "TSpices Kitchen",
+    "url": "https://www.instagram.com/tspices_kitchen/"
+   },
+   "ingredients": [
+    {
+     "name": "Chicken breast",
+     "qty": 1,
+     "unit": "kg"
+    },
+    {
+     "name": "Rice",
+     "qty": 750,
+     "unit": "g"
+    },
+    {
+     "name": "Frozen mixed vegetables",
+     "qty": 400,
+     "unit": "g"
+    },
+    {
+     "name": "Carrots",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Spring onions",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": 1,
+     "unit": ""
+    },
+    {
+     "name": "Curry powder",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Dried thyme",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 60,
+     "unit": "ml"
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Season the chicken with curry, thyme, 2 seasoning cubes and salt. Boil for 15 minutes in a little water, keep the stock, then dice the chicken.",
+    "Parboil the rice in the chicken stock with 1 tsp curry until just tender and the liquid is gone. Spread it out to cool so the grains stay separate.",
+    "Heat the oil in batches. Stir-fry onion, carrots and mixed vegetables for 3 minutes, then add a portion of rice and chicken.",
+    "Season with the remaining cubes and salt, toss on high heat for 3–4 minutes, and finish with spring onions.",
+    "Repeat until all the rice is fried, then cool and portion."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "efo-riro-beef",
+   "title": "Efo Riro with Beef",
+   "kind": "main",
+   "protein": "Beef",
+   "flavour": "Nigerian",
+   "servings": 5,
+   "withCarb": false,
+   "credit": {
+    "name": "TSpices Kitchen",
+    "url": "https://www.instagram.com/tspices_kitchen/"
+   },
+   "ingredients": [
+    {
+     "name": "Beef",
+     "qty": 800,
+     "unit": "g"
+    },
+    {
+     "name": "Spinach",
+     "qty": 800,
+     "unit": "g"
+    },
+    {
+     "name": "Tatashe",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Palm oil",
+     "qty": 120,
+     "unit": "ml"
+    },
+    {
+     "name": "Locust beans (iru)",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Ground crayfish",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Season and boil the beef with an onion, 2 cubes and salt until tender, about 40 minutes. Keep the stock.",
+    "Blend the tatashe, scotch bonnet and the second onion coarsely, then boil it down in a dry pot until most of the water is gone.",
+    "Chop the spinach, blanch it in hot water for a minute, then squeeze out as much water as you can.",
+    "Heat the palm oil for 2 minutes, fry the locust beans briefly, then add the reduced pepper and fry for 10 minutes.",
+    "Add the beef, a little stock, the crayfish and the last cube. Simmer for 5 minutes.",
+    "Stir in the spinach, cook for 3 minutes, and adjust the salt. Cool and portion."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "egusi-soup-beef",
+   "title": "Egusi Soup with Beef",
+   "kind": "main",
+   "protein": "Beef",
+   "flavour": "Nigerian",
+   "servings": 6,
+   "withCarb": false,
+   "credit": {
+    "name": "TSpices Kitchen",
+    "url": "https://www.instagram.com/tspices_kitchen/"
+   },
+   "ingredients": [
+    {
+     "name": "Beef",
+     "qty": 1,
+     "unit": "kg"
+    },
+    {
+     "name": "Ground egusi",
+     "qty": 300,
+     "unit": "g"
+    },
+    {
+     "name": "Palm oil",
+     "qty": 150,
+     "unit": "ml"
+    },
+    {
+     "name": "Ugu",
+     "qty": 200,
+     "unit": "g"
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Locust beans (iru)",
+     "qty": 1,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Ground crayfish",
+     "qty": 3,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Season and boil the beef with an onion, 2 cubes and salt until tender. Keep about 1 litre of stock.",
+    "Mix the ground egusi with a little water and the second onion, blended, into a thick paste.",
+    "Heat the palm oil, add the locust beans, then spoon in the egusi paste in lumps. Fry on low heat for 10 minutes, stirring gently.",
+    "Add the stock, beef, blended scotch bonnet, crayfish and remaining cubes. Simmer for 15 minutes.",
+    "Add the sliced ugu, simmer for 3 minutes, and adjust the salt. Serve with garri, semo or rice."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "ayamase-ofada-stew",
+   "title": "Ayamase (Ofada Stew) with Beef",
+   "kind": "main",
+   "protein": "Beef",
+   "flavour": "Nigerian",
+   "servings": 6,
+   "withCarb": false,
+   "ingredients": [
+    {
+     "name": "Beef",
+     "qty": 1,
+     "unit": "kg"
+    },
+    {
+     "name": "Green bell peppers",
+     "qty": 6,
+     "unit": ""
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 5,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Palm oil",
+     "qty": 200,
+     "unit": "ml"
+    },
+    {
+     "name": "Locust beans (iru)",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Ground crayfish",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Season and boil the beef until tender, then cut it into small pieces and fry or air fry until browned.",
+    "Blend the green peppers, scotch bonnet and one onion coarsely, then boil it in a dry pot until the water is gone.",
+    "Bleach the palm oil: heat it in a covered pot on low heat with good ventilation for 10–15 minutes until it turns clear. Let it cool slightly.",
+    "Fry the second onion, sliced, and the locust beans in the oil, then add the reduced pepper and fry for 20 minutes, stirring often.",
+    "Add the beef, crayfish, seasoning and salt and fry for another 10 minutes. Serve with ofada or regular rice."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "nigerian-chicken-stew",
+   "title": "Nigerian Chicken Stew",
+   "kind": "main",
+   "protein": "Chicken",
+   "flavour": "Nigerian",
+   "servings": 6,
+   "withCarb": false,
+   "ingredients": [
+    {
+     "name": "Chicken thighs",
+     "qty": 1.5,
+     "unit": "kg"
+    },
+    {
+     "name": "Tomatoes",
+     "qty": 8,
+     "unit": ""
+    },
+    {
+     "name": "Tatashe",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Tomato paste",
+     "qty": 70,
+     "unit": "g"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 150,
+     "unit": "ml"
+    },
+    {
+     "name": "Curry powder",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Dried thyme",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Bay leaf",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Season the chicken with curry, thyme, 2 cubes, salt and an onion. Boil for 20 minutes, keep the stock, then air fry until golden.",
+    "Blend the tomatoes, tatashe, scotch bonnet and an onion, then boil it down until thick.",
+    "Fry the last onion and the tomato paste in the oil for 5 minutes, add the reduced pepper and fry for 20–25 minutes until the oil floats.",
+    "Add the stock, bay leaves, chicken and remaining seasoning. Simmer for 10 minutes.",
+    "Serve with rice, yam, plantain or spaghetti. Keeps 4 days in the fridge and freezes well."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "nigerian-chicken-curry-sauce",
+   "title": "Nigerian Chicken Curry Sauce",
+   "kind": "main",
+   "protein": "Chicken",
+   "flavour": "Curry",
+   "servings": 5,
+   "withCarb": false,
+   "ingredients": [
+    {
+     "name": "Chicken breast",
+     "qty": 1,
+     "unit": "kg"
+    },
+    {
+     "name": "Carrots",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Green peas",
+     "qty": 150,
+     "unit": "g"
+    },
+    {
+     "name": "Potatoes",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": 1,
+     "unit": ""
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 1,
+     "unit": ""
+    },
+    {
+     "name": "Curry powder",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Dried thyme",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Cornstarch",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Cut the chicken into cubes and season with 1 tbsp curry, thyme, a cube and salt. Simmer in 700 ml water for 15 minutes.",
+    "Fry the onion in the oil, add the remaining curry and cook for a minute so it blooms.",
+    "Add the diced potatoes, carrots, chicken and its stock, the chopped scotch bonnet and the last cubes. Simmer for 12 minutes.",
+    "Add the peas. Mix the cornstarch with 4 tbsp cold water and stir it in until the sauce thickens.",
+    "Serve with white rice."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "asaro-yam-porridge",
+   "title": "Asaro (Yam Porridge)",
+   "kind": "main",
+   "protein": "Yam",
+   "flavour": "Nigerian",
+   "servings": 4,
+   "withCarb": true,
+   "ingredients": [
+    {
+     "name": "Yam",
+     "qty": 1.2,
+     "unit": "kg"
+    },
+    {
+     "name": "Palm oil",
+     "qty": 80,
+     "unit": "ml"
+    },
+    {
+     "name": "Tatashe",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": 1,
+     "unit": ""
+    },
+    {
+     "name": "Ground crayfish",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Ugu",
+     "qty": 100,
+     "unit": "g"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Peel the yam, cut it into chunks and wash it.",
+    "Blend the tatashe, scotch bonnet and onion.",
+    "Cook the yam in just enough water to cover it with the blended pepper, palm oil, crayfish and cubes for 15–20 minutes until soft.",
+    "Mash about a third of the yam into the liquid to thicken it, add the sliced ugu and adjust the salt.",
+    "Pair it with a protein such as peppered turkey or chicken stew."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "peppered-turkey-wings",
+   "title": "Peppered Turkey Wings (Air Fryer)",
+   "kind": "main",
+   "protein": "Turkey",
+   "flavour": "Peppered",
+   "servings": 5,
+   "withCarb": false,
+   "ingredients": [
+    {
+     "name": "Turkey wings",
+     "qty": 1.5,
+     "unit": "kg"
+    },
+    {
+     "name": "Tatashe",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Garlic",
+     "qty": 4,
+     "unit": "cloves"
+    },
+    {
+     "name": "Ginger",
+     "qty": 1,
+     "unit": "thumb"
+    },
+    {
+     "name": "Dried thyme",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Curry powder",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 3,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Cut the turkey into pieces and season with garlic, ginger, thyme, curry, 2 cubes, salt and an onion. Boil for 30–35 minutes until tender.",
+    "Air fry the turkey at 200°C for 12–15 minutes, turning once, until the skin crisps.",
+    "Blend the tatashe, scotch bonnet and the second onion coarsely. Fry in the oil for 10 minutes with a splash of the stock and the last cube.",
+    "Toss the turkey in the pepper sauce. Serve with rice, plantain or yam."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "gizdodo",
+   "title": "Gizdodo (Peppered Gizzard and Plantain)",
+   "kind": "main",
+   "protein": "Gizzard",
+   "flavour": "Peppered",
+   "servings": 4,
+   "withCarb": true,
+   "ingredients": [
+    {
+     "name": "Chicken gizzards",
+     "qty": 800,
+     "unit": "g"
+    },
+    {
+     "name": "Plantain",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Tatashe",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Curry powder",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Dried thyme",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 4,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Wash and boil the gizzards with curry, thyme, an onion, 2 cubes and salt for 30 minutes until tender. Cut into pieces.",
+    "Cube the ripe plantain and air fry at 200°C for 12–14 minutes until golden.",
+    "Air fry the gizzards for 8 minutes to firm them up.",
+    "Blend the tatashe, scotch bonnet and the second onion coarsely, then fry in the oil for 10 minutes with the last cube.",
+    "Toss the gizzards and plantain in the sauce."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "red-red-plantain",
+   "title": "Ghanaian Red Red with Plantain",
+   "kind": "main",
+   "protein": "Beans",
+   "flavour": "Ghanaian",
+   "servings": 5,
+   "withCarb": true,
+   "ingredients": [
+    {
+     "name": "Black-eyed beans",
+     "qty": 500,
+     "unit": "g"
+    },
+    {
+     "name": "Plantain",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Palm oil",
+     "qty": 100,
+     "unit": "ml"
+    },
+    {
+     "name": "Tomatoes",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Ginger",
+     "qty": 1,
+     "unit": "thumb"
+    },
+    {
+     "name": "Garlic",
+     "qty": 3,
+     "unit": "cloves"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Pick and wash the beans, then boil for 45–60 minutes until soft but whole.",
+    "Fry the chopped onions, garlic and ginger in the palm oil for 5 minutes.",
+    "Add the blended tomatoes and scotch bonnet and fry for 15 minutes.",
+    "Fold in the beans with the seasoning and simmer for 10 minutes, mashing a few to thicken.",
+    "Air fry the plantain at 200°C for 12–14 minutes and serve on the side."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "jamaican-curry-goat",
+   "title": "Jamaican-Style Curry Goat",
+   "kind": "main",
+   "protein": "Goat meat",
+   "flavour": "Caribbean",
+   "servings": 6,
+   "withCarb": false,
+   "ingredients": [
+    {
+     "name": "Bone-in goat meat",
+     "qty": 1.5,
+     "unit": "kg"
+    },
+    {
+     "name": "Curry powder",
+     "qty": 3,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Onions",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Garlic",
+     "qty": 5,
+     "unit": "cloves"
+    },
+    {
+     "name": "Ginger",
+     "qty": 1,
+     "unit": "thumb"
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 1,
+     "unit": ""
+    },
+    {
+     "name": "Dried thyme",
+     "qty": 2,
+     "unit": "tsp"
+    },
+    {
+     "name": "Potatoes",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Spring onions",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 3,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Rub the goat with 2 tbsp curry, garlic, ginger, thyme, onion and salt. Leave for at least an hour, or overnight in the fridge.",
+    "Heat the oil, toast the remaining curry for 30 seconds, then brown the goat in batches.",
+    "Add water to cover, the whole scotch bonnet (don't burst it unless you want the heat) and the cubes. Simmer covered for 1.5–2 hours until tender.",
+    "Add the cubed potatoes for the last 25 minutes so they thicken the sauce. Finish with spring onions.",
+    "Serve with rice or rice and beans."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "spaghetti-jollof-minced-beef",
+   "title": "Spaghetti Jollof with Minced Beef",
+   "kind": "main",
+   "protein": "Beef",
+   "flavour": "Nigerian",
+   "servings": 5,
+   "withCarb": true,
+   "ingredients": [
+    {
+     "name": "Spaghetti",
+     "qty": 500,
+     "unit": "g"
+    },
+    {
+     "name": "Minced beef",
+     "qty": 600,
+     "unit": "g"
+    },
+    {
+     "name": "Tatashe",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Tomatoes",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Tomato paste",
+     "qty": 70,
+     "unit": "g"
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 60,
+     "unit": "ml"
+    },
+    {
+     "name": "Curry powder",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Dried thyme",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Brown the minced beef with an onion, curry, thyme and a cube. Set aside.",
+    "Fry the tomato paste in the oil for 5 minutes, add the blended tatashe, tomatoes, scotch bonnet and onion, and fry for 20 minutes.",
+    "Add 600 ml water and the remaining seasoning and bring to the boil.",
+    "Break in the spaghetti and cook covered on low heat for 12–15 minutes, stirring once or twice, until the liquid is absorbed.",
+    "Stir the beef back through, cool and portion."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "moi-moi",
+   "title": "Moi Moi (Steamed Bean Pudding)",
+   "kind": "sweet",
+   "protein": "Beans",
+   "flavour": "Nigerian",
+   "servings": 8,
+   "withCarb": false,
+   "ingredients": [
+    {
+     "name": "Peeled beans (for moi moi)",
+     "qty": 500,
+     "unit": "g"
+    },
+    {
+     "name": "Tatashe",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Onions",
+     "qty": 1,
+     "unit": ""
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 100,
+     "unit": "ml"
+    },
+    {
+     "name": "Ground crayfish",
+     "qty": 2,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Eggs",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "Seasoning cubes",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Soak the peeled beans for at least 2 hours, or buy them already peeled.",
+    "Blend the beans with the tatashe, scotch bonnet and onion and enough warm water to make a smooth, pourable batter.",
+    "Whisk in the oil, crayfish, seasoning and salt. Beat the eggs in raw so they disappear into the batter.",
+    "Pour into greased ramekins or foil cups, cover, and steam for 45–50 minutes until set.",
+    "Freezes well. Microwave from the fridge for breakfast."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "akara-and-pap",
+   "title": "Akara with Pap",
+   "kind": "sweet",
+   "protein": "Beans",
+   "flavour": "Nigerian",
+   "servings": 4,
+   "withCarb": false,
+   "ingredients": [
+    {
+     "name": "Peeled beans (for moi moi)",
+     "qty": 300,
+     "unit": "g"
+    },
+    {
+     "name": "Onions",
+     "qty": 1,
+     "unit": ""
+    },
+    {
+     "name": "Scotch bonnet (rodo)",
+     "qty": 1,
+     "unit": ""
+    },
+    {
+     "name": "Vegetable oil",
+     "qty": 500,
+     "unit": "ml"
+    },
+    {
+     "name": "Pap (ogi)",
+     "qty": 300,
+     "unit": "g"
+    },
+    {
+     "name": "Evaporated milk",
+     "qty": 1,
+     "unit": "tin"
+    },
+    {
+     "name": "White sugar",
+     "qty": null,
+     "unit": ""
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": ""
+    }
+   ],
+   "steps": [
+    "Blend the soaked, peeled beans with very little water into a thick paste. Whisk hard for 3 minutes to add air.",
+    "Stir in the chopped onion, scotch bonnet and salt.",
+    "Deep fry spoonfuls in hot oil until golden, about 4 minutes. Akara reheats best in the air fryer at 180°C for 4 minutes.",
+    "For the pap, mix the ogi with a little cold water, then pour in boiling water while stirring until it thickens. Add milk and sugar to taste."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "nigerian-pancakes",
+   "title": "Nigerian Pancakes",
+   "kind": "sweet",
+   "protein": "Eggs",
+   "flavour": "Nutmeg",
+   "servings": 4,
+   "withCarb": false,
+   "ingredients": [
+    {
+     "name": "All-purpose flour",
+     "qty": 250,
+     "unit": "g"
+    },
+    {
+     "name": "Eggs",
+     "qty": 3,
+     "unit": ""
+    },
+    {
+     "name": "Evaporated milk",
+     "qty": 200,
+     "unit": "ml"
+    },
+    {
+     "name": "White sugar",
+     "qty": 3,
+     "unit": "tbsp"
+    },
+    {
+     "name": "Nutmeg",
+     "qty": 0.5,
+     "unit": "tsp"
+    },
+    {
+     "name": "Butter",
+     "qty": 30,
+     "unit": "g"
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": "pinch"
+    }
+   ],
+   "steps": [
+    "Whisk the eggs, milk, sugar, nutmeg and salt until smooth, then whisk in the flour and enough water for a thin, pourable batter.",
+    "Cook thin pancakes in a buttered pan for about a minute each side.",
+    "Stack with baking paper between them. They keep 3 days in the fridge and reheat in 20 seconds in the microwave."
+   ],
+   "origin": "preppy-starter"
+  },
+  {
+   "id": "banana-bread-loaf",
+   "title": "Banana Bread Loaf",
+   "kind": "sweet",
+   "protein": "Eggs",
+   "flavour": "Banana",
+   "servings": 10,
+   "withCarb": false,
+   "ingredients": [
+    {
+     "name": "Bananas",
+     "qty": 4,
+     "unit": ""
+    },
+    {
+     "name": "Eggs",
+     "qty": 2,
+     "unit": ""
+    },
+    {
+     "name": "All-purpose flour",
+     "qty": 250,
+     "unit": "g"
+    },
+    {
+     "name": "Brown sugar",
+     "qty": 120,
+     "unit": "g"
+    },
+    {
+     "name": "Butter",
+     "qty": 100,
+     "unit": "g"
+    },
+    {
+     "name": "Baking soda",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Cinnamon",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Vanilla extract",
+     "qty": 1,
+     "unit": "tsp"
+    },
+    {
+     "name": "Salt",
+     "qty": null,
+     "unit": "pinch"
+    }
+   ],
+   "steps": [
+    "Mash the very ripe bananas, then beat in the melted butter, sugar, eggs and vanilla until no egg streaks remain.",
+    "Fold in the flour, baking soda, cinnamon and salt.",
+    "Bake in a lined loaf tin at 175°C for 55–60 minutes, or in the air fryer at 160°C for about 40 minutes, until a skewer comes out clean.",
+    "Slice once cool. Freeze slices and toast them straight from frozen."
+   ],
+   "origin": "preppy-starter"
+  }
+ ],
+ "pantry": [
+  {
+   "id": "baking-powder",
+   "name": "Baking powder",
+   "group": "Baking",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "baking-soda",
+   "name": "Baking soda",
+   "group": "Baking",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "brown-sugar",
+   "name": "Brown sugar",
+   "group": "Baking",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "cocoa-powder",
+   "name": "Cocoa powder",
+   "group": "Baking",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "cornstarch",
+   "name": "Cornstarch",
+   "group": "Baking",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "honey",
+   "name": "Honey",
+   "group": "Baking",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "potato-starch",
+   "name": "Potato starch",
+   "group": "Baking",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "sesame-seeds",
+   "name": "Sesame seeds",
+   "group": "Baking",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "sugar-free-dark-chocolate",
+   "name": "Sugar-free dark chocolate",
+   "group": "Baking",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "sweetened-condensed-milk",
+   "name": "Sweetened condensed milk",
+   "group": "Baking",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "sweetener",
+   "name": "Sweetener",
+   "group": "Baking",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "vanilla-extract",
+   "name": "Vanilla extract",
+   "group": "Baking",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "white-sugar",
+   "name": "White sugar",
+   "group": "Baking",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "all-purpose-flour",
+   "name": "All-purpose flour",
+   "group": "Carbs",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "bread",
+   "name": "Bread",
+   "group": "Carbs",
+   "where": "bokku",
+   "fresh": true
+  },
+  {
+   "id": "cornflakes",
+   "name": "Cornflakes",
+   "group": "Carbs",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "garri",
+   "name": "Garri",
+   "group": "Carbs",
+   "where": "market",
+   "fresh": false
+  },
+  {
+   "id": "macaroni",
+   "name": "Macaroni",
+   "group": "Carbs",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "noodles",
+   "name": "Noodles",
+   "group": "Carbs",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "pap-ogi",
+   "name": "Pap (ogi)",
+   "group": "Carbs",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "plantain",
+   "name": "Plantain",
+   "group": "Carbs",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "potatoes",
+   "name": "Potatoes",
+   "group": "Carbs",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "rice",
+   "name": "Rice",
+   "group": "Carbs",
+   "where": "market",
+   "fresh": false
+  },
+  {
+   "id": "rolled-oats",
+   "name": "Rolled oats",
+   "group": "Carbs",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "semo",
+   "name": "Semo",
+   "group": "Carbs",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "spaghetti",
+   "name": "Spaghetti",
+   "group": "Carbs",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "sweet-potatoes",
+   "name": "Sweet potatoes",
+   "group": "Carbs",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "yam",
+   "name": "Yam",
+   "group": "Carbs",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "butter",
+   "name": "Butter",
+   "group": "Dairy",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "evaporated-milk",
+   "name": "Evaporated milk",
+   "group": "Dairy",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "greek-yogurt",
+   "name": "Greek yogurt",
+   "group": "Dairy",
+   "where": "supermarket",
+   "fresh": true
+  },
+  {
+   "id": "provolone-cheese",
+   "name": "Provolone cheese",
+   "group": "Dairy",
+   "where": "supermarket",
+   "fresh": true
+  },
+  {
+   "id": "skim-milk",
+   "name": "Skim milk",
+   "group": "Dairy",
+   "where": "bokku",
+   "fresh": true
+  },
+  {
+   "id": "whole-milk",
+   "name": "Whole milk",
+   "group": "Dairy",
+   "where": "bokku",
+   "fresh": true
+  },
+  {
+   "id": "cooking-spray",
+   "name": "Cooking spray",
+   "group": "Fats & oils",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "olive-oil",
+   "name": "Olive oil",
+   "group": "Fats & oils",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "palm-oil",
+   "name": "Palm oil",
+   "group": "Fats & oils",
+   "where": "market",
+   "fresh": false
+  },
+  {
+   "id": "peanut-butter",
+   "name": "Peanut butter",
+   "group": "Fats & oils",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "vegetable-oil",
+   "name": "Vegetable oil",
+   "group": "Fats & oils",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "beef-bone-broth",
+   "name": "Beef bone broth",
+   "group": "Other",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "cashew-nuts",
+   "name": "Cashew nuts",
+   "group": "Other",
+   "where": "any",
+   "fresh": false
+  },
+  {
+   "id": "ground-egusi",
+   "name": "Ground egusi",
+   "group": "Other",
+   "where": "market",
+   "fresh": false
+  },
+  {
+   "id": "makhana",
+   "name": "Makhana",
+   "group": "Other",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "pineapple-juice",
+   "name": "Pineapple juice",
+   "group": "Other",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "protein-powder",
+   "name": "Protein powder",
+   "group": "Other",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "roasted-peanuts",
+   "name": "Roasted peanuts",
+   "group": "Other",
+   "where": "market",
+   "fresh": false
+  },
+  {
+   "id": "skewers",
+   "name": "Skewers",
+   "group": "Other",
+   "where": "any",
+   "fresh": false
+  },
+  {
+   "id": "bananas",
+   "name": "Bananas",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "bell-peppers",
+   "name": "Bell peppers",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "cabbage",
+   "name": "Cabbage",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "carrots",
+   "name": "Carrots",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "cucumbers",
+   "name": "Cucumbers",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "fresh-coriander",
+   "name": "Fresh coriander",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "frozen-mixed-vegetables",
+   "name": "Frozen mixed vegetables",
+   "group": "Produce",
+   "where": "supermarket",
+   "fresh": true
+  },
+  {
+   "id": "garlic",
+   "name": "Garlic",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "ginger",
+   "name": "Ginger",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "green-bell-peppers",
+   "name": "Green bell peppers",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "green-peas",
+   "name": "Green peas",
+   "group": "Produce",
+   "where": "supermarket",
+   "fresh": true
+  },
+  {
+   "id": "lemon-juice",
+   "name": "Lemon juice",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "limes",
+   "name": "Limes",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "onions",
+   "name": "Onions",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "pineapple-slices",
+   "name": "Pineapple slices",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "scent-leaves",
+   "name": "Scent leaves",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "scotch-bonnet-rodo",
+   "name": "Scotch bonnet (rodo)",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "spinach",
+   "name": "Spinach",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "spring-onions",
+   "name": "Spring onions",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "tatashe",
+   "name": "Tatashe",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "tomatoes",
+   "name": "Tomatoes",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "ugu",
+   "name": "Ugu",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "watercress",
+   "name": "Watercress",
+   "group": "Produce",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "beef",
+   "name": "Beef",
+   "group": "Protein",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "black-eyed-beans",
+   "name": "Black-eyed beans",
+   "group": "Protein",
+   "where": "market",
+   "fresh": false
+  },
+  {
+   "id": "bone-in-goat-meat",
+   "name": "Bone-in goat meat",
+   "group": "Protein",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "brown-beans-oloyin",
+   "name": "Brown beans (oloyin)",
+   "group": "Protein",
+   "where": "market",
+   "fresh": false
+  },
+  {
+   "id": "chicken-breast",
+   "name": "Chicken breast",
+   "group": "Protein",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "chicken-gizzards",
+   "name": "Chicken gizzards",
+   "group": "Protein",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "chicken-thighs",
+   "name": "Chicken thighs",
+   "group": "Protein",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "chicken-wings",
+   "name": "Chicken wings",
+   "group": "Protein",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "egg-whites",
+   "name": "Egg whites",
+   "group": "Protein",
+   "where": "supermarket",
+   "fresh": true
+  },
+  {
+   "id": "eggs",
+   "name": "Eggs",
+   "group": "Protein",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "minced-beef",
+   "name": "Minced beef",
+   "group": "Protein",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "peeled-beans-for-moi-moi",
+   "name": "Peeled beans (for moi moi)",
+   "group": "Protein",
+   "where": "market",
+   "fresh": false
+  },
+  {
+   "id": "turkey-wings",
+   "name": "Turkey wings",
+   "group": "Protein",
+   "where": "market",
+   "fresh": true
+  },
+  {
+   "id": "apple-cider-vinegar",
+   "name": "Apple cider vinegar",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "bbq-sauce",
+   "name": "BBQ sauce",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "chinese-black-vinegar",
+   "name": "Chinese black vinegar",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "dark-soy-sauce",
+   "name": "Dark soy sauce",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "gochujang",
+   "name": "Gochujang",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "hoisin-sauce",
+   "name": "Hoisin sauce",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "ketchup",
+   "name": "Ketchup",
+   "group": "Sauces",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "light-soy-sauce",
+   "name": "Light soy sauce",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "mayonnaise",
+   "name": "Mayonnaise",
+   "group": "Sauces",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "mushroom-stir-fry-sauce",
+   "name": "Mushroom stir-fry sauce",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "mustard",
+   "name": "Mustard",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "oyster-sauce",
+   "name": "Oyster sauce",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "rice-vinegar",
+   "name": "Rice vinegar",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "sesame-oil",
+   "name": "Sesame oil",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "shaoxing-wine",
+   "name": "Shaoxing wine",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "sriracha",
+   "name": "Sriracha",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "sweet-chili-sauce",
+   "name": "Sweet chili sauce",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "tomato-paste",
+   "name": "Tomato paste",
+   "group": "Sauces",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "worcestershire-sauce",
+   "name": "Worcestershire sauce",
+   "group": "Sauces",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "all-purpose-chicken-seasoning",
+   "name": "All-purpose chicken seasoning",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "bay-leaf",
+   "name": "Bay leaf",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "black-pepper",
+   "name": "Black pepper",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "cameroon-pepper",
+   "name": "Cameroon pepper",
+   "group": "Spices",
+   "where": "market",
+   "fresh": false
+  },
+  {
+   "id": "cardamom",
+   "name": "Cardamom",
+   "group": "Spices",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "cayenne-pepper",
+   "name": "Cayenne pepper",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "chili-flakes",
+   "name": "Chili flakes",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "chinese-five-spice",
+   "name": "Chinese five-spice",
+   "group": "Spices",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "cinnamon",
+   "name": "Cinnamon",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "cumin",
+   "name": "Cumin",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "curry-powder",
+   "name": "Curry powder",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "dried-oregano",
+   "name": "Dried oregano",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "dried-parsley",
+   "name": "Dried parsley",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "dried-red-chilies",
+   "name": "Dried red chilies",
+   "group": "Spices",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "dried-rosemary",
+   "name": "Dried rosemary",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "dried-thyme",
+   "name": "Dried thyme",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "fajita-seasoning",
+   "name": "Fajita seasoning",
+   "group": "Spices",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "garam-masala",
+   "name": "Garam masala",
+   "group": "Spices",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "garlic-powder",
+   "name": "Garlic powder",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "ginger-powder",
+   "name": "Ginger powder",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "gochugaru",
+   "name": "Gochugaru",
+   "group": "Spices",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "ground-coriander",
+   "name": "Ground coriander",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "ground-crayfish",
+   "name": "Ground crayfish",
+   "group": "Spices",
+   "where": "market",
+   "fresh": false
+  },
+  {
+   "id": "italian-seasoning",
+   "name": "Italian seasoning",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "kashmiri-chilli-powder",
+   "name": "Kashmiri chilli powder",
+   "group": "Spices",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "locust-beans-iru",
+   "name": "Locust beans (iru)",
+   "group": "Spices",
+   "where": "market",
+   "fresh": false
+  },
+  {
+   "id": "nigerian-pepper-soup-spice",
+   "name": "Nigerian pepper soup spice",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "nutmeg",
+   "name": "Nutmeg",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "onion-powder",
+   "name": "Onion powder",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "peri-peri-seasoning",
+   "name": "Peri peri seasoning",
+   "group": "Spices",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "salt",
+   "name": "Salt",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "seasoning-cubes",
+   "name": "Seasoning cubes",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "sichuan-peppercorns",
+   "name": "Sichuan peppercorns",
+   "group": "Spices",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "smoked-paprika",
+   "name": "Smoked paprika",
+   "group": "Spices",
+   "where": "supermarket",
+   "fresh": false
+  },
+  {
+   "id": "suya-spice-yaji",
+   "name": "Suya spice (yaji)",
+   "group": "Spices",
+   "where": "market",
+   "fresh": false
+  },
+  {
+   "id": "sweet-paprika",
+   "name": "Sweet paprika",
+   "group": "Spices",
+   "where": "bokku",
+   "fresh": false
+  },
+  {
+   "id": "white-pepper",
+   "name": "White pepper",
+   "group": "Spices",
+   "where": "supermarket",
+   "fresh": false
+  }
+ ]
+}

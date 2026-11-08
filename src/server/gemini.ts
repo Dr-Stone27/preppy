@@ -13,14 +13,12 @@ const MODELS = [
 
 export class AiUnavailable extends Error {}
 
-export type Image = { mime: string; data: string };
-
-async function call(model: string, key: string, prompt: string, thinking: boolean, signal?: AbortSignal, images: Image[] = []) {
+async function call(model: string, key: string, prompt: string, thinking: boolean, signal?: AbortSignal) {
   return fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: "POST",
     headers: { "content-type": "application/json", "x-goog-api-key": key },
     body: JSON.stringify({
-      contents: [{ role: "user", parts: [...images.map((i) => ({ inlineData: { mimeType: i.mime, data: i.data } })), { text: prompt }] }],
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
       generationConfig: {
         responseMimeType: "application/json",
         temperature: 0.2,
@@ -32,18 +30,18 @@ async function call(model: string, key: string, prompt: string, thinking: boolea
   });
 }
 
-async function once(model: string, key: string, prompt: string, signal?: AbortSignal, images?: Image[]): Promise<Response> {
-  const res = await call(model, key, prompt, true, signal, images);
+async function once(model: string, key: string, prompt: string, signal?: AbortSignal): Promise<Response> {
+  const res = await call(model, key, prompt, true, signal);
   // Older models don't know thinkingLevel; ask again without it.
   if (res.status === 400) {
     const detail = await res.text();
-    if (/thinking/i.test(detail)) return call(model, key, prompt, false, signal, images);
+    if (/thinking/i.test(detail)) return call(model, key, prompt, false, signal);
     return new Response(detail, { status: 400 });
   }
   return res;
 }
 
-export async function geminiJson(prompt: string, signal?: AbortSignal, images?: Image[]): Promise<unknown> {
+export async function geminiJson(prompt: string, signal?: AbortSignal): Promise<unknown> {
   const key = process.env.GEMINI_API_KEY || process.env.Gemini_API_Key;
   if (!key) throw new AiUnavailable("not-configured");
   let res: Response | null = null;
@@ -54,7 +52,7 @@ export async function geminiJson(prompt: string, signal?: AbortSignal, images?: 
     // An overloaded model can hang instead of saying so; give each one a share of the time.
     const attempt = last ? signal : AbortSignal.any([...(signal ? [signal] : []), AbortSignal.timeout(20_000)]);
     try {
-      res = await once(model, key, prompt, attempt, images);
+      res = await once(model, key, prompt, attempt);
     } catch {
       if (last || signal?.aborted) {
         console.error(`[ai] ${model} took too long`);

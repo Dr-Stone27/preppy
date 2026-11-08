@@ -26,7 +26,7 @@ export function Privacy() {
 
         <h2 className="t-h3">The recipe reader</h2>
         <p>
-          The caption, link and screenshots you give it are sent to Google’s Gemini AI to turn into a recipe. Preppy uses Gemini’s free tier, under which Google may use
+          The caption and link you give it are sent to Google’s Gemini AI to turn into a recipe. Preppy uses Gemini’s free tier, under which Google may use
           what is sent to improve its products, so leave anything personal out.
         </p>
 

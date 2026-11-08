@@ -1,21 +1,16 @@
-import { aiError, geminiJson, guard, type Image } from "@/server/gemini";
+import { aiError, geminiJson, guard } from "@/server/gemini";
 import { GROUPS, pantryItems } from "@/domain/shop/pantry";
 
 const MAX = 8000;
-const MAX_IMAGES = 4;
-const MAX_IMAGE_CHARS = 1_500_000; // about 1.1 MB of JPEG each; the app shrinks screenshots well below this
-const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
-function prompt(link: string, text: string, never: string[], screenshots: number) {
+function prompt(link: string, text: string, never: string[]) {
   const pantry = pantryItems()
     .map((p) => p.name)
     .sort()
     .join(", ");
   return `You turn a recipe from a social media post into structured data for a batch meal-prep planner. The cook lives in Nigeria and cooks in batches a few times a week.
 
-${screenshots ? `${screenshots === 1 ? "A screenshot" : `${screenshots} screenshots`} of the post ${screenshots === 1 ? "is" : "are"} attached. Read the recipe from the caption text in ${screenshots === 1 ? "it" : "them"}; ignore usernames, like and comment counts, buttons and anything else on screen. If the caption continues across screenshots, join it in order.
-
-` : ""}The input is a caption, a transcript, or a rough note. If it is only a rough note, fill in a sensible standard version of the dish and set "inferred" to true. Keep the original dish; do not swap in different ingredients unless one is missing.
+The input is a caption, a transcript, or a rough note. If it is only a rough note, fill in a sensible standard version of the dish and set "inferred" to true. Keep the original dish; do not swap in different ingredients unless one is missing.
 
 When an ingredient is the same thing as one in this pantry list, use the pantry name exactly: ${pantry}
 
@@ -36,7 +31,7 @@ ${text}
 export async function POST(req: Request) {
   const blocked = await guard(req);
   if (blocked) return blocked;
-  let body: { text?: unknown; link?: unknown; never?: unknown; images?: unknown };
+  let body: { text?: unknown; link?: unknown; never?: unknown };
   try {
     body = await req.json();
   } catch {
@@ -45,15 +40,9 @@ export async function POST(req: Request) {
   const text = typeof body.text === "string" ? body.text.trim().slice(0, MAX) : "";
   const link = typeof body.link === "string" ? body.link.trim().slice(0, 300) : "";
   const never = Array.isArray(body.never) ? body.never.filter((x): x is string => typeof x === "string").slice(0, 40) : [];
-  const raw = Array.isArray(body.images) ? body.images : [];
-  const images: Image[] = raw
-    .slice(0, MAX_IMAGES)
-    .filter((i): i is Image => !!i && typeof i === "object" && IMAGE_TYPES.includes((i as Image).mime) && typeof (i as Image).data === "string")
-    .filter((i) => i.data.length <= MAX_IMAGE_CHARS && /^[A-Za-z0-9+/=]+$/.test(i.data));
-  if (raw.length > MAX_IMAGES || images.length !== raw.length) return Response.json({ error: "bad-image" }, { status: 413 });
-  if (!text && !images.length) return Response.json({ error: "empty" }, { status: 400 });
+  if (!text) return Response.json({ error: "empty" }, { status: 400 });
   try {
-    return Response.json({ recipe: await geminiJson(prompt(link, text || "(the caption is in the screenshots)", never, images.length), AbortSignal.timeout(55_000), images) });
+    return Response.json({ recipe: await geminiJson(prompt(link, text, never), AbortSignal.timeout(55_000)) });
   } catch (e) {
     return aiError(e);
   }

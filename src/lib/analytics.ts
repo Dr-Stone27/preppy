@@ -2,12 +2,13 @@
 
 /**
  * Usage tracking with PostHog: screens opened and a handful of named steps, nothing typed.
- * Does nothing until NEXT_PUBLIC_POSTHOG_KEY is set, and loads the library only then.
+ * Does nothing until NEXT_PUBLIC_POSTHOG_KEY (or _TOKEN) is set, and loads the library only then.
  * No autocapture, no session recordings, no cookies (it keeps its id in localStorage).
  */
 import type { PostHog } from "posthog-js";
 
-const KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+// The Vercel PostHog integration has used both names.
+const KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY || process.env.NEXT_PUBLIC_POSTHOG_TOKEN;
 const HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
 
 export type Event =

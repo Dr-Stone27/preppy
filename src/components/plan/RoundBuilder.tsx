@@ -194,12 +194,12 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
     );
     foot = (
       <>
-        <Button block onClick={onClose}>
+        <ButtonLink href={`/shop?week=${weekKey}&round=${R.id}`} block>
+          See shopping list
+        </ButtonLink>
+        <Button variant="secondary" block onClick={onClose}>
           See the timetable
         </Button>
-        <ButtonLink href="/" variant="secondary" block>
-          Go home
-        </ButtonLink>
       </>
     );
   }

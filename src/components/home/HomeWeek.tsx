@@ -10,6 +10,7 @@ import { Icon } from "@/components/ui/Icon";
 import { addDays, DAY_FULL, dateLabel, daysBetween, sundayOf, today0, weekKey } from "@/domain/plan/dates";
 import { cellKey, dayMacros, nextRound, recipesFor, roundDates, roundRange, SLOTS } from "@/domain/plan/week";
 import { recipeById } from "@/domain/recipes/library";
+import { shopLines } from "@/domain/shop/list";
 import { getWeek, useData } from "@/state/store";
 import styles from "./HomeWeek.module.css";
 
@@ -29,6 +30,8 @@ export function HomeWeek() {
     const cook = roundDates(weekStart, R).cook;
     const n = daysBetween(today, cook);
     const when = n === 0 ? "Today" : n === 1 ? "Tomorrow" : `In ${n} days`;
+    const { buy } = shopLines(R, week, data.pantry);
+    const shop = { got: buy.filter((l) => l.done).length, total: buy.length };
     next = (
       <section className={styles.next}>
         <div className={styles.nextHead}>
@@ -44,9 +47,27 @@ export function HomeWeek() {
           {R.confirmed && <BowlCollage recipes={recipesFor(R.mains)} size={48} />}
         </div>
         {R.confirmed ? (
-          <ButtonLink href="/plan" variant="secondary" block>
-            See the plan
-          </ButtonLink>
+          <>
+            <div className={styles.progress}>
+              <div className={styles.progressRow}>
+                <span>Shopping</span>
+                <span>
+                  {shop.got} of {shop.total}
+                </span>
+              </div>
+              <div className={styles.bar}>
+                <i style={{ width: `${shop.total ? Math.round((shop.got / shop.total) * 100) : 0}%` }} />
+              </div>
+            </div>
+            <div className={styles.actions}>
+              <ButtonLink href={`/shop?round=${R.id}`} block>
+                Go shopping
+              </ButtonLink>
+              <ButtonLink href="/plan" variant="secondary" block>
+                See the plan
+              </ButtonLink>
+            </div>
+          </>
         ) : (
           <>
             <p className="t-small">Nothing picked for {DAY_FULL[R.cook]}’s cook yet.</p>

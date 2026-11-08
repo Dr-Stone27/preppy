@@ -85,3 +85,34 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.progress {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.progressRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+
+.bar {
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-success);
+}
+
+.actions {
+  display: grid;
+  gap: var(--space-2);
+}

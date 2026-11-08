@@ -37,7 +37,7 @@ export function Privacy() {
         </p>
 
         <h2 className="t-h3">Emails</h2>
-        <p>Only sign-in links. No newsletters.</p>
+        <p>Only sign-in emails. No newsletters.</p>
 
         <h2 className="t-h3">Removing it</h2>
         <p>

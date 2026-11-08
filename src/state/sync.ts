@@ -189,6 +189,14 @@ export async function sendCode(email: string) {
   if (error) throw error;
 }
 
+/** Signs in with the code from the email: works in whichever app or browser it's typed into. */
+export async function verifyCode(email: string, token: string) {
+  const s = supabase();
+  if (!s) throw new Error("off");
+  const { error } = await s.auth.verifyOtp({ email, token, type: "email" });
+  if (error) throw error;
+}
+
 /** Deletes the account and everything saved to it, then clears this device. */
 export async function deleteAccount() {
   clearTimeout(timer);

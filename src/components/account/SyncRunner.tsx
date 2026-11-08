@@ -15,6 +15,11 @@ export function SyncRunner() {
 
   useEffect(startAnalytics, []);
 
+  // A sign-in link that was already used or has expired comes back with the reason in the address. Say so on the sign-in page.
+  useEffect(() => {
+    if (/error_code=(otp_expired|access_denied)/.test(location.hash)) router.replace("/account?link=used");
+  }, [router]);
+
   useEffect(() => {
     if (!sync.fresh || !sync.email || sync.status === "loading") return;
     clearFresh();

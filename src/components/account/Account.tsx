@@ -16,6 +16,7 @@ export function Account() {
   const sync = useSync();
   const router = useRouter();
   const back = useSyncExternalStore(noop, hasSeen, () => false);
+  const usedLink = useSyncExternalStore(noop, () => location.search.includes("link=used"), () => false);
 
   const signedOut = !sync.email && sync.status !== "loading";
 
@@ -29,8 +30,13 @@ export function Account() {
       <section className={prefs.section}>
         <div>
           <h2 className="t-h3">{sync.email ? "Signed in" : back ? "Sign in to get your plans back" : "Keep your plans on every device"}</h2>
-          {!sync.email && <p className="t-small t-muted">We’ll email you a sign-in link. No password needed.</p>}
+          {!sync.email && <p className="t-small t-muted">We’ll email you a sign-in code. No password needed.</p>}
         </div>
+        {usedLink && !sync.email && (
+          <p className="t-small" role="alert">
+            That sign-in link was already used or has expired. Each link works once. Send yourself a new code below.
+          </p>
+        )}
         <AccountPanel />
       </section>
       {signedOut && back && (

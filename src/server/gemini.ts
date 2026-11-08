@@ -2,12 +2,16 @@
  * Minimal Gemini call over REST. The key stays on the server.
  * GEMINI_MODEL can change without a code change, since model names move often.
  */
-const MODEL = process.env.GEMINI_MODEL || "gemini-flash-latest";
+const MODELS = [
+  process.env.GEMINI_MODEL || "gemini-flash-latest",
+  // Tried when the first model is overloaded or rate-limited.
+  process.env.GEMINI_FALLBACK_MODEL || "gemini-flash-lite-latest",
+];
 
 export class AiUnavailable extends Error {}
 
-async function call(key: string, prompt: string, thinking: boolean, signal?: AbortSignal) {
-  return fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
+async function call(model: string, key: string, prompt: string, thinking: boolean, signal?: AbortSignal) {
+  return fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: "POST",
     headers: { "content-type": "application/json", "x-goog-api-key": key },
     body: JSON.stringify({
@@ -23,28 +27,39 @@ async function call(key: string, prompt: string, thinking: boolean, signal?: Abo
   });
 }
 
-export async function geminiJson(prompt: string, signal?: AbortSignal): Promise<unknown> {
-  const key = process.env.GEMINI_API_KEY || process.env.Gemini_API_Key;
-  if (!key) throw new AiUnavailable("not-configured");
-  let res = await call(key, prompt, true, signal);
+async function once(model: string, key: string, prompt: string, signal?: AbortSignal): Promise<Response> {
+  const res = await call(model, key, prompt, true, signal);
   // Older models don't know thinkingLevel; ask again without it.
   if (res.status === 400) {
     const detail = await res.text();
-    if (/thinking/i.test(detail)) res = await call(key, prompt, false, signal);
-    else throw new Error(`gemini 400 ${MODEL}: ${detail.slice(0, 300).replace(/\s+/g, " ")}`);
+    if (/thinking/i.test(detail)) return call(model, key, prompt, false, signal);
+    return new Response(detail, { status: 400 });
   }
-  if (res.status === 429) throw new AiUnavailable("busy");
+  return res;
+}
+
+export async function geminiJson(prompt: string, signal?: AbortSignal): Promise<unknown> {
+  const key = process.env.GEMINI_API_KEY || process.env.Gemini_API_Key;
+  if (!key) throw new AiUnavailable("not-configured");
+  let res: Response | null = null;
+  let model = MODELS[0];
+  for (model of MODELS) {
+    res = await once(model, key, prompt, signal);
+    if (res.status !== 503 && res.status !== 429) break;
+    console.error(`[ai] ${model} busy (${res.status}), trying the next model`);
+  }
+  if (!res || res.status === 503 || res.status === 429) throw new AiUnavailable("busy");
   if (!res.ok) {
     // Google's error text names the problem (bad model, quota) and never echoes the key.
     const detail = (await res.text()).slice(0, 300).replace(/\s+/g, " ");
-    throw new Error(`gemini ${res.status} ${MODEL}: ${detail}`);
+    throw new Error(`gemini ${res.status} ${model}: ${detail}`);
   }
   const body = (await res.json()) as { candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] } }[] };
   const text = body.candidates?.[0]?.content?.parts?.filter((p) => !p.thought).map((p) => p.text ?? "").join("") ?? "";
   try {
     return JSON.parse(text.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, ""));
   } catch {
-    throw new Error(`gemini reply was not JSON (${MODEL}): ${text.slice(0, 120)}`);
+    throw new Error(`gemini reply was not JSON (${model}): ${text.slice(0, 120)}`);
   }
 }
 

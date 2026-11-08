@@ -24,7 +24,7 @@ type State =
 
 const ERRORS: Record<number, string> = {
   503: "Reading posts isn’t switched on yet. You can type the recipe in instead.",
-  429: "Too many requests just now. Try again in a minute.",
+  429: "The recipe reader is busy right now. Try again in a minute, or type it in.",
   400: "Paste the caption or type a short note first.",
 };
 
@@ -57,7 +57,7 @@ export function AddRecipe() {
         body: JSON.stringify({ text, link, never: data?.prefs.never ?? [] }),
         signal: ctl.current.signal,
       });
-      if (!res.ok) return setState({ s: "error", message: ERRORS[res.status] ?? "That didn’t work. Try again, or type the recipe in.", offerTyping: true });
+      if (!res.ok) return setState({ s: "error", message: ERRORS[res.status] ?? "That didn’t work. Try again, or type the recipe in.", offerTyping: res.status !== 400 });
       const { recipe } = (await res.json()) as { recipe: unknown };
       setState({ s: "check", recipe: recipeFromAi(recipe, link) });
     } catch (e) {

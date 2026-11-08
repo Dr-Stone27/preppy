@@ -7,7 +7,7 @@ const MODEL = process.env.GEMINI_MODEL || "gemini-flash-latest";
 export class AiUnavailable extends Error {}
 
 export async function geminiJson(prompt: string, signal?: AbortSignal): Promise<unknown> {
-  const key = process.env.GEMINI_API_KEY;
+  const key = process.env.GEMINI_API_KEY || process.env.Gemini_API_Key;
   if (!key) throw new AiUnavailable("not-configured");
   const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
     method: "POST",

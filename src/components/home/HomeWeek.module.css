@@ -1,0 +1,87 @@
+.placeholder {
+  min-height: 320px;
+}
+
+.next {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-5);
+  border-radius: var(--radius-feature);
+  background: linear-gradient(var(--color-accent-soft), var(--color-surface) 80%);
+  box-shadow: var(--shadow-card);
+}
+
+.nextHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.nextHead > div:first-child {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.today {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.todayHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.meals {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.meals li + li {
+  border-top: 1px solid var(--color-border);
+}
+
+.meal {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 64px;
+  padding: var(--space-2) 0;
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.meal > svg:last-child {
+  flex: none;
+  color: var(--color-muted);
+}
+
+.emptyBowl {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  border: 1.5px dashed var(--color-border-strong);
+}
+
+.mealText {
+  flex: 1;
+  display: grid;
+  min-width: 0;
+}
+
+.mealTitle {
+  font-weight: 600;
+  font-size: var(--text-small);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

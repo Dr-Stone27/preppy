@@ -1,21 +1,26 @@
-.hero {
-  display: grid;
-  gap: var(--space-5);
-  padding: var(--space-6);
-  border-radius: var(--radius-feature);
-  background: linear-gradient(var(--color-accent-soft), var(--color-surface) 70%);
-}
-
-.collage {
+.library {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  color: var(--color-ink);
+  text-decoration: none;
 }
 
-.collage > * + * {
-  margin-left: -16px;
+.library > svg:last-child {
+  flex: none;
+  color: var(--color-muted);
 }
 
-.heroText {
+.libraryText {
+  flex: 1;
   display: grid;
-  gap: var(--space-2);
+  min-width: 0;
+}
+
+.libraryTitle {
+  font-weight: 600;
 }

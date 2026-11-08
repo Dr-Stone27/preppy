@@ -2,6 +2,7 @@ import { BOWL_SIZES, BowlIllustration, type BowlSize } from "@/components/bowl/B
 import { Card, ScreenHeader, SectionHeader, Stack } from "@/components/ui/Layout";
 import { bowlFromRecipe } from "@/domain/bowl/fromRecipe";
 import { allRecipes, recipeById } from "@/domain/recipes/library";
+import { notFound } from "next/navigation";
 import styles from "./bowls.module.css";
 
 export const metadata = { title: "Bowl gallery · Preppy" };
@@ -10,6 +11,7 @@ const SHOWCASE = ["party-jollof-rice-chicken", "korean-sweet-chili-minced-beef",
 
 /** Review page for the bowl engine: three reference dishes at every size, then every recipe. */
 export default function BowlGallery() {
+  if (process.env.NODE_ENV === "production") notFound();
   const showcase = SHOWCASE.map(recipeById).filter((r) => r !== undefined);
   const all = allRecipes();
   return (

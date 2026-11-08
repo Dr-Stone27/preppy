@@ -80,6 +80,49 @@ export async function geminiJson(prompt: string, signal?: AbortSignal): Promise<
 
 /** Best-effort guard against other sites using this endpoint, and against bursts from one address. */
 const hits = new Map<string, number[]>();
+const SECRET = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+const secretHeaders = (): Record<string, string> =>
+  SECRET.startsWith("sb_secret_") ? { apikey: SECRET } : { apikey: SECRET, authorization: `Bearer ${SECRET}` };
+
+/**
+ * Checks the token with Supabase Auth, then counts one AI call against that account with the server's secret key.
+ * use_ai(uuid) is only callable with that key, so people can't touch their own counter from the browser.
+ */
+async function allowance(auth: string): Promise<boolean | "sign-in" | "error"> {
+  const signal = AbortSignal.timeout(5_000);
+  try {
+    const who = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { apikey: SUPABASE_KEY, authorization: auth }, signal });
+    if (who.status === 401 || who.status === 403) return "sign-in";
+    if (!who.ok) return "error";
+    const { id } = (await who.json()) as { id?: string };
+    if (!id) return "sign-in";
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/use_ai`, {
+      method: "POST",
+      headers: { ...secretHeaders(), "content-type": "application/json" },
+      body: JSON.stringify({ uid: id }),
+      signal,
+    });
+    if (res.status === 404) {
+      // Database not yet moved to use_ai(uuid): fall back to the older function called as the user.
+      const old = await fetch(`${SUPABASE_URL}/rest/v1/rpc/use_ai`, {
+        method: "POST",
+        headers: { apikey: SUPABASE_KEY, authorization: auth, "content-type": "application/json" },
+        body: "{}",
+        signal,
+      });
+      return old.ok ? (await old.json()) === true : "error";
+    }
+    if (!res.ok) {
+      console.error("[ai] allowance", res.status, (await res.text().catch(() => "")).slice(0, 200));
+      return "error";
+    }
+    return (await res.json()) === true;
+  } catch (e) {
+    console.error("[ai] allowance", e instanceof Error ? e.message : e);
+    return "error";
+  }
+}
+
 /**
  * Same-origin, a per-address burst limit, and — once accounts are switched on —
  * a signed-in account with AI allowance left today (counted by use_ai() in the database).
@@ -97,19 +140,10 @@ export async function guard(req: Request): Promise<Response | null> {
   if (!accountsOn) return null;
   const auth = req.headers.get("authorization");
   if (!auth?.startsWith("Bearer ")) return Response.json({ error: "sign-in" }, { status: 401 });
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/use_ai`, {
-    method: "POST",
-    headers: { apikey: SUPABASE_KEY, authorization: auth, "content-type": "application/json" },
-    body: "{}",
-    signal: AbortSignal.timeout(5_000),
-  }).catch(() => null);
-  if (!res) return Response.json({ error: "busy" }, { status: 429 });
-  if (res.status === 401 || res.status === 403) return Response.json({ error: "sign-in" }, { status: 401 });
-  if (!res.ok) {
-    console.error("[ai] allowance check", res.status, await res.text().catch(() => ""));
-    return Response.json({ error: "busy" }, { status: 429 });
-  }
-  if ((await res.json()) !== true) return Response.json({ error: "limit" }, { status: 402 });
+  const ok = await allowance(auth);
+  if (ok === "sign-in") return Response.json({ error: "sign-in" }, { status: 401 });
+  if (ok === "error") return Response.json({ error: "busy" }, { status: 429 });
+  if (!ok) return Response.json({ error: "limit" }, { status: 402 });
   return null;
 }
 

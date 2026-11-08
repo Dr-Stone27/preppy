@@ -17,8 +17,14 @@ export function RecipeView({ recipe: r, never, footer }: { recipe: Recipe; never
   const m = r.macros;
   const macros = m ? ([["kcal", m.kcal, ""], ["Protein", m.protein, "g"], ["Carbs", m.carbs, "g"], ["Fat", m.fat, "g"]] as const).filter(([, v]) => v != null) : [];
   let host = "";
+  let href = "";
   try {
-    host = r.source ? new URL(r.source).hostname.replace(/^www\./, "") : "";
+    const u = r.source ? new URL(r.source) : null;
+    // Only web links; a saved recipe's link came from a paste and could be anything.
+    if (u && (u.protocol === "https:" || u.protocol === "http:")) {
+      host = u.hostname.replace(/^www\./, "");
+      href = u.href;
+    }
   } catch {}
 
   return (
@@ -101,8 +107,8 @@ export function RecipeView({ recipe: r, never, footer }: { recipe: Recipe; never
               </a>
             </p>
           )}
-          {r.source && (
-            <a className={styles.sourceLink} href={r.source} target="_blank" rel="noopener noreferrer">
+          {href && (
+            <a className={styles.sourceLink} href={href} target="_blank" rel="noopener noreferrer">
               View original{host ? ` on ${host.split(".")[0] === "instagram" ? "Instagram" : host}` : ""}
               <Icon name="chevron" size={18} />
             </a>

@@ -43,8 +43,21 @@ export async function geminiJson(prompt: string, signal?: AbortSignal): Promise<
   if (!key) throw new AiUnavailable("not-configured");
   let res: Response | null = null;
   let model = MODELS[0];
-  for (model of MODELS) {
-    res = await once(model, key, prompt, signal);
+  for (const [i, m] of MODELS.entries()) {
+    model = m;
+    const last = i === MODELS.length - 1;
+    // An overloaded model can hang instead of saying so; give each one a share of the time.
+    const attempt = last ? signal : AbortSignal.any([...(signal ? [signal] : []), AbortSignal.timeout(20_000)]);
+    try {
+      res = await once(model, key, prompt, attempt);
+    } catch (e) {
+      if (last || signal?.aborted) {
+        console.error(`[ai] ${model} took too long`);
+        throw new AiUnavailable("busy");
+      }
+      console.error(`[ai] ${model} took too long, trying the next model`);
+      continue;
+    }
     if (res.status !== 503 && res.status !== 429) break;
     console.error(`[ai] ${model} busy (${res.status}), trying the next model`);
   }

@@ -17,7 +17,7 @@ export function PlanScreen() {
   const data = useData();
   const params = useSearchParams();
   const router = useRouter();
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(() => (params.get("week") === "next" ? 1 : 0));
   const [meal, setMeal] = useState<{ day: number; slot: SlotId } | null>(null);
   const building = params.get("build") as RoundId | null;
 

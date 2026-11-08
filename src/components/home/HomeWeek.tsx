@@ -100,7 +100,7 @@ export function HomeWeek() {
           {dayName(nextCook, 0, true)} {dateLabel(nextCook)}
         </h2>
         <p className="t-small t-muted">This week’s cooking is done.</p>
-        <ButtonLink href="/plan" block>
+        <ButtonLink href="/plan?week=next" block>
           Plan next week
         </ButtonLink>
       </section>

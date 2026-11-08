@@ -5,24 +5,31 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@/components/ui/Icon";
 import { updatePrefs, useData } from "@/state/store";
-import { useSync } from "@/state/sync";
+import { hasSeen, markSeen, useSync } from "@/state/sync";
 import styles from "./HomeWeek.module.css";
 
-/** Sends a first-time visitor to setup, then shows three first steps until they're done or hidden. */
+/**
+ * Sends a first-time visitor to setup and a signed-out returning one to sign in, then shows first steps until done or hidden.
+ * A signed-in person is never sent to setup; they get a "set what you don't eat" step instead.
+ */
 export function GettingStarted() {
   const data = useData();
   const router = useRouter();
   const sync = useSync();
   // A signed-in user on a new device gets their setup from the account, so wait for it.
-  const firstRun = data && sync.status !== "loading" && !data.prefs.onboarded;
+  const ready = !!data && sync.status !== "loading";
+  const away = ready && !data.prefs.onboarded && !sync.email;
+  const goTo = !away ? null : sync.status !== "off" && hasSeen() ? "/account" : "/welcome";
 
   useEffect(() => {
-    if (firstRun) router.replace("/welcome");
-  }, [firstRun, router]);
+    if (goTo) router.replace(goTo);
+    else if (data?.prefs.onboarded) markSeen(); // browsers set up before this flag existed
+  }, [goTo, data?.prefs.onboarded, router]);
 
-  if (!data || sync.status === "loading" || firstRun || data.prefs.checklistHidden) return null;
+  if (!data || !ready || goTo || data.prefs.checklistHidden) return null;
 
   const items = [
+    ...(data.prefs.onboarded ? [] : [{ label: "Set what you don’t eat", done: false, href: "/settings" }]),
     { label: "Save a recipe", done: data.recipes.length > 0, href: "/add" },
     { label: "Plan a round", done: Object.values(data.weeks).some((w) => w.rounds.some((r) => r.confirmed)), href: "/plan" },
     { label: "Do your first stock-up", done: Object.values(data.pantry).some((s) => s === "have"), href: "/shop?view=stock" },

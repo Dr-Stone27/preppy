@@ -43,3 +43,14 @@
   font-weight: 600;
   color: var(--color-muted);
 }
+
+.already {
+  text-align: center;
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+.already a {
+  font-weight: 600;
+  color: var(--color-ink);
+}

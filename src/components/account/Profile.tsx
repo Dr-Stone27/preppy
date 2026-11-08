@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { signOut, useSync } from "@/state/sync";
@@ -19,6 +20,7 @@ export function Profile() {
   const sync = useSync();
   const [open, setOpen] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const router = useRouter();
 
   if (sync.status === "off") return null;
 
@@ -42,6 +44,7 @@ export function Profile() {
             setLeaving(true);
             await signOut();
             setLeaving(false);
+            router.replace("/account");
           }}
         >
           {leaving ? "Signing out…" : "Sign out"}

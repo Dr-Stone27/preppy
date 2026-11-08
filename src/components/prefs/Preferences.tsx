@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import { Profile } from "@/components/account/Profile";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -10,6 +11,11 @@ import styles from "./Preferences.module.css";
 
 export function Preferences() {
   const data = useData();
+  const unset = data ? !data.prefs.onboarded : false;
+  // Opening Settings is where someone who skipped setup sets their food rules, so it counts as set up.
+  useEffect(() => {
+    if (unset) updatePrefs((p) => ({ ...p, onboarded: true }));
+  }, [unset]);
   if (!data) return <div style={{ minHeight: "60vh" }} aria-busy="true" />;
 
   return (

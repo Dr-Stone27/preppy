@@ -9,10 +9,17 @@ import { currentData, type Data, isEmpty, normalise, onUserWrite, replaceData } 
  * Keeps this browser's data and the signed-in account in step.
  * The whole document is saved after each change (last save wins), which is fine for one person on a couple of devices.
  */
-export type SyncState = { status: "off" | "signed-out" | "loading" | "saved" | "saving" | "offline"; email?: string };
+export type SyncState = {
+  status: "off" | "signed-out" | "loading" | "saved" | "saving" | "offline";
+  email?: string;
+  /** Signed in just now (the emailed link, or another tab), rather than a session carried over. */
+  fresh?: boolean;
+};
 
 const OWNER = "preppy:owner"; // account the local copy belongs to
 const DIRTY = "preppy:dirty"; // local changes not yet saved to the account
+const SEEN = "preppy:seen"; // this browser has finished setup or signed in before; kept after sign-out
+const SETUP = "preppy:setup"; // setup reached the sign-in step and isn't finished yet
 
 let state: SyncState = { status: "loading" };
 let session: Session | null = null;
@@ -40,6 +47,13 @@ const ls = {
     } catch {}
   },
 };
+
+export const markSeen = () => ls.set(SEEN, "1");
+export const hasSeen = () => ls.get(SEEN) === "1";
+export const forgetSeen = () => ls.set(SEEN, null);
+export const setSetupPending = (on: boolean) => ls.set(SETUP, on ? "1" : null);
+export const setupPending = () => ls.get(SETUP) === "1";
+export const clearFresh = () => set({ ...state, fresh: false });
 
 /** Guest data joining an account: account wins where both have something. Recipes are combined. */
 function merge(local: Data, remote: Data): Data {
@@ -79,7 +93,7 @@ async function pull() {
   const { data: row, error } = await s.from("user_data").select("data").eq("user_id", uid).maybeSingle();
   if (error) {
     console.error("[sync] load", error.message);
-    return set({ status: "offline", email: session.user.email });
+    return set({ status: "offline", email: session.user.email, fresh: state.fresh });
   }
   const local = currentData();
   const owner = ls.get(OWNER);
@@ -88,22 +102,28 @@ async function pull() {
     // New account: this device's data becomes the account's, unless it belongs to someone else.
     if (owner && owner !== uid) replaceData(normalise(null));
     ls.set(OWNER, uid);
-    set({ status: "saving", email: session.user.email });
+    markSeen();
+    set({ status: "saving", email: session.user.email, fresh: state.fresh });
     return push();
   }
   const remote = normalise(row.data as Partial<Data>);
+  markSeen();
   if (owner === uid) {
-    if (dirty) return push(); // changes made here while away win
+    if (dirty) {
+      set({ status: "saving", email: session.user.email, fresh: state.fresh });
+      return push(); // changes made here while away win
+    }
     replaceData(remote);
   } else if (!owner && !isEmpty(local)) {
     replaceData(merge(local, remote));
     ls.set(OWNER, uid);
+    set({ status: "saving", email: session.user.email, fresh: state.fresh });
     return push();
   } else {
     replaceData(remote);
   }
   ls.set(OWNER, uid);
-  set({ status: "saved", email: session.user.email });
+  set({ status: "saved", email: session.user.email, fresh: state.fresh });
 }
 
 function start() {
@@ -130,7 +150,12 @@ function start() {
       }
       return set({ status: "signed-out" });
     }
-    if (next.user.id !== was) setTimeout(pull, 0); // outside the auth callback, per Supabase's guidance
+    if (next.user.id !== was) {
+      // Hold screens on "loading" until the account's copy is in, so nobody is sent to setup by mistake.
+      const fresh = event === "SIGNED_IN" || (event === "INITIAL_SESSION" && location.pathname === "/account");
+      set({ status: "loading", email: next.user.email, fresh });
+      setTimeout(pull, 0); // outside the auth callback, per Supabase's guidance
+    }
   });
 
   // Another device may have changed things while this tab was in the background.

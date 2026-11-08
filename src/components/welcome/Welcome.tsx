@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
@@ -8,7 +9,7 @@ import { Button, IconButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { libraryRecipes, recipeById } from "@/domain/recipes/library";
 import { updatePrefs, useData } from "@/state/store";
-import { useSync } from "@/state/sync";
+import { markSeen, setSetupPending, useSync } from "@/state/sync";
 import { AccountPanel } from "@/components/account/AccountPanel";
 import builder from "@/components/plan/RoundBuilder.module.css";
 import styles from "./Welcome.module.css";
@@ -23,17 +24,22 @@ const HOW = [
 export function Welcome() {
   const data = useData();
   const router = useRouter();
-  const [step, setStep] = useState(0);
+  // Arriving from the emailed link partway through setup lands on the last step. Nothing renders until data loads, so this can't mismatch.
+  const [step, setStep] = useState(() => (typeof window !== "undefined" && new URLSearchParams(location.search).get("step") === "done" ? 4 : 0));
   const sync = useSync();
 
   useEffect(() => {
     document.getElementById("welcome-scroll")?.scrollTo(0, 0);
+    // From here, tapping the emailed link should bring them back to finish setup, not start over.
+    if (step === 3) setSetupPending(true);
   }, [step]);
 
   if (!data) return <div style={{ minHeight: "60vh" }} aria-busy="true" />;
 
   const finish = (to: string) => {
     updatePrefs((p) => ({ ...p, onboarded: true }));
+    setSetupPending(false);
+    markSeen();
     router.replace(to);
   };
 
@@ -62,9 +68,16 @@ export function Welcome() {
       </>
     );
     foot = (
-      <Button block onClick={() => setStep(1)}>
-        Set up in a minute
-      </Button>
+      <>
+        <Button block onClick={() => setStep(1)}>
+          Set up in a minute
+        </Button>
+        {sync.status !== "off" && !sync.email && (
+          <p className={styles.already}>
+            Already use Preppy? <Link href="/account">Sign in</Link>
+          </p>
+        )}
+      </>
     );
   } else if (step === 1) {
     body = (

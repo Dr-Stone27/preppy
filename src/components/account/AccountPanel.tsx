@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -28,6 +29,7 @@ function message(e: unknown): string {
 /** Sign in with an emailed link, and show sync status once signed in. */
 export function AccountPanel() {
   const sync = useSync();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -47,7 +49,7 @@ export function AccountPanel() {
         <p className="t-small t-muted" role="status">
           {STATUS[sync.status] ?? ""}
         </p>
-        <Button variant="secondary" size="sm" onClick={() => signOut()}>
+        <Button variant="secondary" size="sm" onClick={() => signOut().then(() => router.replace("/account"))}>
           Sign out
         </Button>
       </div>

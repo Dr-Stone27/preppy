@@ -3,9 +3,10 @@
  * GEMINI_MODEL can change without a code change, since model names move often.
  */
 const MODELS = [
-  process.env.GEMINI_MODEL || "gemini-flash-latest",
-  // Tried when the first model is overloaded or rate-limited.
-  process.env.GEMINI_FALLBACK_MODEL || "gemini-flash-lite-latest",
+  // Flash-Lite answers in seconds and is enough for reading captions and ordering a cook.
+  process.env.GEMINI_MODEL || "gemini-flash-lite-latest",
+  // Tried when the first model is overloaded, rate-limited or slow.
+  process.env.GEMINI_FALLBACK_MODEL || "gemini-flash-latest",
 ];
 
 export class AiUnavailable extends Error {}

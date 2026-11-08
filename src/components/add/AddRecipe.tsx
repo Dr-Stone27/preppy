@@ -1,7 +1,9 @@
 "use client";
 
+import { track } from "@/lib/analytics";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { type ChangeEvent, useRef, useState } from "react";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -9,6 +11,7 @@ import { findBySource, recipeHref } from "@/domain/recipes/library";
 import { parseShared, recipeFromAi } from "@/domain/recipes/import";
 import { ruleWarnings, warningSentence } from "@/domain/recipes/rules";
 import type { Recipe } from "@/domain/recipes/types";
+import { shrink, type Shot } from "@/lib/images";
 import { authHeader } from "@/lib/supabase";
 import { saveRecipe, useData } from "@/state/store";
 import { RecipeForm } from "./RecipeForm";
@@ -26,16 +29,37 @@ type State =
 const ERRORS: Record<number, string> = {
   503: "Reading posts isn’t switched on yet. You can type the recipe in instead.",
   429: "The recipe reader is busy right now. Try again in a minute, or type it in.",
-  400: "Paste the caption or type a short note first.",
+  400: "Paste the caption, add a screenshot, or type a short note first.",
+  413: "Those screenshots are too big to read. Try fewer, or crop them to the caption.",
   401: "Sign in to read recipes from posts. It’s free, and keeps your recipes on every device.",
   402: "You’ve read a lot of posts today. Try again tomorrow, or type this one in.",
 };
 
+const MAX_SHOTS = 4;
+
+/**
+ * What arrived in the address: the iPhone Shortcut sends `shared` ("link\ncaption"),
+ * Android's share button sends `text` and sometimes `url` when Preppy is installed.
+ */
+function fromAddress(params: URLSearchParams): { link: string; text: string } {
+  const raw = params.get("shared") ?? [params.get("url"), params.get("text")].filter(Boolean).join("\n");
+  if (!raw.trim()) return { link: "", text: "" };
+  const shared = parseShared(raw.trim());
+  if (shared) return { link: shared.link, text: shared.caption };
+  const url = raw.match(/https?:\/\/(www\.)?instagram\.com\/\S+/i)?.[0];
+  return url ? { link: url.split("?")[0], text: raw.replace(url, "").trim() } : { link: "", text: raw.trim() };
+}
+
 export function AddRecipe() {
   const data = useData();
+  const params = useSearchParams();
+  const [arrived] = useState(() => fromAddress(params));
   const [mode, setMode] = useState<Mode>("post");
-  const [link, setLink] = useState("");
-  const [text, setText] = useState("");
+  const [link, setLink] = useState(arrived.link);
+  const [text, setText] = useState(arrived.text);
+  const [shots, setShots] = useState<Shot[]>([]);
+  const [adding, setAdding] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null);
   const [state, setState] = useState<State>({ s: "idle" });
   const ctl = useRef<AbortController | null>(null);
 
@@ -47,22 +71,39 @@ export function AddRecipe() {
     } else setText(value);
   };
 
+  const addShots = async (e: ChangeEvent<HTMLInputElement>) => {
+    const files = [...(e.target.files ?? [])].filter((f) => f.type.startsWith("image/")).slice(0, MAX_SHOTS - shots.length);
+    e.target.value = "";
+    if (!files.length) return;
+    setAdding(true);
+    try {
+      const next = await Promise.all(files.map(shrink));
+      setShots((s) => [...s, ...next].slice(0, MAX_SHOTS));
+      if (state.s === "error") setState({ s: "idle" });
+    } catch {
+      setState({ s: "error", message: "Couldn’t open that image. Try a regular screenshot." });
+    } finally {
+      setAdding(false);
+    }
+  };
+
   const read = async () => {
     const dup = link ? findBySource(link) : undefined;
     if (dup) return setState({ s: "duplicate", recipe: dup });
-    if (!text.trim()) return setState({ s: "error", message: ERRORS[400] });
+    if (!text.trim() && !shots.length) return setState({ s: "error", message: ERRORS[400] });
     ctl.current = new AbortController();
     setState({ s: "reading" });
     try {
       const res = await fetch("/api/read-recipe", {
         method: "POST",
         headers: { "content-type": "application/json", ...(await authHeader()) },
-        body: JSON.stringify({ text, link, never: data?.prefs.never ?? [] }),
+        body: JSON.stringify({ text, link, never: data?.prefs.never ?? [], images: shots.map(({ mime, data }) => ({ mime, data })) }),
         signal: ctl.current.signal,
       });
       if (!res.ok) return setState({ s: "error", message: ERRORS[res.status] ?? "That didn’t work. Try again, or type the recipe in.", offerTyping: res.status !== 400, signIn: res.status === 401 });
       const { recipe } = (await res.json()) as { recipe: unknown };
       setState({ s: "check", recipe: recipeFromAi(recipe, link) });
+      track("recipe_read", { screenshots: shots.length, caption: !!text.trim() });
     } catch (e) {
       if ((e as Error).name === "AbortError") return setState({ s: "idle" });
       setState({ s: "error", message: "That didn’t work. Try again, or type the recipe in.", offerTyping: true });
@@ -73,9 +114,11 @@ export function AddRecipe() {
 
   const save = (r: Recipe) => {
     saveRecipe(r);
+    track("recipe_saved", { from: mode === "type" ? "typed" : "post" });
     setState({ s: "saved", recipe: r });
     setLink("");
     setText("");
+    setShots([]);
     window.scrollTo({ top: 0 });
   };
 
@@ -160,6 +203,31 @@ export function AddRecipe() {
             />
             <small>No caption on the post? A rough note works, like “gochujang chicken: thighs, gochujang, honey, soy, garlic”.</small>
           </label>
+
+          <div className={styles.field}>
+            <span>Or screenshots of the caption</span>
+            {shots.length > 0 && (
+              <ul className={styles.shots} aria-label="Screenshots added">
+                {shots.map((s, i) => (
+                  <li key={i}>
+                    {/* eslint-disable-next-line @next/next/no-img-element -- a local preview, not a hosted image */}
+                    <img src={s.preview} alt={`Screenshot ${i + 1}`} />
+                    <button type="button" aria-label={`Remove screenshot ${i + 1}`} onClick={() => setShots((all) => all.filter((_, j) => j !== i))} disabled={state.s === "reading"}>
+                      <Icon name="close" size={14} strokeWidth={2.4} />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {shots.length < MAX_SHOTS && (
+              <Button variant="secondary" size="sm" onClick={() => fileInput.current?.click()} disabled={adding || state.s === "reading"}>
+                <Icon name="image" size={18} />
+                {adding ? "Adding…" : shots.length ? "Add another" : "Add screenshots"}
+              </Button>
+            )}
+            <input ref={fileInput} type="file" accept="image/*" multiple hidden onChange={addShots} />
+            <small>Tap “more” on the caption first so all of it shows. Up to {MAX_SHOTS} screenshots.</small>
+          </div>
 
           {state.s === "reading" ? (
             <div className={styles.reading} role="status">

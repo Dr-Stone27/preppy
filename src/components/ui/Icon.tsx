@@ -32,6 +32,13 @@ const paths = {
       <path d="M5 20a7 7 0 0 1 14 0" />
     </>
   ),
+  image: (
+    <>
+      <rect x="4" y="4" width="16" height="16" rx="2.5" />
+      <circle cx="9.5" cy="9.5" r="1.5" />
+      <path d="M20 15l-4.5-4.5L6 20" />
+    </>
+  ),
   search: (
     <>
       <circle cx="11" cy="11" r="6" />

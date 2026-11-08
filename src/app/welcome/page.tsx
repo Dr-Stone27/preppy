@@ -1,7 +1,12 @@
+import { Suspense } from "react";
 import { Welcome } from "@/components/welcome/Welcome";
 
 export const metadata = { title: "Welcome · Preppy" };
 
 export default function WelcomePage() {
-  return <Welcome />;
+  return (
+    <Suspense>
+      <Welcome />
+    </Suspense>
+  );
 }

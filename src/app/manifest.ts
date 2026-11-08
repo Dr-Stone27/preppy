@@ -10,6 +10,8 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     background_color: "#FFFDF9",
     theme_color: "#FFFDF9",
+    // Android: Preppy appears in the share sheet once added to the home screen, and opens Add with what was shared.
+    share_target: { action: "/add", method: "GET", params: { title: "title", text: "text", url: "url" } },
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
       { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },

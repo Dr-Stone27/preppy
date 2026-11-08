@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@/lib/analytics";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
@@ -45,6 +46,8 @@ export function CookDay() {
   useEffect(() => {
     document.getElementById("cook-scroll")?.scrollTo(0, 0);
   }, [i]);
+
+  useEffect(() => track("cook_day_opened"), []);
 
   if (!data) return <div style={{ minHeight: "60vh" }} aria-busy="true" />;
 

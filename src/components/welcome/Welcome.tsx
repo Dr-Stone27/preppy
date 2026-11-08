@@ -1,7 +1,8 @@
 "use client";
 
+import { track } from "@/lib/analytics";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
 import { CookDaysEditor, NeverEditor, SidesEditor } from "@/components/prefs/PrefEditors";
@@ -25,19 +26,22 @@ const HOW = [
 export function Welcome() {
   const data = useData();
   const router = useRouter();
-  // Arriving from the emailed link partway through setup lands on the last step. Nothing renders until data loads, so this can't mismatch.
-  const [step, setStep] = useState(() => (typeof window !== "undefined" && new URLSearchParams(location.search).get("step") === "done" ? DONE : 0));
+  const params = useSearchParams();
+  // Arriving from the landing page starts at the first question; from the emailed link partway through, at the end.
+  const [step, setStep] = useState(() => (params.get("step") === "done" ? DONE : params.get("step") === "start" ? COOK : 0));
   const sync = useSync();
 
   useEffect(() => {
     document.getElementById("welcome-scroll")?.scrollTo(0, 0);
     // From here, tapping the emailed link should bring them back to finish setup, not start over.
     if (step === SIGN_IN) setSetupPending(true);
+    if (step === COOK) track("setup_started");
   }, [step]);
 
   if (!data) return <div style={{ minHeight: "60vh" }} aria-busy="true" />;
 
   const finish = (to: string) => {
+    track("setup_done", { skipped: step < DONE, cook_days: data.prefs.cookDays?.length ?? 0, signed_in: !!sync.email });
     updatePrefs((p) => ({ ...p, onboarded: true }));
     setSetupPending(false);
     markSeen();

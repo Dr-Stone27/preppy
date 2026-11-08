@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@/lib/analytics";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
@@ -54,6 +55,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
       Object.assign(w.cells, cells);
       return w;
     });
+    track("round_planned", { mains: mains.length, sweets: sweets.length });
     setStep("done");
   };
 

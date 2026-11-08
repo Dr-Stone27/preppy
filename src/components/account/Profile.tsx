@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { signOut, useSync } from "@/state/sync";
+import { deleteAccount, signOut, useSync } from "@/state/sync";
 import { AccountPanel } from "./AccountPanel";
 import { Avatar } from "./Avatar";
 import styles from "./Profile.module.css";
@@ -20,6 +20,9 @@ export function Profile() {
   const sync = useSync();
   const [open, setOpen] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const [confirm, setConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [failed, setFailed] = useState(false);
   const router = useRouter();
 
   if (sync.status === "off") return null;
@@ -49,6 +52,41 @@ export function Profile() {
         >
           {leaving ? "Signing out…" : "Sign out"}
         </Button>
+        {confirm ? (
+          <div className={styles.danger} role="alertdialog" aria-label="Delete account">
+            <p className="t-small">
+              Delete your account and everything saved to it: plans, pantry, settings and recipes you saved. This can’t be undone.
+            </p>
+            {failed && <p className={styles.failed}>That didn’t work. Check your connection and try again.</p>}
+            <div className={styles.dangerActions}>
+              <Button
+                size="sm"
+                variant="danger"
+                disabled={deleting}
+                onClick={async () => {
+                  setDeleting(true);
+                  setFailed(false);
+                  try {
+                    await deleteAccount();
+                    router.replace("/start");
+                  } catch {
+                    setFailed(true);
+                    setDeleting(false);
+                  }
+                }}
+              >
+                {deleting ? "Deleting…" : "Delete everything"}
+              </Button>
+              <Button size="sm" variant="text" disabled={deleting} onClick={() => setConfirm(false)}>
+                Keep my account
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <button type="button" className={styles.deleteLink} onClick={() => setConfirm(true)}>
+            Delete my account
+          </button>
+        )}
       </section>
     );
   }

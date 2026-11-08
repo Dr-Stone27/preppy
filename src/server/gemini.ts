@@ -1,4 +1,5 @@
 import { accountsOn, SUPABASE_KEY, SUPABASE_URL } from "@/lib/supabase";
+import { accountFrom, sameOrigin, secretHeaders } from "./admin";
 /**
  * Minimal Gemini call over REST. The key stays on the server.
  * GEMINI_MODEL can change without a code change, since model names move often.
@@ -12,12 +13,14 @@ const MODELS = [
 
 export class AiUnavailable extends Error {}
 
-async function call(model: string, key: string, prompt: string, thinking: boolean, signal?: AbortSignal) {
+export type Image = { mime: string; data: string };
+
+async function call(model: string, key: string, prompt: string, thinking: boolean, signal?: AbortSignal, images: Image[] = []) {
   return fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: "POST",
     headers: { "content-type": "application/json", "x-goog-api-key": key },
     body: JSON.stringify({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      contents: [{ role: "user", parts: [...images.map((i) => ({ inlineData: { mimeType: i.mime, data: i.data } })), { text: prompt }] }],
       generationConfig: {
         responseMimeType: "application/json",
         temperature: 0.2,
@@ -29,18 +32,18 @@ async function call(model: string, key: string, prompt: string, thinking: boolea
   });
 }
 
-async function once(model: string, key: string, prompt: string, signal?: AbortSignal): Promise<Response> {
-  const res = await call(model, key, prompt, true, signal);
+async function once(model: string, key: string, prompt: string, signal?: AbortSignal, images?: Image[]): Promise<Response> {
+  const res = await call(model, key, prompt, true, signal, images);
   // Older models don't know thinkingLevel; ask again without it.
   if (res.status === 400) {
     const detail = await res.text();
-    if (/thinking/i.test(detail)) return call(model, key, prompt, false, signal);
+    if (/thinking/i.test(detail)) return call(model, key, prompt, false, signal, images);
     return new Response(detail, { status: 400 });
   }
   return res;
 }
 
-export async function geminiJson(prompt: string, signal?: AbortSignal): Promise<unknown> {
+export async function geminiJson(prompt: string, signal?: AbortSignal, images?: Image[]): Promise<unknown> {
   const key = process.env.GEMINI_API_KEY || process.env.Gemini_API_Key;
   if (!key) throw new AiUnavailable("not-configured");
   let res: Response | null = null;
@@ -51,7 +54,7 @@ export async function geminiJson(prompt: string, signal?: AbortSignal): Promise<
     // An overloaded model can hang instead of saying so; give each one a share of the time.
     const attempt = last ? signal : AbortSignal.any([...(signal ? [signal] : []), AbortSignal.timeout(20_000)]);
     try {
-      res = await once(model, key, prompt, attempt);
+      res = await once(model, key, prompt, attempt, images);
     } catch {
       if (last || signal?.aborted) {
         console.error(`[ai] ${model} took too long`);
@@ -80,9 +83,6 @@ export async function geminiJson(prompt: string, signal?: AbortSignal): Promise<
 
 /** Best-effort guard against other sites using this endpoint, and against bursts from one address. */
 const hits = new Map<string, number[]>();
-const SECRET = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
-const secretHeaders = (): Record<string, string> =>
-  SECRET.startsWith("sb_secret_") ? { apikey: SECRET } : { apikey: SECRET, authorization: `Bearer ${SECRET}` };
 
 /**
  * Checks the token with Supabase Auth, then counts one AI call against that account with the server's secret key.
@@ -91,11 +91,9 @@ const secretHeaders = (): Record<string, string> =>
 async function allowance(auth: string): Promise<boolean | "sign-in" | "error"> {
   const signal = AbortSignal.timeout(5_000);
   try {
-    const who = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { apikey: SUPABASE_KEY, authorization: auth }, signal });
-    if (who.status === 401 || who.status === 403) return "sign-in";
-    if (!who.ok) return "error";
-    const { id } = (await who.json()) as { id?: string };
-    if (!id) return "sign-in";
+    const who = await accountFrom(auth, signal);
+    if (typeof who === "string") return who;
+    const { id } = who;
     const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/use_ai`, {
       method: "POST",
       headers: { ...secretHeaders(), "content-type": "application/json" },
@@ -128,9 +126,7 @@ async function allowance(auth: string): Promise<boolean | "sign-in" | "error"> {
  * a signed-in account with AI allowance left today (counted by use_ai() in the database).
  */
 export async function guard(req: Request): Promise<Response | null> {
-  const origin = req.headers.get("origin");
-  const host = req.headers.get("host");
-  if (origin && host && new URL(origin).host !== host) return Response.json({ error: "forbidden" }, { status: 403 });
+  if (!sameOrigin(req)) return Response.json({ error: "forbidden" }, { status: 403 });
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "local";
   const now = Date.now();
   const recent = (hits.get(ip) ?? []).filter((t) => now - t < 60_000);

@@ -19,7 +19,7 @@ export function GettingStarted() {
   // A signed-in user on a new device gets their setup from the account, so wait for it.
   const ready = !!data && sync.status !== "loading";
   const away = ready && !data.prefs.onboarded && !sync.email;
-  const goTo = !away ? null : sync.status !== "off" && hasSeen() ? "/account" : "/welcome";
+  const goTo = !away ? null : sync.status !== "off" && hasSeen() ? "/account" : "/start";
 
   useEffect(() => {
     if (goTo) router.replace(goTo);

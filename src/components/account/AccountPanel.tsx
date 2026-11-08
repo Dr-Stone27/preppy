@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { sendCode, signOut, useSync } from "@/state/sync";
@@ -88,6 +89,9 @@ export function AccountPanel() {
         <Button type="submit" block disabled={busy || !email.trim()}>
           {busy ? "Sending…" : "Email me a sign-in link"}
         </Button>
+        <p className="t-label t-muted">
+          What Preppy keeps and why: <Link href="/privacy">Privacy</Link>
+        </p>
       </form>
     );
   }

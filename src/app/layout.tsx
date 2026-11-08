@@ -19,6 +19,13 @@ export const metadata: Metadata = {
   title: "Preppy",
   description: "Save recipes, cook on the days that suit you, shop the way you shop.",
   appleWebApp: { capable: true, title: "Preppy", statusBarStyle: "default" },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://preppy-liart.vercel.app"),
+  openGraph: {
+    title: "Preppy · Cook a few times. Eat well all week.",
+    description: "Meal prep planned around the days you cook, with one shopping list and a cooking order.",
+    siteName: "Preppy",
+    type: "website",
+  },
 };
 
 export const viewport: Viewport = {

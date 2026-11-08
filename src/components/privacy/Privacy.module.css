@@ -1,0 +1,15 @@
+.body {
+  display: grid;
+  gap: var(--space-3);
+  line-height: 1.55;
+}
+
+.body h2 {
+  margin-top: var(--space-4);
+}
+
+.body a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

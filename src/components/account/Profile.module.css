@@ -30,3 +30,30 @@
   font-weight: 700;
   overflow-wrap: anywhere;
 }
+
+.deleteLink {
+  align-self: flex-start;
+  min-height: 44px;
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+.danger {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-danger-soft);
+}
+
+.dangerActions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.failed {
+  font-size: var(--text-small);
+  color: var(--color-danger);
+}

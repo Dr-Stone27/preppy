@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { AddRecipe } from "@/components/add/AddRecipe";
 import { ScreenHeader, Stack } from "@/components/ui/Layout";
 
@@ -7,7 +8,9 @@ export default function AddPage() {
   return (
     <Stack gap={4}>
       <ScreenHeader title="Add a recipe" />
-      <AddRecipe />
+      <Suspense>
+        <AddRecipe />
+      </Suspense>
     </Stack>
   );
 }

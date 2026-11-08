@@ -2,7 +2,8 @@
 
 import type { Session } from "@supabase/supabase-js";
 import { useSyncExternalStore } from "react";
-import { supabase } from "@/lib/supabase";
+import { forget, identify, track } from "@/lib/analytics";
+import { authHeader, supabase } from "@/lib/supabase";
 import { currentData, type Data, isEmpty, normalise, onUserWrite, replaceData } from "./store";
 
 /**
@@ -90,6 +91,8 @@ async function pull() {
   const s = supabase();
   if (!s || !session) return;
   const uid = session.user.id;
+  identify(uid);
+  if (state.fresh) track("signed_in");
   const { data: row, error } = await s.from("user_data").select("data").eq("user_id", uid).maybeSingle();
   if (error) {
     console.error("[sync] load", error.message);
@@ -186,8 +189,22 @@ export async function sendCode(email: string) {
   if (error) throw error;
 }
 
+/** Deletes the account and everything saved to it, then clears this device. */
+export async function deleteAccount() {
+  clearTimeout(timer);
+  const res = await fetch("/api/account", { method: "DELETE", headers: await authHeader() });
+  if (!res.ok) throw new Error(`delete ${res.status}`);
+  track("account_deleted");
+  forget();
+  ls.set(DIRTY, null);
+  forgetSeen();
+  setSetupPending(false);
+  await supabase()?.auth.signOut({ scope: "local" });
+}
+
 export async function signOut() {
   clearTimeout(timer);
   if (ls.get(DIRTY) === "1") await push();
   await supabase()?.auth.signOut();
+  forget();
 }

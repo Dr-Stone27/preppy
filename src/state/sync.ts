@@ -161,13 +161,6 @@ export async function sendCode(email: string) {
   if (error) throw error;
 }
 
-export async function verifyCode(email: string, token: string) {
-  const s = supabase();
-  if (!s) throw new Error("off");
-  const { error } = await s.auth.verifyOtp({ email, token, type: "email" });
-  if (error) throw error;
-}
-
 export async function signOut() {
   clearTimeout(timer);
   if (ls.get(DIRTY) === "1") await push();

@@ -19,7 +19,7 @@ export function Account() {
       <section className={prefs.section}>
         <div>
           <h2 className="t-h3">{sync.email ? "Signed in" : "Keep your plans on every device"}</h2>
-          {!sync.email && <p className="t-small t-muted">We’ll email you a code. No password needed.</p>}
+          {!sync.email && <p className="t-small t-muted">We’ll email you a sign-in link. No password needed.</p>}
         </div>
         <AccountPanel />
       </section>

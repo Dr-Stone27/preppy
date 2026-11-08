@@ -3,7 +3,7 @@
 import { track } from "@/lib/analytics";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -15,7 +15,7 @@ import { authHeader } from "@/lib/supabase";
 import { saveRecipe, useData } from "@/state/store";
 import { useSync } from "@/state/sync";
 import { AccountPanel } from "@/components/account/AccountPanel";
-import { FromInstagram } from "./FromInstagram";
+import { FromInstagram, SHORTCUT, SHORTCUT_VERSION } from "./FromInstagram";
 import { RecipeForm } from "./RecipeForm";
 import styles from "./Add.module.css";
 
@@ -94,6 +94,12 @@ function saveDraft(d: { link: string; text: string } | null) {
   } catch {}
 }
 
+/** The version the iPhone Shortcut stamps on what it sends (#v=6&shared=…); 0 for older copies and other routes. */
+function shortcutVersion(): number {
+  if (typeof window === "undefined") return 0;
+  return Number(window.location.hash.match(/[#&]v=(\d+)/)?.[1] ?? 0);
+}
+
 function fromAddress(params: URLSearchParams): { link: string; text: string } {
   // The Shortcut puts it after # (kept in the browser, so any length works); older links used ?shared=.
   const shared = sharedFromHref() ?? params.get("shared");
@@ -105,7 +111,22 @@ function fromAddress(params: URLSearchParams): { link: string; text: string } {
   return url ? { link: url.split("?")[0], text: raw.replace(url, "").trim() } : { link: "", text: raw.trim() };
 }
 
+const onHashChange = (cb: () => void) => {
+  window.addEventListener("hashchange", cb);
+  return () => window.removeEventListener("hashchange", cb);
+};
+
+/**
+ * What the Shortcut sends sits after # in the address, which the server never sees, and the draft lives in this
+ * browser. So the form is only drawn once the page is running here, and drawn afresh if a new post arrives.
+ */
 export function AddRecipe() {
+  const hash = useSyncExternalStore(onHashChange, () => window.location.hash, () => null);
+  if (hash === null) return <div style={{ minHeight: "60vh" }} aria-busy="true" />;
+  return <AddRecipeForm key={hash} />;
+}
+
+function AddRecipeForm() {
   const data = useData();
   const params = useSearchParams();
   // What arrived from Instagram or TikTok, or failing that, whatever was being added before (e.g. before signing in).
@@ -114,6 +135,8 @@ export function AddRecipe() {
     return a.link || a.text ? a : loadDraft();
   });
   const source = /tiktok/i.test(arrived.link) ? "TikTok" : "Instagram";
+  // Sent by an iPhone Shortcut older than the one on the site: it may cut long captions.
+  const [oldShortcut] = useState(() => typeof window !== "undefined" && window.location.hash.includes("shared=") && shortcutVersion() < SHORTCUT_VERSION);
   const [mode, setMode] = useState<Mode>("post");
   const [link, setLink] = useState(arrived.link);
   const [text, setText] = useState(arrived.text);
@@ -251,6 +274,15 @@ export function AddRecipe() {
         <RecipeForm initial={{ source: link || undefined }} submitLabel="Save recipe" onSubmit={save} />
       ) : (
         <>
+          {oldShortcut && (
+            <p className={styles.outdated} role="status">
+              Your Save to Preppy shortcut is out of date and may cut long captions. Delete it in the Shortcuts app, then{" "}
+              <a href={SHORTCUT} download="Save to Preppy.shortcut">
+                get the new one
+              </a>
+              .
+            </p>
+          )}
           {arrived.link && state.s === "idle" && (
             <p className={styles.arrived} role="status">
               {arrived.text ? `Got the post from ${source}.` : `Got the link, but not the caption. Copy the caption in ${source} and paste it below.`}

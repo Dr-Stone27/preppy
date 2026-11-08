@@ -289,3 +289,17 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+.outdated {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-warning-soft);
+  color: var(--color-warning-ink);
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+
+.outdated a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

@@ -5,8 +5,11 @@ import styles from "./Add.module.css";
 
 type Platform = "iphone" | "android";
 
+/** Matches VERSION in tools/build-shortcut.py. The download link carries it so phones don't reuse an older copy. */
+export const SHORTCUT_VERSION = 6;
+
 /** The signed iPhone Shortcut (built by tools/build-shortcut.py); an iCloud link can replace it. */
-const SHORTCUT = process.env.NEXT_PUBLIC_IOS_SHORTCUT_URL || "/save-to-preppy.shortcut";
+export const SHORTCUT = process.env.NEXT_PUBLIC_IOS_SHORTCUT_URL || `/save-to-preppy.shortcut?v=${SHORTCUT_VERSION}`;
 
 const noop = () => () => {};
 const guess = (): Platform => (/android/i.test(navigator.userAgent) ? "android" : "iphone");

@@ -19,6 +19,8 @@ def tokens(parts):
     return {"Value": {"string": s, "attachmentsByRange": att}, "WFSerializationType": "WFTextTokenString"}
 import sys
 DEBUG = "--debug" in sys.argv  # ends on the finished address instead of opening it, for testing with `shortcuts run`
+# Bump with every change, together with SHORTCUT_VERSION in src/components/add/FromInstagram.tsx.
+VERSION = 6
 SITE = next((x.split("=", 1)[1] for x in sys.argv if x.startswith("--site=")), "https://preppy-liart.vercel.app")
 U = {k: str(uuid.uuid4()).upper() for k in "ARMTNSUVWCEFG"}
 # Tested with `shortcuts run` against a page shaped like an Instagram post (8–9 Nov 2026). Two things matter:
@@ -62,7 +64,7 @@ actions = [
   {"WFWorkflowActionIdentifier": "is.workflow.actions.urlencode",
    "WFWorkflowActionParameters": {"UUID": U["F"], "WFEncodeMode": "Encode", "WFInput": tokens([out(U["E"], "Text")])}},
   {"WFWorkflowActionIdentifier": "is.workflow.actions.gettext",
-   "WFWorkflowActionParameters": {"UUID": U["G"], "WFTextActionText": tokens([SITE + "/add#shared=", out(U["F"], "URL Encoded Text")])}},
+   "WFWorkflowActionParameters": {"UUID": U["G"], "WFTextActionText": tokens([SITE + f"/add#v={VERSION}&shared=", out(U["F"], "URL Encoded Text")])}},
 ]
 if not DEBUG:
   actions.append({"WFWorkflowActionIdentifier": "is.workflow.actions.openurl",

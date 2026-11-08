@@ -19,10 +19,18 @@ export async function geminiJson(prompt: string, signal?: AbortSignal): Promise<
     signal,
   });
   if (res.status === 429) throw new AiUnavailable("busy");
-  if (!res.ok) throw new Error(`gemini ${res.status}`);
+  if (!res.ok) {
+    // Google's error text names the problem (bad model, quota) and never echoes the key.
+    const detail = (await res.text()).slice(0, 300).replace(/\s+/g, " ");
+    throw new Error(`gemini ${res.status} ${MODEL}: ${detail}`);
+  }
   const body = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
   const text = body.candidates?.[0]?.content?.parts?.map((p) => p.text ?? "").join("") ?? "";
-  return JSON.parse(text);
+  try {
+    return JSON.parse(text.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, ""));
+  } catch {
+    throw new Error(`gemini reply was not JSON (${MODEL}): ${text.slice(0, 120)}`);
+  }
 }
 
 /** Best-effort guard against other sites using this endpoint, and against bursts from one address. */
@@ -40,6 +48,7 @@ export function guard(req: Request): Response | null {
 }
 
 export function aiError(e: unknown): Response {
+  console.error("[ai]", e instanceof Error ? e.message : e);
   if (e instanceof AiUnavailable) {
     return Response.json({ error: e.message }, { status: e.message === "busy" ? 429 : 503 });
   }

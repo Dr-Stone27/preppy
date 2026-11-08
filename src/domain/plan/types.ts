@@ -37,4 +37,11 @@ export type Week = {
   prices: Record<string, number>;
 };
 
-export type Prefs = { never: string[]; bases: string[] };
+export type Prefs = {
+  never: string[];
+  bases: string[];
+  /** Set once the first-run setup is finished or skipped. */
+  onboarded?: boolean;
+  /** The getting-started checklist on Home was hidden. */
+  checklistHidden?: boolean;
+};

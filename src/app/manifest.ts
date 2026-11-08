@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 
+/** Used when someone adds Preppy to their home screen from the browser. */
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Preppy",
@@ -9,7 +10,10 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     background_color: "#FFFDF9",
     theme_color: "#FFFDF9",
-    // App icons are designed in the PWA slice; the favicon stands in until then.
-    icons: [{ src: "/favicon.ico", sizes: "any", type: "image/x-icon" }],
+    icons: [
+      { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+      { src: "/icons/maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+    ],
   };
 }

@@ -57,3 +57,12 @@ export function IconButton({
     </button>
   );
 }
+
+/** Round icon button that navigates. */
+export function IconButtonLink({ href, label, children }: { href: string; label: string; children: ReactNode }) {
+  return (
+    <Link href={href} aria-label={label} className={styles.icon}>
+      {children}
+    </Link>
+  );
+}

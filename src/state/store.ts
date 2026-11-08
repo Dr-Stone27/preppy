@@ -123,3 +123,11 @@ export function deleteRecipe(id: string) {
   }
   write({ ...d, weeks, recipes: d.recipes.filter((x) => x.id !== id) });
 }
+
+/** Copies starter recipes into the library as the user's own, so they can be planned and deleted. */
+export function addStarters(list: Recipe[]) {
+  const d = snapshot();
+  const have = new Set(d.recipes.map((r) => r.id));
+  const added = list.filter((r) => !have.has(r.id)).map((r) => ({ ...r, origin: "you" as const, createdAt: new Date().toISOString() }));
+  write({ ...d, recipes: [...d.recipes, ...added] });
+}

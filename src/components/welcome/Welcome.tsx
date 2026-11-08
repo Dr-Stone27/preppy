@@ -84,7 +84,7 @@ export function Welcome() {
       <>
         <div className={builder.intro}>
           <h1 className="t-h1">Anything you don’t eat?</h1>
-          <p className="t-muted">Recipes with these get a warning, so you can skip or swap them.</p>
+          <p className="t-muted">Pick any you avoid. Recipes with them get a warning, so you can skip or swap them. Nothing to avoid? Tap Next.</p>
         </div>
         <NeverEditor never={data.prefs.never} onChange={(never) => updatePrefs((p) => ({ ...p, never }))} />
       </>
@@ -94,7 +94,7 @@ export function Welcome() {
       <>
         <div className={builder.intro}>
           <h1 className="t-h1">Your sides</h1>
-          <p className="t-muted">Mains without their own carb get one of these, taking turns through the week.</p>
+          <p className="t-muted">Pick the sides you like. Mains without their own carb get one of these, taking turns through the week.</p>
         </div>
         <SidesEditor bases={data.prefs.bases} onChange={(bases) => updatePrefs((p) => ({ ...p, bases }))} />
       </>

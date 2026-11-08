@@ -3,7 +3,7 @@ import { aiError, geminiJson, guard } from "@/server/gemini";
 type Dish = { title: string; portions: number; servings: number; ingredients: string[]; steps: string[] };
 
 function prompt(dishes: Dish[]) {
-  return `Plan one batch-cooking session for a home cook in Nigeria with a two-burner stove, an air fryer and a microwave. They are cooking these recipes today, scaled to the portions shown:
+  return `Plan one batch-cooking session for a home cook in Nigeria with an ordinary home kitchen: a stove and an oven. Use a microwave or air fryer only where a recipe calls for one. They are cooking these recipes today, scaled to the portions shown:
 
 ${dishes
   .map((d) => `## ${d.title} (cook ${d.portions} portions; the recipe as written makes ${d.servings})
@@ -11,7 +11,7 @@ Ingredients: ${d.ingredients.join("; ")}
 Steps: ${d.steps.join(" ")}`)
   .join("\n\n")}
 
-Order the work so things run in parallel: start the longest hands-off items first (beans, rice, stews), use the stove and air fryer at the same time, do prep in the gaps, and merge shared prep (chop all the onions at once). Scale amounts to the portions. Include a cooling step before portioning.
+Order the work so things run in parallel: start the longest hands-off items first (beans, rice, stews), use the stove and oven at the same time, do prep in the gaps, and merge shared prep (chop all the onions at once). Scale amounts to the portions. Include a cooling step before portioning.
 Reply with only JSON: {"minutes": number, "steps": [{"title": short imperative, "detail": one or two sentences with scaled amounts, "appliance": "Prep" | "Stove" | "Air fryer" | "Microwave" | "Oven" | "Counter", "recipe": a recipe title or "All", "minutes": number or null (only for timed cooking), "meanwhile": string or null (what is already running)}], "storeTips": [string]}
 Use 8 to 16 steps.`;
 }

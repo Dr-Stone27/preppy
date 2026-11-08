@@ -11,8 +11,9 @@ export const SLOTS: { id: SlotId; label: string; short: string; kind: "main" | "
 ];
 
 export const DEFAULT_PREFS: Prefs = {
-  never: ["fried egg", "boiled egg", "fish", "seafood", "prawn", "shrimp", "crayfish"],
-  bases: ["Rice", "Spaghetti", "Yam", "Potatoes", "Sweet potatoes", "Bread", "Plantain"],
+  // A new person starts with nothing chosen; setup asks.
+  never: [],
+  bases: [],
 };
 
 /** Sunday cooks for Sunday to Wednesday; Wednesday cooks for Thursday to Saturday. */

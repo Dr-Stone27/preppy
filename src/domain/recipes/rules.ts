@@ -1,10 +1,5 @@
 import type { Recipe } from "./types";
 
-/**
- * Food rules carried over from Prep Week's preferences.
- * Becomes per-user settings when accounts land; until then these are the owner's.
- */
-export const NEVER_DEFAULT = ["fried egg", "boiled egg", "fish", "seafood", "prawn", "shrimp", "crayfish"];
 
 const SEAFOOD = ["oyster sauce", "fish sauce", "shrimp", "prawn", "crayfish", "anchov", "crab", "lobster", "squid", "calamari", "mussel", "clam"];
 
@@ -13,17 +8,19 @@ function searchable(r: Recipe) {
 }
 
 /**
- * What in this recipe breaks the user's food rules.
- * `items` are short names ("oyster sauce"); `notes` are longer flags saved with the recipe at import.
+ * What in this recipe breaks this person's food rules.
+ * `items` are short names ("oyster sauce"), found from their own list only.
+ * `notes` are longer remarks saved with the recipe at import, shown to everyone.
+ * Short flags on shared library recipes came from the owner's rules, so only a person's own saved recipes use them.
  */
-export function ruleWarnings(r: Recipe, never: string[] = NEVER_DEFAULT): { items: string[]; notes: string[] } {
+export function ruleWarnings(r: Recipe, never: string[] = []): { items: string[]; notes: string[] } {
   const text = searchable(r);
   const found = never.map((n) => n.toLowerCase()).filter((n) => n && text.includes(n));
   if (never.includes("seafood")) for (const w of SEAFOOD) if (text.includes(w)) found.push(w);
   const notes: string[] = [];
   for (const f of r.flags ?? []) {
     if (f.length > 40) notes.push(f);
-    else found.push(f.toLowerCase());
+    else if (r.origin === "you") found.push(f.toLowerCase()); // flagged against this person's own list when they saved it
   }
   const unique = [...new Set(found)];
   // "fish" adds nothing when "fish sauce" is already listed.

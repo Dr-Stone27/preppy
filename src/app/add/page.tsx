@@ -6,7 +6,7 @@ export default function AddPage() {
   return (
     <ComingSoon
       title="Add a recipe"
-      body="Saving reels needs Preppy's own server, which goes live with the accounts. Keep using the Prep Week Shortcut until then."
+      body="Paste an Instagram link and save the recipe straight to your library."
     />
   );
 }

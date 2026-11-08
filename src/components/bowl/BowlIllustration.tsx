@@ -76,8 +76,8 @@ export function BowlIllustration({ recipe, spec, size = "md", decorative, label,
       {/* contact shadow on the counter */}
       <ellipse cx="100" cy="190" rx="66" ry="6.5" fill={CERAMIC.shadow} opacity="0.06" />
       {/* vessel */}
-      <circle cx={cx} cy={cy} r="94" fill={CERAMIC.vessel} stroke={CERAMIC.rim} strokeWidth="2.5" />
-      <circle cx={cx} cy={cy} r="82" fill={CERAMIC.band} />
+      <circle cx={cx} cy={cy} r="93.5" fill={CERAMIC.vessel} stroke={CERAMIC.rim} strokeWidth="3.5" />
+      <circle cx={cx} cy={cy} r="82" fill={CERAMIC.band} stroke={CERAMIC.bandLine} strokeWidth="1.2" />
       {/* interior */}
       <circle cx={cx} cy={cy} r={r} fill={base} />
       <g clipPath={`url(#${id}-clip)`}>
@@ -86,7 +86,7 @@ export function BowlIllustration({ recipe, spec, size = "md", decorative, label,
       </g>
       <circle cx={cx} cy={cy} r={r} fill="none" stroke={CERAMIC.shadow} strokeOpacity="0.07" strokeWidth="2" />
       {/* glaze highlight on the rim */}
-      <path d="M 38 62 A 74 74 0 0 1 78 26" fill="none" stroke="#FFFFFF" strokeWidth="5" strokeLinecap="round" opacity="0.9" />
+      <path d="M 38 62 A 74 74 0 0 1 78 26" fill="none" stroke="#FFFDF9" strokeWidth="5" strokeLinecap="round" opacity="0.75" />
     </svg>
   );
 }

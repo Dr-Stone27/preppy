@@ -9,6 +9,19 @@
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
   min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+
+.card:active {
+  transform: scale(0.98);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    box-shadow: var(--shadow-floating);
+  }
 }
 
 .title {

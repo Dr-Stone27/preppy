@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <Stack gap={6}>
-      <ScreenHeader eyebrow="Preppy" title="This week" />
+      <ScreenHeader title="This week" />
 
       <Card className={styles.hero}>
         <div className={styles.collage}>
@@ -21,18 +21,17 @@ export default function Home() {
           ))}
         </div>
         <div className={styles.heroText}>
-          <span className="t-eyebrow">Your library</span>
-          <h2 className="t-h2">{count} recipes, moved over from Prep Week</h2>
-          <p className="t-small t-muted">Every dish now has its own bowl, drawn from what it actually contains.</p>
+          <span className="t-eyebrow">Your recipes</span>
+          <h2 className="t-h2">{count} dishes saved</h2>
         </div>
         <ButtonLink href="/library" block>
-          Open your library
+          Browse recipes
         </ButtonLink>
       </Card>
 
       <EmptyState
-        title="Nothing planned yet"
-        body="Rounds, your shopping list and cook day move over in the next build. Until then, keep planning in Prep Week."
+        title="No plan this week"
+        body="Weekly planning is coming soon."
       />
     </Stack>
   );

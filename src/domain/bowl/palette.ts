@@ -37,11 +37,13 @@ export function baseColor(cuisine: CuisineFamily, tint?: string): string {
   return CUISINE_BASE[cuisine];
 }
 
+/** Glazed stoneware: warm cream body, a fired earth-brown lip, a toasted inner band. */
 export const CERAMIC = {
-  vessel: "#FFFDF9",
-  rim: "#EAE5DC",
-  band: "#F5EFE6",
-  shadow: "#1E1B18",
+  vessel: "#F6EBDD",
+  rim: "#A8714A",
+  band: "#EEDCC6",
+  bandLine: "#CFAE88",
+  shadow: "#3B2A1E",
 };
 
 export const TOPPING_COLOR: Record<ToppingType, { fill: string; edge?: string }> = {

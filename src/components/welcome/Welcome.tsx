@@ -35,7 +35,6 @@ export function Welcome() {
     document.getElementById("welcome-scroll")?.scrollTo(0, 0);
     // From here, tapping the emailed link should bring them back to finish setup, not start over.
     if (step === SIGN_IN) setSetupPending(true);
-    if (step === COOK) track("setup_started");
   }, [step]);
 
   if (!data) return <div style={{ minHeight: "60vh" }} aria-busy="true" />;
@@ -74,7 +73,13 @@ export function Welcome() {
     );
     foot = (
       <>
-        <Button block onClick={() => setStep(COOK)}>
+        <Button
+          block
+          onClick={() => {
+            track("setup_started");
+            setStep(COOK);
+          }}
+        >
           Set up in a minute
         </Button>
         {sync.status !== "off" && !sync.email && (

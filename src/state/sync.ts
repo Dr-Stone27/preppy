@@ -91,7 +91,6 @@ async function pull() {
   const s = supabase();
   if (!s || !session) return;
   const uid = session.user.id;
-  identify(uid);
   if (state.fresh) track("signed_in");
   const { data: row, error } = await s.from("user_data").select("data").eq("user_id", uid).maybeSingle();
   if (error) {
@@ -146,6 +145,7 @@ function start() {
     session = next;
     if (!next) {
       if (event === "SIGNED_OUT" && was) {
+        forget();
         // Leave nothing behind for the next person on this device.
         replaceData(normalise(null));
         ls.set(OWNER, null);
@@ -154,6 +154,9 @@ function start() {
       return set({ status: "signed-out" });
     }
     if (next.user.id !== was) {
+      // A direct account switch must not merge the previous account's analytics identity.
+      if (was) forget();
+      identify(next.user.id, next.user.email);
       // Hold screens on "loading" until the account's copy is in, so nobody is sent to setup by mistake.
       const fresh = event === "SIGNED_IN" || (event === "INITIAL_SESSION" && location.pathname === "/account");
       set({ status: "loading", email: next.user.email, fresh });

@@ -1,72 +1,41 @@
 "use client";
 
 /**
- * Usage tracking with PostHog: screens opened and a handful of named steps, nothing typed.
- * Does nothing until NEXT_PUBLIC_POSTHOG_KEY is set, and loads the library only then.
- * No autocapture, no session recordings, no cookies (it keeps its id in localStorage).
+ * Usage tracking with PostHog: meaningful user actions and completion steps, never typed content.
+ * The shared client is initialized once in instrumentation-client.ts.
  */
-import type { PostHog } from "posthog-js";
+import posthog from "posthog-js";
 
-const KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
-const HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
+const isConfigured = Boolean(
+  process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST,
+);
 
 export type Event =
-  | "landing_viewed"
   | "landing_get_started"
   | "setup_started"
   | "setup_done"
+  | "sign_in_link_requested"
   | "signed_in"
-  | "round_planned"
+  | "account_deleted"
   | "recipe_read"
   | "recipe_saved"
-  | "cook_day_opened"
-  | "account_deleted";
-
-let client: PostHog | null = null;
-let loading: Promise<PostHog | null> | null = null;
-const queue: (() => void)[] = [];
-
-function load(): Promise<PostHog | null> {
-  if (!KEY || typeof window === "undefined") return Promise.resolve(null);
-  loading ??= import("posthog-js")
-    .then(({ default: posthog }) => {
-      posthog.init(KEY, {
-        api_host: HOST,
-        persistence: "localStorage",
-        person_profiles: "identified_only",
-        capture_pageview: "history_change",
-        capture_pageleave: false,
-        autocapture: false,
-        disable_session_recording: true,
-        disable_surveys: true,
-      });
-      client = posthog;
-      queue.splice(0).forEach((f) => f());
-      return posthog;
-    })
-    .catch(() => null);
-  return loading;
-}
-
-function run(f: (p: PostHog) => void) {
-  if (!KEY || typeof window === "undefined") return;
-  if (client) return f(client);
-  queue.push(() => client && f(client));
-  void load();
-}
-
-/** Starts tracking (and the first page view) as soon as the app opens. */
-export const startAnalytics = () => void load();
+  | "recipe_deleted"
+  | "round_planned"
+  | "cook_order_generated"
+  | "cooking_completed"
+  | "meal_customized";
 
 export function track(event: Event, props?: Record<string, string | number | boolean>) {
-  run((p) => p.capture(event, props));
+  if (isConfigured) posthog.capture(event, props);
 }
 
-/** Links this browser's events to the account by its id only. Never the email. */
-export function identify(userId: string) {
-  run((p) => p.identify(userId));
+/** Links this browser's events to the account id; email is a person property, never an event property. */
+export function identify(userId: string, email?: string) {
+  if (!isConfigured) return;
+  if (email) posthog.identify(userId, { email });
+  else posthog.identify(userId);
 }
 
 export function forget() {
-  run((p) => p.reset());
+  if (isConfigured) posthog.reset();
 }

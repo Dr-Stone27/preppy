@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { startAnalytics } from "@/lib/analytics";
 import { clearFresh, setupPending, useSync } from "@/state/sync";
 
 /**
@@ -12,8 +11,6 @@ import { clearFresh, setupPending, useSync } from "@/state/sync";
 export function SyncRunner() {
   const sync = useSync();
   const router = useRouter();
-
-  useEffect(startAnalytics, []);
 
   useEffect(() => {
     if (!sync.fresh || !sync.email || sync.status === "loading") return;

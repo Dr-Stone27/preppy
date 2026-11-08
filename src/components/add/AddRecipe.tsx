@@ -95,7 +95,8 @@ function saveDraft(d: { link: string; text: string } | null) {
 }
 
 function fromAddress(params: URLSearchParams): { link: string; text: string } {
-  const shared = params.has("shared") ? sharedFromHref() ?? params.get("shared") ?? "" : null;
+  // The Shortcut puts it after # (kept in the browser, so any length works); older links used ?shared=.
+  const shared = sharedFromHref() ?? params.get("shared");
   const raw = shared != null ? decode(shared) : [params.get("url"), params.get("text")].filter(Boolean).join("\n");
   if (!raw.trim()) return { link: "", text: "" };
   const post = parseShared(raw.trim());

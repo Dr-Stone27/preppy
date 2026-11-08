@@ -20,7 +20,7 @@ def tokens(parts):
 import sys
 DEBUG = "--debug" in sys.argv  # ends on the finished address instead of opening it, for testing with `shortcuts run`
 SITE = next((x.split("=", 1)[1] for x in sys.argv if x.startswith("--site=")), "https://preppy-liart.vercel.app")
-U = {k: str(uuid.uuid4()).upper() for k in "ARMTNEFG"}
+U = {k: str(uuid.uuid4()).upper() for k in "ARMTNSUVWCEFG"}
 # Tested with `shortcuts run` against a page shaped like an Instagram post (8–9 Nov 2026). Two things matter:
 #  - The fetched page is renamed to page.txt before matching; otherwise Shortcuts turns it into readable text and the
 #    <meta> tags holding the caption are gone.
@@ -42,13 +42,27 @@ actions = [
      "WFWorkflowActionParameters": {"UUID": U[k], "WFMatchTextPattern": meta(attr, name), "WFMatchTextCaseSensitive": False,
                                     "text": tokens([out(U["R"], "Renamed Item")])}}
     for k, attr, name in [("M", "property", "og:description"), ("T", "property", "og:title"), ("N", "name", "description")]],
-  # 3. "link<newline>caption", URL-encoded, inside the Preppy address.
+  # 3. Instagram only: the official embed page (/p/<code>/embed/captioned/) carries the whole caption, which the page
+  #    summaries above cut after a line or two. Checked against a long-caption reel on 9 Nov 2026. TikTok links don't
+  #    match the code pattern, so these steps come out empty for them.
+  {"WFWorkflowActionIdentifier": "is.workflow.actions.text.match",
+   "WFWorkflowActionParameters": {"UUID": U["S"], "WFMatchTextPattern": r'(?<=instagram\.com/(p|reel|reels|tv)/)[A-Za-z0-9_-]+', "text": tokens([INPUT])}},
   {"WFWorkflowActionIdentifier": "is.workflow.actions.gettext",
-   "WFWorkflowActionParameters": {"UUID": U["E"], "WFTextActionText": tokens([INPUT, "\n", out(U["M"], "Matches"), SEP, out(U["T"], "Matches"), SEP, out(U["N"], "Matches")])}},
+   "WFWorkflowActionParameters": {"UUID": U["U"], "WFTextActionText": tokens(["https://www.instagram.com/p/", out(U["S"], "Matches"), "/embed/captioned/"])}},
+  {"WFWorkflowActionIdentifier": "is.workflow.actions.downloadurl",
+   "WFWorkflowActionParameters": {"UUID": U["V"], "WFURL": tokens([out(U["U"], "Text")])}},
+  {"WFWorkflowActionIdentifier": "is.workflow.actions.setitemname",
+   "WFWorkflowActionParameters": {"UUID": U["W"], "WFName": "embed.txt", "WFInput": attach(out(U["V"], "Contents of URL"))}},
+  {"WFWorkflowActionIdentifier": "is.workflow.actions.text.match",
+   "WFWorkflowActionParameters": {"UUID": U["C"], "WFMatchTextPattern": r'(?<=class="Caption">)[\s\S]*?(?=</div>)', "text": tokens([out(U["W"], "Renamed Item")])}},
+  # 4. "link<newline>caption versions", URL-encoded, after # in the Preppy address. A long caption makes this ~12 KB;
+  #    after # it stays in the browser and never meets the server's limit on address length.
+  {"WFWorkflowActionIdentifier": "is.workflow.actions.gettext",
+   "WFWorkflowActionParameters": {"UUID": U["E"], "WFTextActionText": tokens([INPUT, "\n", out(U["M"], "Matches"), SEP, out(U["T"], "Matches"), SEP, out(U["N"], "Matches"), SEP, out(U["C"], "Matches")])}},
   {"WFWorkflowActionIdentifier": "is.workflow.actions.urlencode",
    "WFWorkflowActionParameters": {"UUID": U["F"], "WFEncodeMode": "Encode", "WFInput": tokens([out(U["E"], "Text")])}},
   {"WFWorkflowActionIdentifier": "is.workflow.actions.gettext",
-   "WFWorkflowActionParameters": {"UUID": U["G"], "WFTextActionText": tokens([SITE + "/add?shared=", out(U["F"], "URL Encoded Text")])}},
+   "WFWorkflowActionParameters": {"UUID": U["G"], "WFTextActionText": tokens([SITE + "/add#shared=", out(U["F"], "URL Encoded Text")])}},
 ]
 if not DEBUG:
   actions.append({"WFWorkflowActionIdentifier": "is.workflow.actions.openurl",

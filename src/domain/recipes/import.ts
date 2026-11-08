@@ -10,6 +10,10 @@ export const SHARED_SEP = "\n---preppy---\n";
 /** A post page's summary, minus the wrapping: "12 likes, 3 comments - cook on 1 Nov: "…"" or "Cook on Instagram: "…"". */
 function cleanCaption(raw: string) {
   return raw
+    // Instagram's embed page: the username link, then the caption with <br /> for line breaks and links for hashtags.
+    .replace(/<a [^>]*class="CaptionUsername"[^>]*>[\s\S]*?<\/a>/i, "")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
     .trim()
     .replace(/^[\d.,]+[KkMm]? likes?, [\d.,]+[KkMm]? comments? - [^:]{1,80}: "/, "")
     .replace(/^[^:\n]{1,80} on (Instagram|TikTok): "/i, "")

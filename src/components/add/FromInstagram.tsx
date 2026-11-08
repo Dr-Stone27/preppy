@@ -44,7 +44,7 @@ export function FromInstagram() {
                 </a>
                 , open it, and tap Add Shortcut.
               </li>
-              <li>In Instagram, tap the share button on a post, then Preppy. You may need to tap More to find it the first time.</li>
+              <li>In Instagram, tap the share button on a post, then Save to Preppy. You may need to tap More to find it the first time.</li>
               <li>Preppy opens with the link and caption in. Tap Read recipe.</li>
             </ol>
             <p className="t-label t-muted">

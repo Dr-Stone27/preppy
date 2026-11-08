@@ -1,3 +1,4 @@
+import { accountsOn, SUPABASE_KEY, SUPABASE_URL } from "@/lib/supabase";
 /**
  * Minimal Gemini call over REST. The key stays on the server.
  * GEMINI_MODEL can change without a code change, since model names move often.
@@ -79,7 +80,11 @@ export async function geminiJson(prompt: string, signal?: AbortSignal): Promise<
 
 /** Best-effort guard against other sites using this endpoint, and against bursts from one address. */
 const hits = new Map<string, number[]>();
-export function guard(req: Request): Response | null {
+/**
+ * Same-origin, a per-address burst limit, and — once accounts are switched on —
+ * a signed-in account with AI allowance left today (counted by use_ai() in the database).
+ */
+export async function guard(req: Request): Promise<Response | null> {
   const origin = req.headers.get("origin");
   const host = req.headers.get("host");
   if (origin && host && new URL(origin).host !== host) return Response.json({ error: "forbidden" }, { status: 403 });
@@ -88,6 +93,23 @@ export function guard(req: Request): Response | null {
   const recent = (hits.get(ip) ?? []).filter((t) => now - t < 60_000);
   if (recent.length >= 8) return Response.json({ error: "busy" }, { status: 429 });
   hits.set(ip, [...recent, now]);
+
+  if (!accountsOn) return null;
+  const auth = req.headers.get("authorization");
+  if (!auth?.startsWith("Bearer ")) return Response.json({ error: "sign-in" }, { status: 401 });
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/use_ai`, {
+    method: "POST",
+    headers: { apikey: SUPABASE_KEY, authorization: auth, "content-type": "application/json" },
+    body: "{}",
+    signal: AbortSignal.timeout(5_000),
+  }).catch(() => null);
+  if (!res) return Response.json({ error: "busy" }, { status: 429 });
+  if (res.status === 401 || res.status === 403) return Response.json({ error: "sign-in" }, { status: 401 });
+  if (!res.ok) {
+    console.error("[ai] allowance check", res.status, await res.text().catch(() => ""));
+    return Response.json({ error: "busy" }, { status: 429 });
+  }
+  if ((await res.json()) !== true) return Response.json({ error: "limit" }, { status: 402 });
   return null;
 }
 

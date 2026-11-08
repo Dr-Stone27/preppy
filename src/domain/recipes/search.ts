@@ -16,7 +16,7 @@ export const CUISINE_LABEL: Record<CuisineFamily, string> = {
   other: "Other",
 };
 
-export type LibraryFilter = { query: string; kind: RecipeKind | "all"; cuisine: CuisineFamily | "all" };
+export type LibraryFilter = { query: string; kind: RecipeKind | "all" | "you"; cuisine: CuisineFamily | "all" };
 
 /** Cuisines present in the library, most common first, for the filter chips. */
 export function cuisinesIn(recipes: Recipe[]): CuisineFamily[] {
@@ -32,7 +32,7 @@ export function cuisinesIn(recipes: Recipe[]): CuisineFamily[] {
 export function filterRecipes(recipes: Recipe[], f: LibraryFilter): Recipe[] {
   const q = f.query.trim().toLowerCase();
   return recipes.filter((r) => {
-    if (f.kind !== "all" && r.kind !== f.kind) return false;
+    if (f.kind === "you" ? r.origin !== "you" : f.kind !== "all" && r.kind !== f.kind) return false;
     if (f.cuisine !== "all" && cuisineOf(r) !== f.cuisine) return false;
     if (!q) return true;
     const hay = [r.title, r.protein, r.flavour, ...r.ingredients.map((i) => i.name)].join(" ").toLowerCase();

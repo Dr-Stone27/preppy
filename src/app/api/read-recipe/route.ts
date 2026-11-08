@@ -29,7 +29,7 @@ ${text}
 }
 
 export async function POST(req: Request) {
-  const blocked = guard(req);
+  const blocked = await guard(req);
   if (blocked) return blocked;
   let body: { text?: unknown; link?: unknown; never?: unknown };
   try {

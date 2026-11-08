@@ -17,7 +17,7 @@ Use 8 to 16 steps.`;
 }
 
 export async function POST(req: Request) {
-  const blocked = guard(req);
+  const blocked = await guard(req);
   if (blocked) return blocked;
   let dishes: Dish[];
   try {

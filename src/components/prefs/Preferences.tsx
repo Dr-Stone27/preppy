@@ -1,14 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { AccountPanel } from "@/components/account/AccountPanel";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { updatePrefs, useData } from "@/state/store";
+import { useSync } from "@/state/sync";
 import { NeverEditor, SidesEditor } from "./PrefEditors";
 import styles from "./Preferences.module.css";
 
 export function Preferences() {
   const data = useData();
+  const sync = useSync();
   if (!data) return <div style={{ minHeight: "60vh" }} aria-busy="true" />;
 
   return (
@@ -18,6 +21,16 @@ export function Preferences() {
         Home
       </Link>
       <h1 className="t-h1">Preferences</h1>
+
+      <section className={styles.section} id="account">
+        <div>
+          <h2 className="t-h3">Account</h2>
+          {!sync.email && sync.status !== "off" && (
+            <p className="t-small t-muted">Sign in to keep your plans, pantry and saved recipes on every device. We’ll email you a code.</p>
+          )}
+        </div>
+        <AccountPanel />
+      </section>
 
       <section className={styles.section}>
         <div>
@@ -37,10 +50,8 @@ export function Preferences() {
 
       <section className={styles.section}>
         <div>
-          <h2 className="t-h3">Your data</h2>
-          <p className="t-small t-muted">
-            Plans, saved recipes and your pantry are kept in this browser. Clearing your browsing data removes them.
-          </p>
+          <h2 className="t-h3">Setup</h2>
+          <p className="t-small t-muted">Go through the first-run questions again.</p>
         </div>
         <ButtonLink href="/welcome" variant="secondary" size="sm">
           Run setup again

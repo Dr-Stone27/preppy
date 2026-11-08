@@ -8,39 +8,65 @@ import { registerSavedRecipes } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
 
 /**
- * Plans and preferences, saved in this browser until accounts arrive.
- * Shapes match Prep Week's so they can move to the server unchanged.
+ * Plans, preferences, pantry stock and the user's own recipes.
+ * Always saved in this browser; when signed in, sync.ts copies every change to the account.
  */
-type Data = { weeks: Record<string, Week>; prefs: Prefs; pantry: Record<string, Stock>; recipes: Recipe[] };
+export type Data = { weeks: Record<string, Week>; prefs: Prefs; pantry: Record<string, Stock>; recipes: Recipe[] };
 
 const KEY = "preppy:v1";
 let data: Data | null = null;
 const listeners = new Set<() => void>();
 
+const writeHooks = new Set<(d: Data) => void>();
+
+export function normalise(parsed: Partial<Data> | null | undefined): Data {
+  return { weeks: parsed?.weeks ?? {}, prefs: { ...DEFAULT_PREFS, ...parsed?.prefs }, pantry: parsed?.pantry ?? {}, recipes: parsed?.recipes ?? [] };
+}
+
 function read(): Data {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
-      const parsed = JSON.parse(raw) as Partial<Data>;
-      const d = { weeks: parsed.weeks ?? {}, prefs: { ...DEFAULT_PREFS, ...parsed.prefs }, pantry: parsed.pantry ?? {}, recipes: parsed.recipes ?? [] };
+      const d = normalise(JSON.parse(raw) as Partial<Data>);
       registerSavedRecipes(d.recipes);
       return d;
     }
   } catch {}
-  return { weeks: {}, prefs: DEFAULT_PREFS, pantry: {}, recipes: [] };
+  return normalise(null);
 }
 
 function snapshot(): Data {
   return (data ??= read());
 }
 
-function write(next: Data) {
+function write(next: Data, fromUser = true) {
   data = next;
   registerSavedRecipes(next.recipes);
   try {
     localStorage.setItem(KEY, JSON.stringify(next));
   } catch {}
   listeners.forEach((l) => l());
+  if (fromUser) writeHooks.forEach((h) => h(next));
+}
+
+/** Called after every change the user makes (not after replaceData). Returns an unsubscribe. */
+export function onUserWrite(h: (d: Data) => void) {
+  writeHooks.add(h);
+  return () => void writeHooks.delete(h);
+}
+
+export function currentData(): Data {
+  return snapshot();
+}
+
+/** Swap in data from the account. Doesn't count as a user change. */
+export function replaceData(d: Data) {
+  write(normalise(d), false);
+}
+
+/** True when nothing has been saved on this device yet. */
+export function isEmpty(d: Data) {
+  return !Object.keys(d.weeks).length && !Object.keys(d.pantry).length && !d.recipes.length && !d.prefs.onboarded;
 }
 
 function subscribe(l: () => void) {
@@ -125,9 +151,3 @@ export function deleteRecipe(id: string) {
 }
 
 /** Copies starter recipes into the library as the user's own, so they can be planned and deleted. */
-export function addStarters(list: Recipe[]) {
-  const d = snapshot();
-  const have = new Set(d.recipes.map((r) => r.id));
-  const added = list.filter((r) => !have.has(r.id)).map((r) => ({ ...r, origin: "you" as const, createdAt: new Date().toISOString() }));
-  write({ ...d, recipes: [...d.recipes, ...added] });
-}

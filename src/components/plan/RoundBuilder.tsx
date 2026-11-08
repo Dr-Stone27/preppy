@@ -10,7 +10,7 @@ import { EmptyState } from "@/components/ui/Layout";
 import { DAY_FULL } from "@/domain/plan/dates";
 import type { Prefs, Round } from "@/domain/plan/types";
 import { dayMacros, eggCount, fillCells, recipesFor, repeatedFlavours, roundLabel, roundRange, SLOTS } from "@/domain/plan/week";
-import { myRecipes } from "@/domain/recipes/library";
+import { libraryRecipes } from "@/domain/recipes/library";
 import { ruleWarnings } from "@/domain/recipes/rules";
 import type { Recipe } from "@/domain/recipes/types";
 import { updateWeek } from "@/state/store";
@@ -65,7 +65,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
     const kind = step === 1 ? "main" : "sweet";
     const picked = step === 1 ? mains : sweets;
     const setPicked = step === 1 ? setMains : setSweets;
-    const list = myRecipes().filter((r) => r.kind === kind);
+    const list = libraryRecipes().filter((r) => r.kind === kind);
     const variety = repeatedFlavours(mains);
     const eggs = eggCount(R, cells);
 

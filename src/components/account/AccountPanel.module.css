@@ -1,0 +1,28 @@
+.panel {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: stretch;
+}
+
+.panel > button[type="button"] {
+  justify-self: start;
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-small);
+  overflow-wrap: anywhere;
+}
+
+.who svg {
+  flex: none;
+  color: var(--color-success);
+}
+
+.error {
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-danger);
+}

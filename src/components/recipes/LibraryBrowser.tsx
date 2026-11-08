@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Layout";
 import type { CuisineFamily } from "@/domain/bowl/types";
 import { CUISINE_LABEL, cuisinesIn, filterRecipes, type LibraryFilter } from "@/domain/recipes/search";
-import { myRecipes } from "@/domain/recipes/library";
+import { libraryRecipes } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
 import { useData } from "@/state/store";
 import { RecipeCard } from "./RecipeCard";
@@ -25,7 +25,7 @@ const EMPTY: LibraryFilter = { query: "", kind: "all", cuisine: "all" };
 export function LibraryBrowser({ recipes: exported }: { recipes: Recipe[] }) {
   const data = useData();
   // Saved recipes register with the library once the store loads in the browser.
-  const recipes = useMemo(() => (data ? myRecipes() : exported), [data, exported]);
+  const recipes = useMemo(() => (data ? libraryRecipes() : exported), [data, exported]);
   const [filter, setFilter] = useState<LibraryFilter>(EMPTY);
   const query = useDeferredValue(filter.query);
   const cuisines = useMemo(() => cuisinesIn(recipes), [recipes]);
@@ -56,7 +56,7 @@ export function LibraryBrowser({ recipes: exported }: { recipes: Recipe[] }) {
         </label>
 
         <div className={styles.chips} role="group" aria-label="Type">
-          {KINDS.map((k) => (
+          {[...KINDS, ...(recipes.some((r) => r.origin === "you") ? [{ value: "you" as const, label: "Saved by you" }] : [])].map((k) => (
             <FilterChip key={k.value} selected={filter.kind === k.value} onClick={() => set({ kind: k.value, cuisine: k.value === "sweet" ? "all" : filter.cuisine })}>
               {k.label}
             </FilterChip>

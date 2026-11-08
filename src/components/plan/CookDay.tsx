@@ -13,6 +13,7 @@ import { sundayOf, today0, weekKey } from "@/domain/plan/dates";
 import type { RoundId } from "@/domain/plan/types";
 import { roundLabel } from "@/domain/plan/week";
 import { allRecipes } from "@/domain/recipes/library";
+import { authHeader } from "@/lib/supabase";
 import { shopLines } from "@/domain/shop/list";
 import { getWeek, updateWeek, useData } from "@/state/store";
 import builder from "./RoundBuilder.module.css";
@@ -66,7 +67,7 @@ export function CookDay() {
     try {
       const res = await fetch("/api/cook-order", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", ...(await authHeader()) },
         body: JSON.stringify({
           dishes: dishes.map(({ recipe: r, portions }) => ({
             title: r.title,
@@ -84,7 +85,9 @@ export function CookDay() {
       setNotice(
         (e as Error).message === "503"
           ? "Working out a combined order isn’t switched on yet, so here’s each recipe in turn."
-          : "Couldn’t work out a combined order just now, so here’s each recipe in turn.",
+          : (e as Error).message === "401"
+            ? "Sign in to get one combined cooking order. For now, here’s each recipe in turn."
+            : "Couldn’t work out a combined order just now, so here’s each recipe in turn.",
       );
     } finally {
       setBusy(false);

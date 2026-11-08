@@ -9,6 +9,7 @@ import { findBySource, recipeHref } from "@/domain/recipes/library";
 import { parseShared, recipeFromAi } from "@/domain/recipes/import";
 import { ruleWarnings, warningSentence } from "@/domain/recipes/rules";
 import type { Recipe } from "@/domain/recipes/types";
+import { authHeader } from "@/lib/supabase";
 import { saveRecipe, useData } from "@/state/store";
 import { RecipeForm } from "./RecipeForm";
 import styles from "./Add.module.css";
@@ -20,12 +21,14 @@ type State =
   | { s: "check"; recipe: Recipe }
   | { s: "saved"; recipe: Recipe }
   | { s: "duplicate"; recipe: Recipe }
-  | { s: "error"; message: string; offerTyping?: boolean };
+  | { s: "error"; message: string; offerTyping?: boolean; signIn?: boolean };
 
 const ERRORS: Record<number, string> = {
   503: "Reading posts isn’t switched on yet. You can type the recipe in instead.",
   429: "The recipe reader is busy right now. Try again in a minute, or type it in.",
   400: "Paste the caption or type a short note first.",
+  401: "Sign in to read recipes from posts. It’s free, and keeps your recipes on every device.",
+  402: "You’ve read a lot of posts today. Try again tomorrow, or type this one in.",
 };
 
 export function AddRecipe() {
@@ -53,11 +56,11 @@ export function AddRecipe() {
     try {
       const res = await fetch("/api/read-recipe", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", ...(await authHeader()) },
         body: JSON.stringify({ text, link, never: data?.prefs.never ?? [] }),
         signal: ctl.current.signal,
       });
-      if (!res.ok) return setState({ s: "error", message: ERRORS[res.status] ?? "That didn’t work. Try again, or type the recipe in.", offerTyping: res.status !== 400 });
+      if (!res.ok) return setState({ s: "error", message: ERRORS[res.status] ?? "That didn’t work. Try again, or type the recipe in.", offerTyping: res.status !== 400, signIn: res.status === 401 });
       const { recipe } = (await res.json()) as { recipe: unknown };
       setState({ s: "check", recipe: recipeFromAi(recipe, link) });
     } catch (e) {
@@ -182,6 +185,11 @@ export function AddRecipe() {
               <Icon name="alert" size={20} />
               <div>
                 <p>{state.message}</p>
+                {state.signIn && (
+                  <Link href="/account" className={styles.link}>
+                    Sign in
+                  </Link>
+                )}
                 {state.offerTyping && (
                   <button type="button" className={styles.link} onClick={() => setMode("type")}>
                     Type it in
@@ -192,7 +200,7 @@ export function AddRecipe() {
           )}
 
           <p className="t-label t-muted">
-            Saved recipes stay on this device for now. See them in your <Link href="/library">library</Link>.
+            Recipes you save show in the <Link href="/library">library</Link> under Saved by you.
           </p>
         </>
       )}

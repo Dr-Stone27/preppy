@@ -2,8 +2,8 @@ import data from "@/data/starter-library.json";
 import type { Recipe } from "./types";
 
 /**
- * Recipe source: the Prep Week export (11 Oct 2026) plus recipes saved on this device.
- * Saved recipes are registered by the client store; on the server only the export is visible.
+ * The shared library (the Prep Week export of 11 Oct 2026 plus the recipes written for Preppy),
+ * which every user sees, plus the user's own saved recipes, registered by the client store.
  * Screens should only call these functions, so the source can move to the database later.
  */
 const ALL = (data.recipes as unknown as Recipe[]).map((r) => ({ ...r, servings: Number(r.servings) || 1 }));
@@ -15,18 +15,15 @@ export function registerSavedRecipes(list: Recipe[]) {
   mineById = new Map(list.map((r) => [r.id, r]));
 }
 
-/** The owner's recipes, carried over from Prep Week, plus any saved here. */
-export function myRecipes(): Recipe[] {
-  return [...ALL.filter((r) => r.origin === "owner-library"), ...mine].sort((a, b) => a.title.localeCompare(b.title));
-}
-
-/** Recipes written for Preppy's starter library (shown to new users in a later slice). */
-export function starterRecipes(): Recipe[] {
-  return ALL.filter((r) => r.origin === "preppy-starter");
+/** Everything the user can plan with: the shared library plus their own, A to Z. */
+export function libraryRecipes(): Recipe[] {
+  return allRecipes().sort((a, b) => a.title.localeCompare(b.title));
 }
 
 export function allRecipes(): Recipe[] {
-  return [...ALL, ...mine];
+  const own = new Set(mine.map((r) => r.id));
+  // A starter copied in by an earlier version of setup shows once, as the user's.
+  return [...ALL.filter((r) => !own.has(r.id)), ...mine];
 }
 
 export function recipeById(id: string): Recipe | undefined {

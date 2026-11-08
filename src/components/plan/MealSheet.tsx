@@ -8,7 +8,7 @@ import { Icon } from "@/components/ui/Icon";
 import { DAY_FULL } from "@/domain/plan/dates";
 import type { Prefs, SlotId, Week } from "@/domain/plan/types";
 import { cellKey, recipesFor, roundOfDay, SLOTS } from "@/domain/plan/week";
-import { myRecipes } from "@/domain/recipes/library";
+import { libraryRecipes } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
 import { updateWeek } from "@/state/store";
 import styles from "./Plan.module.css";
@@ -33,7 +33,7 @@ export function MealSheet({ weekKey, week, prefs, meal, onClose }: Props) {
   const cell = meal ? week.cells[key] : undefined;
   const R = meal ? roundOfDay(week, meal.day) : null;
   const inRound = slot && R ? recipesFor(slot.kind === "main" ? R.mains : R.sweets) : [];
-  const others = slot ? myRecipes().filter((r) => r.kind === slot.kind && !inRound.some((x) => x.id === r.id)) : [];
+  const others = slot ? libraryRecipes().filter((r) => r.kind === slot.kind && !inRound.some((x) => x.id === r.id)) : [];
 
   const set = (patch: (c: Week["cells"][string] | undefined) => Week["cells"][string] | undefined) =>
     updateWeek(weekKey, (w) => {

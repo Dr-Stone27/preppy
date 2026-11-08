@@ -3,14 +3,13 @@
 import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
-import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { NeverEditor, SidesEditor } from "@/components/prefs/PrefEditors";
 import { Button, IconButton } from "@/components/ui/Button";
-import { Tag } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
-import { recipeById, starterRecipes } from "@/domain/recipes/library";
-import { ruleWarnings } from "@/domain/recipes/rules";
-import { addStarters, updatePrefs, useData } from "@/state/store";
+import { libraryRecipes, recipeById } from "@/domain/recipes/library";
+import { updatePrefs, useData } from "@/state/store";
+import { useSync } from "@/state/sync";
+import { AccountPanel } from "@/components/account/AccountPanel";
 import builder from "@/components/plan/RoundBuilder.module.css";
 import styles from "./Welcome.module.css";
 
@@ -25,7 +24,7 @@ export function Welcome() {
   const data = useData();
   const router = useRouter();
   const [step, setStep] = useState(0);
-  const [picked, setPicked] = useState<string[]>([]);
+  const sync = useSync();
 
   useEffect(() => {
     document.getElementById("welcome-scroll")?.scrollTo(0, 0);
@@ -38,7 +37,6 @@ export function Welcome() {
     router.replace(to);
   };
 
-  const starters = starterRecipes();
   let body: ReactNode;
   let foot: ReactNode;
 
@@ -92,61 +90,34 @@ export function Welcome() {
     body = (
       <>
         <div className={builder.intro}>
-          <h1 className="t-h1">Start with a few recipes</h1>
-          <p className="t-muted">Pick any you’d cook. You can add your own from Instagram later.</p>
+          <h1 className="t-h1">{sync.email ? "You’re signed in" : "Keep your plans safe"}</h1>
+          <p className="t-muted">
+            {sync.email
+              ? "Your plans, pantry and saved recipes will follow you to any device."
+              : "Sign in and your plans, pantry and saved recipes follow you to any device. You’ll also need it to read recipes from Instagram posts."}
+          </p>
         </div>
-        <div className={builder.grid}>
-          {starters.map((r) => {
-            const on = picked.includes(r.id);
-            const { items } = ruleWarnings(r, data.prefs.never);
-            return (
-              <button
-                key={r.id}
-                type="button"
-                className={builder.pick}
-                aria-pressed={on}
-                onClick={() => setPicked((p) => (p.includes(r.id) ? p.filter((x) => x !== r.id) : [...p, r.id]))}
-              >
-                {on && (
-                  <span className={builder.tick} aria-hidden>
-                    <Icon name="check" size={16} strokeWidth={2.4} />
-                  </span>
-                )}
-                <BowlIllustration recipe={r} size={84} decorative />
-                <span className={builder.pickTitle}>{r.title}</span>
-                <span className={builder.pickMeta}>
-                  <Tag tone={r.kind === "sweet" ? "neutral" : "accent"}>{r.kind === "sweet" ? "Breakfast" : r.flavour ?? "Main"}</Tag>
-                </span>
-                {items.length > 0 && <span className={builder.pickWarn}>Has {items.join(", ")}</span>}
-              </button>
-            );
-          })}
-        </div>
+        <AccountPanel />
       </>
     );
-    foot = picked.length ? (
-      <Button
-        block
-        onClick={() => {
-          addStarters(picked.map(recipeById).filter((r) => r !== undefined));
-          setStep(4);
-        }}
-      >
-        Add {picked.length} {picked.length === 1 ? "recipe" : "recipes"}
-      </Button>
-    ) : (
-      <Button block variant="secondary" onClick={() => setStep(4)}>
-        Skip for now
-      </Button>
-    );
+    foot =
+      sync.email || sync.status === "off" ? (
+        <Button block onClick={() => setStep(4)}>
+          Next
+        </Button>
+      ) : (
+        <Button block variant="secondary" onClick={() => setStep(4)}>
+          Not now
+        </Button>
+      );
   } else {
     body = (
       <div className={builder.done}>
         <div className={builder.hero}>
-          <BowlCollage recipes={picked.map(recipeById).filter((r) => r !== undefined)} size={84} />
+          <BowlCollage recipes={["suya-jollof-rice-with-beef-suya-npq6", "korean-sweet-chili-minced-beef", "vanilla-caramel-flan-cup"].map(recipeById).filter((r) => r !== undefined)} size={84} />
         </div>
         <h1 className="t-h1">You’re set</h1>
-        <p className="t-muted">Next, plan your first round. You can change any of this in Preferences.</p>
+        <p className="t-muted">The library has {libraryRecipes().length} dishes to plan with. You can change any of this in Preferences.</p>
       </div>
     );
     foot = (

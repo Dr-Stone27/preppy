@@ -5,19 +5,22 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@/components/ui/Icon";
 import { updatePrefs, useData } from "@/state/store";
+import { useSync } from "@/state/sync";
 import styles from "./HomeWeek.module.css";
 
 /** Sends a first-time visitor to setup, then shows three first steps until they're done or hidden. */
 export function GettingStarted() {
   const data = useData();
   const router = useRouter();
-  const firstRun = data && !data.prefs.onboarded;
+  const sync = useSync();
+  // A signed-in user on a new device gets their setup from the account, so wait for it.
+  const firstRun = data && sync.status !== "loading" && !data.prefs.onboarded;
 
   useEffect(() => {
     if (firstRun) router.replace("/welcome");
   }, [firstRun, router]);
 
-  if (!data || firstRun || data.prefs.checklistHidden) return null;
+  if (!data || sync.status === "loading" || firstRun || data.prefs.checklistHidden) return null;
 
   const items = [
     { label: "Save a recipe", done: data.recipes.length > 0, href: "/add" },

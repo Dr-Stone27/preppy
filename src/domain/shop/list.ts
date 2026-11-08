@@ -1,4 +1,4 @@
-import { myRecipes } from "@/domain/recipes/library";
+import { libraryRecipes } from "@/domain/recipes/library";
 import { formatQty } from "@/domain/recipes/scale";
 import type { Round, Week } from "@/domain/plan/types";
 import { needs, slug, type NeedLine } from "@/domain/plan/week";
@@ -55,7 +55,7 @@ export function allNeeded(bases: string[]) {
     if (!m.has(key)) m.set(key, { key, name, from: new Set() });
     m.get(key)!.from.add(from);
   };
-  for (const r of myRecipes()) for (const i of r.ingredients) add(i.name, r.title);
+  for (const r of libraryRecipes()) for (const i of r.ingredients) add(i.name, r.title);
   for (const b of bases) add(b, "Sides");
   return [...m.values()].map((x) => ({ ...x, item: pantryItem(x.key) }));
 }

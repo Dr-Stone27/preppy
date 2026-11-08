@@ -203,7 +203,11 @@ export function composeBowl(spec: BowlSpec, detail: Detail): { base: string; sha
       shapes.push(...topping(t.type, p, rand));
     }
   }
-  return { base, shapes };
+  // Server and browser maths can differ in the last digit, which breaks hydration. Two places is plenty at 200×200.
+  const r2 = (n: number) => Math.round(n * 100) / 100;
+  const round = (v: unknown) =>
+    typeof v === "number" ? r2(v) : typeof v === "string" && v.startsWith("M ") ? v.replace(/-?\d+\.\d+/g, (m) => String(r2(Number(m)))) : v;
+  return { base, shapes: shapes.map((sh) => Object.fromEntries(Object.entries(sh).map(([k, v]) => [k, round(v)])) as Shape) };
 }
 
 export function detailFor(px: number): Detail {

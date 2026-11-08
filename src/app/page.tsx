@@ -2,7 +2,7 @@ import Link from "next/link";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
 import { GettingStarted } from "@/components/home/GettingStarted";
 import { HomeWeek } from "@/components/home/HomeWeek";
-import { IconButtonLink } from "@/components/ui/Button";
+import { AvatarLink } from "@/components/account/Avatar";
 import { Icon } from "@/components/ui/Icon";
 import { ScreenHeader, Stack } from "@/components/ui/Layout";
 import { libraryRecipes, recipeById } from "@/domain/recipes/library";
@@ -19,9 +19,7 @@ export default function Home() {
       <ScreenHeader
         title="This week"
         action={
-          <IconButtonLink href="/settings" label="Preferences">
-            <Icon name="settings" size={22} />
-          </IconButtonLink>
+          <AvatarLink />
         }
       />
       <GettingStarted />

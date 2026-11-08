@@ -117,7 +117,7 @@ export function Welcome() {
           <BowlCollage recipes={["suya-jollof-rice-with-beef-suya-npq6", "korean-sweet-chili-minced-beef", "vanilla-caramel-flan-cup"].map(recipeById).filter((r) => r !== undefined)} size={84} />
         </div>
         <h1 className="t-h1">You’re set</h1>
-        <p className="t-muted">The library has {libraryRecipes().length} dishes to plan with. You can change any of this in Preferences.</p>
+        <p className="t-muted">The library has {libraryRecipes().length} dishes to plan with. You can change any of this in Settings.</p>
       </div>
     );
     foot = (

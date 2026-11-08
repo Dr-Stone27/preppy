@@ -26,6 +26,12 @@ const paths = {
   close: <path d="M6 6l12 12M18 6L6 18" />,
   chevron: <path d="M9 5l7 7-7 7" />,
   check: <path d="M5 12l5 5 9-10" />,
+  user: (
+    <>
+      <circle cx="12" cy="8.5" r="3.5" />
+      <path d="M5 20a7 7 0 0 1 14 0" />
+    </>
+  ),
   search: (
     <>
       <circle cx="11" cy="11" r="6" />

@@ -1,7 +1,7 @@
 import { recipeById } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
-import { addDays, dateLabel, DAYS } from "./dates";
-import type { Cell, Prefs, Round, SlotId, Week } from "./types";
+import { addDays, dateLabel, dayName, weekKey, weekStartFromKey, weekStartOf } from "./dates";
+import type { Cell, Prefs, Round, RoundId, SlotId, Week } from "./types";
 
 export const SLOTS: { id: SlotId; label: string; short: string; kind: "main" | "sweet" }[] = [
   { id: "breakfast", label: "Breakfast", short: "Bfast", kind: "sweet" },
@@ -16,18 +16,85 @@ export const DEFAULT_PREFS: Prefs = {
   bases: [],
 };
 
-/** Sunday cooks for Sunday to Wednesday; Wednesday cooks for Thursday to Saturday. */
-export function defaultWeek(): Week {
-  return {
-    rounds: [
-      { id: "r1", cook: 0, days: [0, 1, 2, 3], mains: [], sweets: [] },
-      { id: "r2", cook: 3, days: [4, 5, 6], mains: [], sweets: [] },
-    ],
-    cells: {},
-    bought: {},
-    prices: {},
-  };
+export const FALLBACK_COOK_DAYS = [0, 3];
+export const MAX_COOK_DAYS = 3;
+
+/** This person's cook days, sorted, 1 to 3 of them. */
+export function cookDaysOf(prefs: Prefs): number[] {
+  const days = [...new Set((prefs.cookDays ?? []).filter((d) => Number.isInteger(d) && d >= 0 && d < 7))].sort((a, b) => a - b);
+  return days.length ? days.slice(0, MAX_COOK_DAYS) : FALLBACK_COOK_DAYS;
 }
+
+/**
+ * A fresh week starting on `weekStart`: one round per cook day.
+ * Each cook feeds its own day and every day up to the next cook.
+ */
+export function defaultWeek(prefs: Prefs, weekStart: Date): Week {
+  const offsets = cookDaysOf(prefs)
+    .map((d) => (d - weekStart.getDay() + 7) % 7)
+    .sort((a, b) => a - b);
+  // Weeks start on a cook day, so the first offset is 0. If one ever doesn't, the first cook also covers the days before it.
+  const rounds: Round[] = offsets.map((cook, k) => {
+    const from = k === 0 ? 0 : cook;
+    const to = k === offsets.length - 1 ? 6 : offsets[k + 1] - 1;
+    return { id: `r${k + 1}` as RoundId, cook, days: Array.from({ length: to - from + 1 }, (_, i) => from + i), mains: [], sweets: [] };
+  });
+  return { rounds, cells: {}, bought: {} };
+}
+
+/** "Sunday’s cook covers Sunday to Tuesday. Wednesday’s covers Wednesday to Saturday." */
+export function coverText(days: number[]): string {
+  const d = [...days].sort((a, b) => a - b);
+  if (!d.length) return "";
+  if (d.length === 1) return `${FULL[d[0]]}’s cook covers the whole week.`;
+  return d
+    .map((c, k) => {
+      const last = (d[(k + 1) % d.length] + 6) % 7;
+      const span = last === c ? `just ${FULL[c]}` : `${FULL[c]} to ${FULL[last]}`;
+      return k === 0 ? `${FULL[c]}’s cook covers ${span}.` : `${FULL[c]}’s covers ${span}.`;
+    })
+    .join(" ");
+}
+const FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+/** Starts of the weeks already saved, oldest first. */
+function savedStarts(weeks: Record<string, Week>): Date[] {
+  return Object.keys(weeks)
+    .filter((k) => /^w-\d{4}-\d{2}-\d{2}$/.test(k))
+    .map(weekStartFromKey)
+    .sort((a, b) => a.getTime() - b.getTime());
+}
+
+/**
+ * The start of the week that holds this date. A saved week keeps its own start, so changing cook days
+ * never moves a week that's already planned; new weeks start on the first cook day.
+ */
+export function weekStartFor(weeks: Record<string, Week>, prefs: Prefs, d: Date): Date {
+  const saved = savedStarts(weeks);
+  const holding = saved.filter((s) => s <= d && d < addDays(s, 7)).at(-1);
+  if (holding) return holding;
+  const first = cookDaysOf(prefs)[0];
+  let start = weekStartOf(d, first);
+  // Don't overlap a saved week: start on the first cook day after it ends. The days in between belong to no week.
+  const clash = saved.filter((s) => s < start && start < addDays(s, 7)).at(-1);
+  if (clash) start = weekStartOf(addDays(clash, 13), first);
+  return start;
+}
+
+/** The week after (`step` 1) or before (-1) the one starting on `start`. */
+export function stepWeek(weeks: Record<string, Week>, prefs: Prefs, start: Date, step: 1 | -1): Date {
+  if (step === 1) {
+    const next = weekStartFor(weeks, prefs, addDays(start, 7));
+    return next > start ? next : addDays(start, 7);
+  }
+  const prev = weekStartFor(weeks, prefs, addDays(start, -1));
+  if (prev < start) return prev;
+  // The day before is in a gap left by changing cook days; go to the saved week before the gap.
+  const before = savedStarts(weeks).filter((s) => s < start).at(-1);
+  return before && addDays(before, 7) > addDays(start, -7) ? before : addDays(start, -7);
+}
+
+export const weekKeyFor = (weeks: Record<string, Week>, prefs: Prefs, d: Date) => weekKey(weekStartFor(weeks, prefs, d));
 
 export const cellKey = (day: number, slot: SlotId) => `${day}|${slot}`;
 export const roundOfDay = (w: Week, day: number) => w.rounds.find((r) => r.days.includes(day))!;
@@ -41,7 +108,9 @@ export function roundDates(weekStart: Date, R: Round) {
 /** "Sun 8 – Wed 11 Nov" */
 export function roundRange(weekStart: Date, R: Round) {
   const d = roundDates(weekStart, R);
-  return `${DAYS[R.days[0]]} ${d.first.getDate()} – ${DAYS[R.days.at(-1)!]} ${dateLabel(d.last)}`;
+  return R.days.length === 1
+    ? `${dayName(weekStart, R.days[0])} ${dateLabel(d.first)}`
+    : `${dayName(weekStart, R.days[0])} ${d.first.getDate()} – ${dayName(weekStart, R.days.at(-1)!)} ${dateLabel(d.last)}`;
 }
 
 export const roundStatus = (R: Round) => (R.cooked ? "Cooked" : R.confirmed ? "Planned" : "Not planned");
@@ -163,6 +232,5 @@ export function nextRound(w: Week, weekStart: Date, today: Date) {
   return w.rounds.find((R) => !R.cooked && roundDates(weekStart, R).cook >= today) ?? null;
 }
 
-const COOK_DAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 /** "Sunday cook" */
-export const roundLabel = (R: Round) => `${COOK_DAY[R.cook]} cook`;
+export const roundLabel = (R: Round, weekStart: Date) => `${dayName(weekStart, R.cook, true)} cook`;

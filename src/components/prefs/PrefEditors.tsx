@@ -3,6 +3,7 @@
 import { type FormEvent, useState } from "react";
 import { FilterChip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
+import { coverText, MAX_COOK_DAYS } from "@/domain/plan/week";
 import { customTerms, hasOption, NEVER_OPTIONS, SIDE_OPTIONS, toggleOption } from "@/domain/prefs/options";
 import styles from "./PrefEditors.module.css";
 
@@ -49,7 +50,7 @@ export function NeverEditor({ never, onChange }: { never: string[]; onChange: (n
           <Removable key={w} word={w} onRemove={() => onChange(never.filter((x) => x !== w))} />
         ))}
       </div>
-      <AddWord placeholder="Something else, like coconut" label="Add a food to avoid" onAdd={(w) => onChange([...new Set([...never, w])])} />
+      <AddWord placeholder="Something else, like okra" label="Add a food to avoid" onAdd={(w) => onChange([...new Set([...never, w])])} />
     </div>
   );
 }
@@ -77,6 +78,38 @@ export function SidesEditor({ bases, onChange }: { bases: string[]; onChange: (n
           if (!bases.some((b) => b.toLowerCase() === w)) onChange([...bases, name]);
         }}
       />
+    </div>
+  );
+}
+
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAYS_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+/** The days someone batch-cooks on, one to three. `required` stops the last one being removed. */
+export function CookDaysEditor({ days, onChange, required = false }: { days: number[]; onChange: (next: number[]) => void; required?: boolean }) {
+  const full = days.length >= MAX_COOK_DAYS;
+  return (
+    <div className={styles.editor}>
+      <div className={styles.chips}>
+        {WEEKDAYS.map((name, d) => {
+          const on = days.includes(d);
+          return (
+            <FilterChip
+              key={d}
+              selected={on}
+              aria-label={WEEKDAYS_FULL[d]}
+              disabled={(!on && full) || (on && required && days.length === 1)}
+              onClick={() => onChange(on ? days.filter((x) => x !== d) : [...days, d].sort((a, b) => a - b))}
+            >
+              {name}
+            </FilterChip>
+          );
+        })}
+      </div>
+      <p className="t-small t-muted" aria-live="polite">
+        {days.length ? coverText(days) : "Pick up to three."}
+        {full && days.length ? " That’s the most." : ""}
+      </p>
     </div>
   );
 }

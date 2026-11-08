@@ -2,12 +2,12 @@
 
 import { BowlCollage } from "@/components/bowl/BowlCollage";
 import { Icon } from "@/components/ui/Icon";
-import { DAY_FULL } from "@/domain/plan/dates";
+import { dayName, weekStartFromKey } from "@/domain/plan/dates";
 import type { Round, Week } from "@/domain/plan/types";
 import { recipesFor } from "@/domain/plan/week";
 import { pantryItems, stockOf, WHERE, WHERE_ORDER, type Stock } from "@/domain/shop/pantry";
-import { amountText, roundSpend, shopLines, tickKey, type ShopLine } from "@/domain/shop/list";
-import { setBought, setPrice, setStock } from "@/state/store";
+import { amountText, shopLines, tickKey, type ShopLine } from "@/domain/shop/list";
+import { setBought, setStock } from "@/state/store";
 import styles from "./Shop.module.css";
 
 type Props = { weekKey: string; week: Week; round: Round; statuses: Record<string, Stock> };
@@ -15,7 +15,6 @@ type Props = { weekKey: string; week: Week; round: Round; statuses: Record<strin
 export function ToBuy({ weekKey, week, round: R, statuses }: Props) {
   const { buy, stocked } = shopLines(R, week, statuses);
   const got = buy.filter((l) => l.done).length;
-  const spent = roundSpend(R, week);
   const onList = new Set([...buy, ...stocked].map((l) => l.key));
   const low = pantryItems().filter((p) => stockOf(statuses, p.id) === "low" && !onList.has(p.id));
   const pct = buy.length ? Math.round((got / buy.length) * 100) : 0;
@@ -25,20 +24,13 @@ export function ToBuy({ weekKey, week, round: R, statuses }: Props) {
       <section className={styles.summary}>
         <div className={styles.summaryRow}>
           <div>
-            <span className="t-eyebrow">Shop before {DAY_FULL[R.cook]}</span>
+            <span className="t-eyebrow">Shop before {dayName(weekStartFromKey(weekKey), R.cook, true)}</span>
             <p className={styles.big}>
               {got}
               <small> of {buy.length}</small>
             </p>
           </div>
-          {spent > 0 ? (
-            <div className={styles.spent}>
-              <span className="t-eyebrow">Spent</span>
-              <p className={styles.bigSm}>₦{spent.toLocaleString()}</p>
-            </div>
-          ) : (
-            <BowlCollage recipes={recipesFor(R.mains)} size={44} />
-          )}
+          <BowlCollage recipes={recipesFor(R.mains)} size={44} />
         </div>
         <div className={styles.bar} role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Shopping progress">
           <i style={{ width: `${pct}%` }} />
@@ -58,7 +50,7 @@ export function ToBuy({ weekKey, week, round: R, statuses }: Props) {
             </div>
             <ul className={styles.lines}>
               {lines.map((l) => (
-                <Line key={l.key} line={l} weekKey={weekKey} round={R} price={week.prices[tickKey(R, l.key)]} />
+                <Line key={l.key} line={l} weekKey={weekKey} round={R} />
               ))}
             </ul>
           </section>
@@ -106,7 +98,7 @@ export function ToBuy({ weekKey, week, round: R, statuses }: Props) {
   );
 }
 
-function Line({ line: l, weekKey, round: R, price }: { line: ShopLine; weekKey: string; round: Round; price?: number }) {
+function Line({ line: l, weekKey, round: R }: { line: ShopLine; weekKey: string; round: Round }) {
   const tick = tickKey(R, l.key);
   const from = [...l.from].join(", ");
   return (
@@ -127,22 +119,6 @@ function Line({ line: l, weekKey, round: R, price }: { line: ShopLine; weekKey: 
           <span className={`t-label t-muted ${styles.from}`}>{from}</span>
         </span>
       </button>
-      {l.done && (
-        <label className={styles.price}>
-          <span className="t-label t-muted">Paid</span>
-          <span className={styles.priceField}>
-            ₦
-            <input
-              type="number"
-              inputMode="numeric"
-              min={0}
-              placeholder="optional"
-              value={price ?? ""}
-              onChange={(e) => setPrice(weekKey, tick, e.target.value === "" ? null : Number(e.target.value))}
-            />
-          </span>
-        </label>
-      )}
     </li>
   );
 }

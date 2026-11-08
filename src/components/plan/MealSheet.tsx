@@ -5,7 +5,7 @@ import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Button } from "@/components/ui/Button";
 import { FilterChip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
-import { DAY_FULL } from "@/domain/plan/dates";
+import { dayName, weekStartFromKey } from "@/domain/plan/dates";
 import type { Prefs, SlotId, Week } from "@/domain/plan/types";
 import { cellKey, recipesFor, roundOfDay, SLOTS } from "@/domain/plan/week";
 import { libraryRecipes } from "@/domain/recipes/library";
@@ -64,7 +64,7 @@ export function MealSheet({ weekKey, week, prefs, meal, onClose }: Props) {
     <BottomSheet
       open={!!meal}
       onClose={onClose}
-      title={meal && slot ? `${DAY_FULL[meal.day]} ${slot.label.toLowerCase()}` : ""}
+      title={meal && slot ? `${dayName(weekStartFromKey(weekKey), meal.day, true)} ${slot.label.toLowerCase()}` : ""}
       footer={
         <div className={styles.sheetActions}>
           {cell && (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { weekStartFromKey } from "@/domain/plan/dates";
 import { DEFAULT_PREFS, defaultWeek } from "@/domain/plan/week";
 import type { Prefs, Week } from "@/domain/plan/types";
 import type { Stock } from "@/domain/shop/pantry";
@@ -90,7 +91,7 @@ export function useData(): Data | null {
 }
 
 export function getWeek(d: Data, key: string): Week {
-  return d.weeks[key] ?? defaultWeek();
+  return d.weeks[key] ?? defaultWeek(d.prefs, weekStartFromKey(key));
 }
 
 export function updateWeek(key: string, fn: (w: Week) => Week) {
@@ -115,18 +116,10 @@ export function setBought(weekKey: string, tick: string, itemId: string | null, 
   if (on) week.bought[tick] = true;
   else {
     delete week.bought[tick];
-    delete week.prices[tick];
+    if (week.prices) delete week.prices[tick];
   }
   const pantry = on && itemId ? { ...d.pantry, [itemId]: "have" as Stock } : d.pantry;
   write({ ...d, pantry, weeks: { ...d.weeks, [weekKey]: week } });
-}
-
-export function setPrice(weekKey: string, tick: string, naira: number | null) {
-  updateWeek(weekKey, (w) => {
-    if (naira == null || Number.isNaN(naira)) delete w.prices[tick];
-    else w.prices[tick] = naira;
-    return w;
-  });
 }
 
 export function saveRecipe(r: Recipe) {

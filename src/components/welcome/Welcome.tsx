@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
-import { NeverEditor, SidesEditor } from "@/components/prefs/PrefEditors";
+import { CookDaysEditor, NeverEditor, SidesEditor } from "@/components/prefs/PrefEditors";
 import { Button, IconButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { libraryRecipes, recipeById } from "@/domain/recipes/library";
@@ -14,9 +14,10 @@ import { AccountPanel } from "@/components/account/AccountPanel";
 import builder from "@/components/plan/RoundBuilder.module.css";
 import styles from "./Welcome.module.css";
 
-const STEPS = 4;
+// Steps in order. The progress dots cover the four questions between the intro and the end.
+const COOK = 1, NEVER = 2, SIDES = 3, SIGN_IN = 4, DONE = 5;
 const HOW = [
-  { title: "Cook twice, eat all week", body: "Sunday’s cook covers Sunday to Wednesday. Wednesday’s covers Thursday to Saturday." },
+  { title: "Cook a few times, eat all week", body: "Pick the days you cook. Each cook covers the days until the next one." },
   { title: "Keep it interesting", body: "Pick two or three mains per round. Preppy tells you when two taste the same." },
   { title: "One cooking session", body: "Cook day puts every dish in one order, then tells you what goes in the fridge and what goes in the freezer." },
 ];
@@ -25,13 +26,13 @@ export function Welcome() {
   const data = useData();
   const router = useRouter();
   // Arriving from the emailed link partway through setup lands on the last step. Nothing renders until data loads, so this can't mismatch.
-  const [step, setStep] = useState(() => (typeof window !== "undefined" && new URLSearchParams(location.search).get("step") === "done" ? 4 : 0));
+  const [step, setStep] = useState(() => (typeof window !== "undefined" && new URLSearchParams(location.search).get("step") === "done" ? DONE : 0));
   const sync = useSync();
 
   useEffect(() => {
     document.getElementById("welcome-scroll")?.scrollTo(0, 0);
     // From here, tapping the emailed link should bring them back to finish setup, not start over.
-    if (step === 3) setSetupPending(true);
+    if (step === SIGN_IN) setSetupPending(true);
   }, [step]);
 
   if (!data) return <div style={{ minHeight: "60vh" }} aria-busy="true" />;
@@ -53,7 +54,7 @@ export function Welcome() {
           <BowlCollage recipes={["party-jollof-rice-chicken", "efo-riro-beef", "banana-bread-loaf"].map(recipeById).filter((r) => r !== undefined)} size={92} />
         </div>
         <h1 className="t-display">Meal prep, planned for you</h1>
-        <p className="t-muted">Save recipes, plan the week in two cooks, and shop from one list.</p>
+        <p className="t-muted">Save recipes, plan the week around the days you cook, and shop from one list.</p>
         <ul className={styles.how}>
           {HOW.map((h, i) => (
             <li key={h.title}>
@@ -69,7 +70,7 @@ export function Welcome() {
     );
     foot = (
       <>
-        <Button block onClick={() => setStep(1)}>
+        <Button block onClick={() => setStep(COOK)}>
           Set up in a minute
         </Button>
         {sync.status !== "off" && !sync.email && (
@@ -79,7 +80,22 @@ export function Welcome() {
         )}
       </>
     );
-  } else if (step === 1) {
+  } else if (step === COOK) {
+    body = (
+      <>
+        <div className={builder.intro}>
+          <h1 className="t-h1">When do you cook?</h1>
+          <p className="t-muted">Pick the days you batch-cook, up to three. You can change them in Settings.</p>
+        </div>
+        <CookDaysEditor days={data.prefs.cookDays ?? []} onChange={(cookDays) => updatePrefs((p) => ({ ...p, cookDays }))} />
+      </>
+    );
+    foot = (
+      <Button block disabled={!data.prefs.cookDays?.length} onClick={() => setStep(NEVER)}>
+        Next
+      </Button>
+    );
+  } else if (step === NEVER) {
     body = (
       <>
         <div className={builder.intro}>
@@ -89,7 +105,7 @@ export function Welcome() {
         <NeverEditor never={data.prefs.never} onChange={(never) => updatePrefs((p) => ({ ...p, never }))} />
       </>
     );
-  } else if (step === 2) {
+  } else if (step === SIDES) {
     body = (
       <>
         <div className={builder.intro}>
@@ -99,7 +115,7 @@ export function Welcome() {
         <SidesEditor bases={data.prefs.bases} onChange={(bases) => updatePrefs((p) => ({ ...p, bases }))} />
       </>
     );
-  } else if (step === 3) {
+  } else if (step === SIGN_IN) {
     body = (
       <>
         <div className={builder.intro}>
@@ -115,11 +131,11 @@ export function Welcome() {
     );
     foot =
       sync.email || sync.status === "off" ? (
-        <Button block onClick={() => setStep(4)}>
+        <Button block onClick={() => setStep(DONE)}>
           Next
         </Button>
       ) : (
-        <Button block variant="secondary" onClick={() => setStep(4)}>
+        <Button block variant="secondary" onClick={() => setStep(DONE)}>
           Not now
         </Button>
       );
@@ -145,7 +161,7 @@ export function Welcome() {
     );
   }
 
-  if (step === 1 || step === 2)
+  if (step === NEVER || step === SIDES)
     foot = (
       <Button block onClick={() => setStep(step + 1)}>
         Next
@@ -155,23 +171,23 @@ export function Welcome() {
   return (
     <div className={builder.overlay} role="dialog" aria-modal="true" aria-label="Set up Preppy">
       <div className={builder.top}>
-        {step > 0 && step < 4 ? (
+        {step > 0 && step < DONE ? (
           <IconButton label="Back" onClick={() => setStep(step - 1)}>
             <Icon name="back" size={20} />
           </IconButton>
         ) : (
           <span />
         )}
-        {step > 0 && step < 4 ? (
-          <span className={builder.progress} aria-label={`Step ${step} of ${STEPS - 1}`}>
-            {[1, 2, 3].map((n) => (
+        {step > 0 && step < DONE ? (
+          <span className={builder.progress} aria-label={`Step ${step} of ${DONE - 1}`}>
+            {[COOK, NEVER, SIDES, SIGN_IN].map((n) => (
               <i key={n} data-on={n <= step || undefined} />
             ))}
           </span>
         ) : (
           <span />
         )}
-        {step < 4 ? (
+        {step < DONE ? (
           <button type="button" className={styles.skip} onClick={() => finish("/")}>
             Skip
           </button>

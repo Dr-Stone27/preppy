@@ -9,9 +9,9 @@ import { Tag } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { EmptyState } from "@/components/ui/Layout";
 import { cookDishes, fallbackPlan, planFromAi, storePlan } from "@/domain/plan/cook";
-import { sundayOf, today0, weekKey } from "@/domain/plan/dates";
+import { today0, weekKey, weekStartFromKey } from "@/domain/plan/dates";
 import type { RoundId } from "@/domain/plan/types";
-import { roundLabel } from "@/domain/plan/week";
+import { roundLabel, weekStartFor } from "@/domain/plan/week";
 import { allRecipes } from "@/domain/recipes/library";
 import { authHeader } from "@/lib/supabase";
 import { shopLines } from "@/domain/shop/list";
@@ -48,7 +48,8 @@ export function CookDay() {
 
   if (!data) return <div style={{ minHeight: "60vh" }} aria-busy="true" />;
 
-  const key = params.get("week") ?? weekKey(sundayOf(today0()));
+  const key = params.get("week") ?? weekKey(weekStartFor(data.weeks, data.prefs, today0()));
+  const weekStart = weekStartFromKey(key);
   const week = getWeek(data, key);
   const R = week.rounds.find((x) => x.id === (params.get("round") as RoundId)) ?? week.rounds[0];
   const dishes = cookDishes(R, week.cells);
@@ -236,7 +237,7 @@ export function CookDay() {
         <span className="t-eyebrow">Last step</span>
         <h1 className="t-h1">Portion and store</h1>
         <p className="t-muted">Let everything cool, then split it into containers. Eat the fridge ones first.</p>
-        {storePlan(R, week.cells).map(({ recipe: r, fridge, freezer }) => (
+        {storePlan(R, week.cells, weekStart).map(({ recipe: r, fridge, freezer }) => (
           <section key={r.id} className={styles.card}>
             <div className={styles.dish}>
               <BowlIllustration recipe={r} size={44} decorative />
@@ -279,13 +280,13 @@ export function CookDay() {
   }
 
   return (
-    <div className={builder.overlay} role="dialog" aria-modal="true" aria-label={`Cook day, ${roundLabel(R).toLowerCase()}`}>
+    <div className={builder.overlay} role="dialog" aria-modal="true" aria-label={`Cook day, ${roundLabel(R, weekStart).toLowerCase()}`}>
       <div className={builder.top}>
         <IconButton label="Close" onClick={close}>
           <Icon name="close" size={20} />
         </IconButton>
         <span />
-        <span className={`t-label t-muted ${builder.which}`}>Cook day · {roundLabel(R)}</span>
+        <span className={`t-label t-muted ${builder.which}`}>Cook day · {roundLabel(R, weekStart)}</span>
       </div>
       <div id="cook-scroll" className={builder.scroll}>
         <div className={builder.body}>{body}</div>

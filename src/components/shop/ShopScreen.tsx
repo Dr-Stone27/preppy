@@ -4,9 +4,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { ButtonLink } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Layout";
-import { DAYS, sundayOf, today0, weekKey, weekStartFromKey } from "@/domain/plan/dates";
+import { dayName, today0, weekKey, weekStartFromKey } from "@/domain/plan/dates";
 import type { RoundId } from "@/domain/plan/types";
-import { nextRound, roundDates, roundLabel } from "@/domain/plan/week";
+import { nextRound, roundDates, roundLabel, weekStartFor } from "@/domain/plan/week";
 import { getWeek, useData } from "@/state/store";
 import { AtHome } from "./AtHome";
 import { StockUp } from "./StockUp";
@@ -29,7 +29,7 @@ export function ShopScreen() {
   const view = (params.get("view") as View) || "buy";
   const today = today0();
   const wParam = params.get("week");
-  const weekStart = wParam && /^w-\d{4}-\d{2}-\d{2}$/.test(wParam) ? weekStartFromKey(wParam) : sundayOf(today);
+  const weekStart = wParam && /^w-\d{4}-\d{2}-\d{2}$/.test(wParam) ? weekStartFromKey(wParam) : weekStartFor(data.weeks, data.prefs, today);
   const key = weekKey(weekStart);
   const week = getWeek(data, key);
   const rParam = params.get("round") as RoundId | null;
@@ -64,7 +64,7 @@ export function ShopScreen() {
           <div className={styles.rounds} role="group" aria-label="Round">
             {week.rounds.map((x) => (
               <button key={x.id} type="button" aria-pressed={x.id === R.id} onClick={() => go({ round: x.id })}>
-                {roundLabel(x)} · {DAYS[x.cook]} {roundDates(weekStart, x).cook.getDate()}
+                {roundLabel(x, weekStart)} · {dayName(weekStart, x.cook)} {roundDates(weekStart, x).cook.getDate()}
               </button>
             ))}
           </div>
@@ -73,7 +73,7 @@ export function ShopScreen() {
           ) : (
             <EmptyState
               title="Nothing to buy yet"
-              body={`Plan the ${roundLabel(R).toLowerCase()} and its shopping list fills in.`}
+              body={`Plan the ${roundLabel(R, weekStart).toLowerCase()} and its shopping list fills in.`}
               action={
                 <ButtonLink href={`/plan?build=${R.id}`} size="sm">
                   Plan this round

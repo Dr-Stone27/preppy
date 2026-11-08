@@ -8,7 +8,7 @@ function prompt(link: string, text: string, never: string[]) {
     .map((p) => p.name)
     .sort()
     .join(", ");
-  return `You turn a recipe from a social media post into structured data for a batch meal-prep planner. The cook lives in Nigeria and cooks in batches twice a week.
+  return `You turn a recipe from a social media post into structured data for a batch meal-prep planner. The cook lives in Nigeria and cooks in batches a few times a week.
 
 The input is a caption, a transcript, or a rough note. If it is only a rough note, fill in a sensible standard version of the dish and set "inferred" to true. Keep the original dish; do not swap in different ingredients unless one is missing.
 

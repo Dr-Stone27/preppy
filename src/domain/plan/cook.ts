@@ -1,6 +1,6 @@
 import { recipeById } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
-import { DAYS } from "./dates";
+import { dayName } from "./dates";
 import type { Cell, CookPlan, Round } from "./types";
 import { cellKey, SLOTS, usesOf } from "./week";
 
@@ -46,14 +46,14 @@ export function planFromAi(d: unknown): CookPlan {
 }
 
 /** Meals within two days of cooking go in the fridge; later ones go in the freezer. */
-export function storePlan(R: Round, cells: Record<string, Cell>) {
+export function storePlan(R: Round, cells: Record<string, Cell>, weekStart: Date) {
   return cookDishes(R, cells).map(({ recipe }) => {
     const fridge: string[] = [];
     const freezer: string[] = [];
     for (const d of R.days)
       for (const s of SLOTS) {
         if (cells[cellKey(d, s.id)]?.r !== recipe.id) continue;
-        (d - R.cook <= 2 ? fridge : freezer).push(`${DAYS[d]} ${s.label.toLowerCase()}`);
+        (d - R.cook <= 2 ? fridge : freezer).push(`${dayName(weekStart, d)} ${s.label.toLowerCase()}`);
       }
     return { recipe, fridge, freezer };
   });

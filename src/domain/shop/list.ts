@@ -40,12 +40,6 @@ export function amountText(l: NeedLine): string {
   return parts.join(" + ");
 }
 
-export function roundSpend(R: Round, week: Week) {
-  return Object.entries(week.prices)
-    .filter(([k]) => k.startsWith(`${R.id}|`))
-    .reduce((a, [, v]) => a + (Number(v) || 0), 0);
-}
-
 /** Every ingredient any saved recipe or side uses, with the recipes that use it. */
 export function allNeeded(bases: string[]) {
   const m = new Map<string, { key: string; name: string; from: Set<string> }>();

@@ -7,7 +7,7 @@ import { Button, ButtonLink, IconButton } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { EmptyState } from "@/components/ui/Layout";
-import { DAY_FULL } from "@/domain/plan/dates";
+import { dayName } from "@/domain/plan/dates";
 import type { Prefs, Round } from "@/domain/plan/types";
 import { dayMacros, eggCount, fillCells, recipesFor, repeatedFlavours, roundLabel, roundRange, SLOTS } from "@/domain/plan/week";
 import { libraryRecipes } from "@/domain/recipes/library";
@@ -75,7 +75,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
           <h1 className="t-h1">{step === 1 ? "Choose your mains" : "Breakfast and sweets"}</h1>
           <p className="t-muted">
             {step === 1
-              ? `Pick 2 or 3 to cook on ${DAY_FULL[R.cook]}. Different flavours keep the week interesting.`
+              ? `Pick 2 or 3 to cook on ${dayName(weekStart, R.cook, true)}. Different flavours keep the week interesting.`
               : "Quick to make fresh each day. A good place to hide eggs."}
           </p>
         </div>
@@ -164,7 +164,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
               <span>
                 <span className={styles.reviewTitle}>{r.title}</span>
                 <span className="t-label t-muted">
-                  {r.kind === "sweet" ? "Made fresh" : `Cooked ${DAY_FULL[R.cook]}`} · {meals(r.id)} meals
+                  {r.kind === "sweet" ? "Made fresh" : `Cooked ${dayName(weekStart, R.cook, true)}`} · {meals(r.id)} meals
                 </span>
               </span>
             </li>
@@ -188,7 +188,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
         </div>
         <h1 className="t-h1">Round planned</h1>
         <p className="t-muted">
-          {Object.keys(cells).length} meals from {DAY_FULL[R.days[0]]} to {DAY_FULL[R.days.at(-1)!]}.
+          {Object.keys(cells).length} meals from {dayName(weekStart, R.days[0], true)} to {dayName(weekStart, R.days.at(-1)!, true)}.
         </p>
       </div>
     );
@@ -205,7 +205,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
   }
 
   return (
-    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label={`Plan ${roundLabel(R).toLowerCase()}`}>
+    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label={`Plan ${roundLabel(R, weekStart).toLowerCase()}`}>
       <div className={styles.top}>
         <IconButton label={back ? "Back" : "Close"} onClick={() => (back ? setStep((s) => ((s as number) - 1) as Step) : onClose())}>
           <Icon name={back ? "back" : "close"} size={20} />
@@ -217,7 +217,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
             ))}
           </span>
         )}
-        <span className={`t-label t-muted ${styles.which}`}>{roundLabel(R)}</span>
+        <span className={`t-label t-muted ${styles.which}`}>{roundLabel(R, weekStart)}</span>
       </div>
       <div id="builder-scroll" className={styles.scroll}>
         <div className={styles.body}>{body}</div>

@@ -1,7 +1,23 @@
 import type { Recipe } from "./types";
 
 
-const SEAFOOD = ["oyster sauce", "fish sauce", "shrimp", "prawn", "crayfish", "anchov", "crab", "lobster", "squid", "calamari", "mussel", "clam"];
+const SEAFOOD = ["oyster sauce", "fish sauce", "shrimp", "prawn", "crayfish", "anchovy", "anchovies", "crab", "lobster", "squid", "calamari", "mussel", "clam"];
+
+/** Phrases that contain a listed word but aren't that food: coconut milk isn't dairy, peanut butter isn't butter. */
+const NOT_IT: Record<string, string[]> = {
+  milk: ["coconut milk", "almond milk", "soy milk", "oat milk"],
+  butter: ["peanut butter", "groundnut butter", "shea butter", "nut butter"],
+  cream: ["coconut cream"],
+};
+
+const escape = (w: string) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/** Whole-word match, plurals included, so "egg" doesn't catch "eggplant" and "rum" doesn't catch "drumstick". */
+function mentions(text: string, word: string) {
+  let t = text;
+  for (const p of NOT_IT[word] ?? []) t = t.split(p).join(" ");
+  return new RegExp(`\\b${escape(word)}(s|es)?\\b`).test(t);
+}
 
 function searchable(r: Recipe) {
   return [r.title, ...r.ingredients.map((i) => i.name), ...r.steps].join(" ").toLowerCase();
@@ -15,8 +31,8 @@ function searchable(r: Recipe) {
  */
 export function ruleWarnings(r: Recipe, never: string[] = []): { items: string[]; notes: string[] } {
   const text = searchable(r);
-  const found = never.map((n) => n.toLowerCase()).filter((n) => n && text.includes(n));
-  if (never.includes("seafood")) for (const w of SEAFOOD) if (text.includes(w)) found.push(w);
+  const found = never.map((n) => n.toLowerCase().trim()).filter((n) => n && mentions(text, n));
+  if (never.includes("seafood")) for (const w of SEAFOOD) if (mentions(text, w)) found.push(w);
   const notes: string[] = [];
   for (const f of r.flags ?? []) {
     if (f.length > 40) notes.push(f);

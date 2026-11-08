@@ -6,7 +6,8 @@ import { Profile } from "@/components/account/Profile";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { updatePrefs, useData } from "@/state/store";
-import { NeverEditor, SidesEditor } from "./PrefEditors";
+import { cookDaysOf } from "@/domain/plan/week";
+import { CookDaysEditor, NeverEditor, SidesEditor } from "./PrefEditors";
 import styles from "./Preferences.module.css";
 
 export function Preferences() {
@@ -27,6 +28,14 @@ export function Preferences() {
       <h1 className="t-h1">Settings</h1>
 
       <Profile />
+
+      <section className={styles.section}>
+        <div>
+          <h2 className="t-h3">Cook days</h2>
+          <p className="t-small t-muted">New weeks follow these. Weeks you’ve already planned keep their days.</p>
+        </div>
+        <CookDaysEditor required days={cookDaysOf(data.prefs)} onChange={(cookDays) => updatePrefs((p) => ({ ...p, cookDays }))} />
+      </section>
 
       <section className={styles.section}>
         <div>

@@ -4,9 +4,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { IconButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { addDays, dateLabel, DAYS, sundayOf, today0, weekKey, ymd } from "@/domain/plan/dates";
+import { addDays, dateLabel, dayName, today0, weekKey, ymd } from "@/domain/plan/dates";
 import type { RoundId, SlotId } from "@/domain/plan/types";
-import { roundOfDay } from "@/domain/plan/week";
+import { roundOfDay, stepWeek, weekStartFor } from "@/domain/plan/week";
 import { getWeek, useData } from "@/state/store";
 import { MealSheet } from "./MealSheet";
 import { RoundBuilder } from "./RoundBuilder";
@@ -24,7 +24,8 @@ export function PlanScreen() {
   if (!data) return <div className={styles.loading} aria-busy="true" />;
 
   const today = today0();
-  const weekStart = addDays(sundayOf(today), offset * 7);
+  let weekStart = weekStartFor(data.weeks, data.prefs, today);
+  for (let n = 0; n < Math.abs(offset); n++) weekStart = stepWeek(data.weeks, data.prefs, weekStart, offset > 0 ? 1 : -1);
   const key = weekKey(weekStart);
   const week = getWeek(data, key);
   const thisWeek = offset === 0;
@@ -48,7 +49,8 @@ export function PlanScreen() {
       </header>
 
       <ol className={styles.strip} aria-label="Days">
-        {DAYS.map((name, d) => {
+        {Array.from({ length: 7 }, (_, d) => {
+          const name = dayName(weekStart, d);
           const date = addDays(weekStart, d);
           const R = roundOfDay(week, d);
           const isToday = ymd(date) === ymd(today);

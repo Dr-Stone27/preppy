@@ -17,7 +17,7 @@ const jakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: "Preppy",
-  description: "Save recipes, cook twice a week, shop the way you shop.",
+  description: "Save recipes, cook on the days that suit you, shop the way you shop.",
   appleWebApp: { capable: true, title: "Preppy", statusBarStyle: "default" },
 };
 

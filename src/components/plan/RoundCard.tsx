@@ -4,7 +4,7 @@ import { BowlCollage } from "@/components/bowl/BowlCollage";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Chip";
-import { addDays, DAY_FULL, DAYS, weekKey } from "@/domain/plan/dates";
+import { addDays, dayName, weekKey } from "@/domain/plan/dates";
 import type { Round, SlotId, Week } from "@/domain/plan/types";
 import { cellKey, eggCount, recipesFor, roundAverage, roundLabel, roundRange, roundStatus, SLOTS } from "@/domain/plan/week";
 import { recipeById } from "@/domain/recipes/library";
@@ -26,10 +26,10 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
   const empty = !R.confirmed && !R.mains.length;
 
   return (
-    <section className={styles.round} aria-label={roundLabel(R)}>
+    <section className={styles.round} aria-label={roundLabel(R, weekStart)}>
       <div className={styles.roundHead}>
         <div>
-          <span className="t-eyebrow">{roundLabel(R)}</span>
+          <span className="t-eyebrow">{roundLabel(R, weekStart)}</span>
           <h2 className="t-h2">{roundRange(weekStart, R)}</h2>
         </div>
         <Tag tone={R.cooked ? "success" : R.confirmed ? "accent" : "neutral"}>{status}</Tag>
@@ -38,7 +38,7 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
       {empty ? (
         <div className={styles.roundEmpty}>
           <p className="t-small t-muted">
-            Pick what to cook on {DAY_FULL[R.cook]} for these {R.days.length} days.
+            Pick what to cook on {dayName(weekStart, R.cook, true)} for these {R.days.length} days.
           </p>
           <Button onClick={onPlan}>Plan this round</Button>
         </div>
@@ -64,7 +64,7 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
             </div>
           )}
 
-          <div className={styles.table} role="grid" aria-label={`${roundLabel(R)} meals`}>
+          <div className={styles.table} role="grid" aria-label={`${roundLabel(R, weekStart)} meals`}>
             <div className={styles.tableHead} role="row">
               <span role="columnheader" />
               {SLOTS.map((s) => (
@@ -76,7 +76,7 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
             {R.days.map((d) => (
               <div key={d} className={styles.tableRow} role="row">
                 <span className={styles.dayLabel} role="rowheader">
-                  {DAYS[d]}
+                  {dayName(weekStart, d)}
                   <small>{addDays(weekStart, d).getDate()}</small>
                 </span>
                 {SLOTS.map((s) => {
@@ -90,7 +90,7 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
                       className={styles.cell}
                       data-empty={!r || undefined}
                       onClick={() => onMeal(d, s.id)}
-                      aria-label={`${DAY_FULL[d]} ${s.label.toLowerCase()}: ${r ? r.title : "nothing planned"}`}
+                      aria-label={`${dayName(weekStart, d, true)} ${s.label.toLowerCase()}: ${r ? r.title : "nothing planned"}`}
                     >
                       {r ? <BowlIllustration recipe={r} size={34} decorative /> : <span className={styles.cellEmpty} />}
                       <span className={styles.cellName}>{r ? r.title : ""}</span>

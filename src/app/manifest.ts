@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Preppy",
     short_name: "Preppy",
-    description: "Save recipes, cook twice a week, shop the way you shop.",
+    description: "Save recipes, cook on the days that suit you, shop the way you shop.",
     start_url: "/",
     display: "standalone",
     background_color: "#FFFDF9",

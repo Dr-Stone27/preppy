@@ -7,22 +7,28 @@ import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { ButtonLink } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
-import { addDays, DAY_FULL, dateLabel, daysBetween, sundayOf, today0, weekKey } from "@/domain/plan/dates";
-import { cellKey, dayMacros, nextRound, recipesFor, roundDates, roundRange, SLOTS } from "@/domain/plan/week";
+import { addDays, dateLabel, dayName, daysBetween, today0, weekKey } from "@/domain/plan/dates";
+import { cellKey, dayMacros, nextRound, recipesFor, roundDates, roundRange, SLOTS, stepWeek, weekStartFor } from "@/domain/plan/week";
 import { recipeById, recipeHref } from "@/domain/recipes/library";
 import { shopLines } from "@/domain/shop/list";
-import { getWeek, useData } from "@/state/store";
+import { type Data, getWeek, useData } from "@/state/store";
 import styles from "./HomeWeek.module.css";
+
+/** The date of the first cook in the week starting on `start`. */
+function defaultWeekFirstCook(data: Data, start: Date) {
+  const w = getWeek(data, weekKey(start));
+  return addDays(start, w.rounds[0]?.cook ?? 0);
+}
 
 export function HomeWeek() {
   const data = useData();
   if (!data) return <div className={styles.placeholder} aria-busy="true" />;
 
   const today = today0();
-  const weekStart = sundayOf(today);
+  const weekStart = weekStartFor(data.weeks, data.prefs, today);
   const week = getWeek(data, weekKey(weekStart));
   const R = nextRound(week, weekStart, today);
-  const dayIndex = today.getDay();
+  const dayIndex = daysBetween(weekStart, today);
   const m = dayMacros(dayIndex, week.cells);
 
   let next: ReactNode;
@@ -38,7 +44,7 @@ export function HomeWeek() {
           <div>
             <span className="t-eyebrow">Next cook</span>
             <h2 className="t-h2">
-              {DAY_FULL[R.cook]} {dateLabel(cook)}
+              {dayName(weekStart, R.cook, true)} {dateLabel(cook)}
             </h2>
             <p className="t-small t-muted">
               {when} · for {roundRange(weekStart, R)}
@@ -76,7 +82,7 @@ export function HomeWeek() {
           </>
         ) : (
           <>
-            <p className="t-small">Nothing picked for {DAY_FULL[R.cook]}’s cook yet.</p>
+            <p className="t-small">Nothing picked for {dayName(weekStart, R.cook, true)}’s cook yet.</p>
             <ButtonLink href={`/plan?build=${R.id}`} block>
               Plan this round
             </ButtonLink>
@@ -85,10 +91,14 @@ export function HomeWeek() {
       </section>
     );
   } else {
+    const nextStart = stepWeek(data.weeks, data.prefs, weekStart, 1);
+    const nextCook = defaultWeekFirstCook(data, nextStart);
     next = (
       <section className={styles.next}>
         <span className="t-eyebrow">Next cook</span>
-        <h2 className="t-h2">Sunday {dateLabel(addDays(weekStart, 7))}</h2>
+        <h2 className="t-h2">
+          {dayName(nextCook, 0, true)} {dateLabel(nextCook)}
+        </h2>
         <p className="t-small t-muted">This week’s cooking is done.</p>
         <ButtonLink href="/plan" block>
           Plan next week

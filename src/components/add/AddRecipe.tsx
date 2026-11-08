@@ -3,7 +3,7 @@
 import { track } from "@/lib/analytics";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -13,6 +13,7 @@ import { ruleWarnings, warningSentence } from "@/domain/recipes/rules";
 import type { Recipe } from "@/domain/recipes/types";
 import { authHeader } from "@/lib/supabase";
 import { saveRecipe, useData } from "@/state/store";
+import { useSync } from "@/state/sync";
 import { FromInstagram } from "./FromInstagram";
 import { RecipeForm } from "./RecipeForm";
 import styles from "./Add.module.css";
@@ -70,6 +71,8 @@ export function AddRecipe() {
 
   const [state, setState] = useState<State>({ s: "idle" });
   const ctl = useRef<AbortController | null>(null);
+  const sync = useSync();
+  const autoRead = useRef(false);
 
   const onPaste = (value: string) => {
     const shared = parseShared(value);
@@ -103,6 +106,14 @@ export function AddRecipe() {
       ctl.current = null;
     }
   };
+
+  // A post shared from Instagram with its caption reads straight away, once sign-in has loaded.
+  useEffect(() => {
+    if (autoRead.current || !arrived.text || !data || sync.status === "loading") return;
+    autoRead.current = true;
+    // Not cleared on re-render: the guard above has already flipped, so a cleared timer would never be replaced.
+    setTimeout(read, 0);
+  });
 
   const save = (r: Recipe) => {
     saveRecipe(r);
@@ -181,7 +192,7 @@ export function AddRecipe() {
         <>
           {arrived.link && state.s === "idle" && (
             <p className={styles.arrived} role="status">
-              {arrived.text ? "Got the post from Instagram. Check the caption, then tap Read recipe." : "Got the link. Copy the caption in Instagram and paste it below."}
+              {arrived.text ? "Got the post from Instagram." : "Got the link, but not the caption. Copy the caption in Instagram and paste it below."}
             </p>
           )}
           <label className={styles.field}>

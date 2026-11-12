@@ -3,7 +3,7 @@
 import { type FormEvent, useState } from "react";
 import { FilterChip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
-import { coverText, MAX_COOK_DAYS } from "@/domain/plan/week";
+import { coverText, MAX_COOK_DAYS, MAX_PEOPLE } from "@/domain/plan/week";
 import { customTerms, hasOption, NEVER_OPTIONS, SIDE_OPTIONS, toggleOption } from "@/domain/prefs/options";
 import { allNeeded } from "@/domain/shop/list";
 import { stockOf, type Stock } from "@/domain/shop/pantry";
@@ -112,6 +112,21 @@ export function CookDaysEditor({ days, onChange, required = false }: { days: num
         {days.length ? coverText(days) : "Pick up to three."}
         {full && days.length ? " That’s the most." : ""}
       </p>
+    </div>
+  );
+}
+
+/** How many people each meal feeds. Every amount and portion scales with it. */
+export function PeopleEditor({ people, onChange }: { people: number; onChange: (next: number) => void }) {
+  return (
+    <div className={styles.stepper}>
+      <button type="button" aria-label="One fewer person" disabled={people <= 1} onClick={() => onChange(people - 1)}>
+        −
+      </button>
+      <output aria-live="polite">{people === 1 ? "1 person" : `${people} people`}</output>
+      <button type="button" aria-label="One more person" disabled={people >= MAX_PEOPLE} onClick={() => onChange(people + 1)}>
+        +
+      </button>
     </div>
   );
 }

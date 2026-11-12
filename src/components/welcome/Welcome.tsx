@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
-import { CookDaysEditor, KitchenEditor, NeverEditor, SidesEditor } from "@/components/prefs/PrefEditors";
+import { CookDaysEditor, KitchenEditor, NeverEditor, PeopleEditor, SidesEditor } from "@/components/prefs/PrefEditors";
 import { Button, IconButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { peopleOf } from "@/domain/plan/week";
 import { libraryRecipes, recipeById } from "@/domain/recipes/library";
 import { setStock, updatePrefs, useData } from "@/state/store";
 import { markSeen, setSetupPending, useSync } from "@/state/sync";
@@ -92,6 +93,11 @@ export function Welcome() {
           <p className="t-muted">Pick the days you batch-cook, up to three. You can change them in Settings.</p>
         </div>
         <CookDaysEditor days={data.prefs.cookDays ?? []} onChange={(cookDays) => updatePrefs((p) => ({ ...p, cookDays }))} />
+        <div className={builder.intro}>
+          <h2 className="t-h3">How many people do you cook for?</h2>
+          <p className="t-small t-muted">Every shopping list and portion is sized for this.</p>
+        </div>
+        <PeopleEditor people={peopleOf(data.prefs)} onChange={(people) => updatePrefs((p) => ({ ...p, people }))} />
       </>
     );
     foot = (

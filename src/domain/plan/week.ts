@@ -1,7 +1,7 @@
 import { recipeById } from "@/domain/recipes/library";
 import { LOOSE, normUnit } from "@/domain/shop/amounts";
 import type { Recipe } from "@/domain/recipes/types";
-import { addDays, dateLabel, dayName, weekKey, weekStartFromKey, weekStartOf } from "./dates";
+import { addDays, dateLabel, dayName, daysBetween, weekKey, weekStartFromKey, weekStartOf } from "./dates";
 import type { Cell, Prefs, Round, RoundId, SlotId, Week } from "./types";
 
 export const SLOTS: { id: SlotId; label: string; short: string; kind: "main" | "sweet" }[] = [
@@ -18,6 +18,20 @@ export const DEFAULT_PREFS: Prefs = {
 };
 
 export const FALLBACK_COOK_DAYS = [0, 3];
+export const MAX_PEOPLE = 12;
+
+/** How many people each meal feeds, 1 to 12. */
+export const peopleOf = (prefs: Prefs) => Math.min(MAX_PEOPLE, Math.max(1, Math.round(Number(prefs.people) || 1)));
+
+/** Set by the store whenever prefs change, so every amount scales without passing it through each screen. */
+let household = 1;
+export function registerPeople(prefs: Prefs) {
+  household = peopleOf(prefs);
+}
+export const householdSize = () => household;
+
+/** "for 1 person", "for 3 people" */
+export const forPeople = (n = household) => `for ${n} ${n === 1 ? "person" : "people"}`;
 export const MAX_COOK_DAYS = 3;
 
 /** This person's cook days, sorted, 1 to 3 of them. */
@@ -139,6 +153,17 @@ export function fillCells(R: Round, mains: string[], sweets: string[], bases: st
   return cells;
 }
 
+/** The mains actually on this cook's meals, including any swapped in one meal at a time. Falls back to the picks before meals are filled. */
+export function roundMains(R: Round, cells: Record<string, Cell>): string[] {
+  const ids: string[] = [];
+  for (const d of R.days)
+    for (const slot of SLOTS) {
+      const id = slot.kind === "main" ? cells[cellKey(d, slot.id)]?.r : undefined;
+      if (id && recipeById(id) && !ids.includes(id)) ids.push(id);
+    }
+  return ids.length ? ids : R.mains;
+}
+
 /** How many meals each dish covers in this round. */
 export function usesOf(R: Round, cells: Record<string, Cell>) {
   const rec = new Map<string, number>();
@@ -158,7 +183,7 @@ export type NeedLine = { key: string; name: string; amounts: Map<string, number>
 export const slug = (s: string) =>
   s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "item";
 
-/** Everything the round needs, scaled to the number of meals each dish covers. */
+/** Everything the round needs, scaled to the number of meals each dish covers and the people each meal feeds. */
 export function needs(R: Round, cells: Record<string, Cell>): NeedLine[] {
   const { rec, bases } = usesOf(R, cells);
   const lines = new Map<string, NeedLine>();
@@ -174,7 +199,7 @@ export function needs(R: Round, cells: Record<string, Cell>): NeedLine[] {
   };
   for (const [id, n] of rec) {
     const r = recipeById(id)!;
-    const f = n / (r.servings || 1);
+    const f = (n * household) / (r.servings || 1);
     for (const i of r.ingredients) add(i.name, i.qty == null ? null : Number(i.qty) * f, i.unit, r.title);
   }
   for (const [b] of bases) add(b, null, "", "Sides");
@@ -263,6 +288,16 @@ export function nextOpenCook(weeks: Record<string, Week>, prefs: Prefs, today: D
 /** The next round that hasn't been cooked and whose cook day is today or later. */
 export function nextRound(w: Week, weekStart: Date, today: Date) {
   return w.rounds.find((R) => !R.cooked && roundDates(weekStart, R).cook >= today) ?? null;
+}
+
+/**
+ * The cook that holds today when its day has passed and it was never planned: someone starting partway
+ * through a week can cook today for the days that are left instead. Null when there's nothing to offer.
+ */
+export function missedCook(w: Week, weekStart: Date, today: Date): Round | null {
+  const day = daysBetween(weekStart, today);
+  const R = day >= 0 && day <= 6 ? w.rounds.find((r) => r.days.includes(day)) : undefined;
+  return R && !R.confirmed && !R.cooked && R.cook < day ? R : null;
 }
 
 /** "Sunday cook" */

@@ -1,5 +1,6 @@
 export type SlotId = "breakfast" | "lunch" | "dinner" | "dessert";
-export type RoundId = "r1" | "r2" | "r3";
+/** r4 only appears when someone adds a cook for today partway through a week. */
+export type RoundId = "r1" | "r2" | "r3" | "r4";
 
 /** One meal in the timetable. `base` is the side served with a main that has no carb of its own. */
 export type Cell = { r: string; base?: string };
@@ -48,6 +49,8 @@ export type Prefs = {
   bases: string[];
   /** Days of the week (0 = Sunday) this person cooks on, one to three of them. Missing means Sunday and Wednesday. */
   cookDays?: number[];
+  /** How many people each meal feeds. Missing means one. */
+  people?: number;
   /** Set once the first-run setup is finished or skipped. */
   onboarded?: boolean;
   /** The getting-started checklist on Home was hidden. */

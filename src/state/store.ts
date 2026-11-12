@@ -2,8 +2,8 @@
 
 import { useSyncExternalStore } from "react";
 import { weekStartFromKey } from "@/domain/plan/dates";
-import { cellKey, DEFAULT_PREFS, defaultWeek, fillCells, SLOTS } from "@/domain/plan/week";
-import type { Extra, Prefs, Week } from "@/domain/plan/types";
+import { cellKey, DEFAULT_PREFS, defaultWeek, fillCells, registerPeople, SLOTS } from "@/domain/plan/week";
+import type { Extra, Prefs, RoundId, Week } from "@/domain/plan/types";
 import type { Stock } from "@/domain/shop/pantry";
 import { recipeById, registerSavedRecipes } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
@@ -30,6 +30,7 @@ function read(): Data {
     if (raw) {
       const d = normalise(JSON.parse(raw) as Partial<Data>);
       registerSavedRecipes(d.recipes);
+      registerPeople(d.prefs);
       return d;
     }
   } catch {}
@@ -43,6 +44,7 @@ function snapshot(): Data {
 function write(next: Data, fromUser = true) {
   data = next;
   registerSavedRecipes(next.recipes);
+  registerPeople(next.prefs);
   try {
     localStorage.setItem(KEY, JSON.stringify(next));
   } catch {}
@@ -128,6 +130,28 @@ export function repeatWeek(fromKey: string, toKey: string): number {
     return w;
   });
   return n;
+}
+
+/**
+ * Splits off a cook for today from a passed, unplanned cook that holds today: the old cook keeps the days
+ * before today, the new one covers today to the end of the old one. Returns the new cook's id.
+ */
+export function cookToday(key: string, day: number): RoundId | null {
+  let id: RoundId | null = null;
+  updateWeek(key, (w) => {
+    const R = w.rounds.find((r) => r.days.includes(day));
+    if (!R || R.confirmed || R.cook >= day) return w;
+    const used = new Set(w.rounds.map((r) => r.id));
+    const free = (["r1", "r2", "r3", "r4"] as RoundId[]).find((x) => !used.has(x));
+    if (!free) return w;
+    const rest = R.days.filter((d) => d >= day);
+    R.days = R.days.filter((d) => d < day);
+    w.rounds.push({ id: free, cook: day, days: rest, mains: [], sweets: [] });
+    w.rounds.sort((a, b) => a.cook - b.cook);
+    id = free;
+    return w;
+  });
+  return id;
 }
 
 const MAX_EXTRAS = 100;

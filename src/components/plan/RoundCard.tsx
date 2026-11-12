@@ -7,7 +7,7 @@ import { Button, ButtonLink } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Chip";
 import { addDays, dayName, weekKey } from "@/domain/plan/dates";
 import type { Round, SlotId, Week } from "@/domain/plan/types";
-import { cellKey, eggCount, recipesFor, roundAverage, roundLabel, roundRange, roundStatus, SLOTS } from "@/domain/plan/week";
+import { cellKey, eggCount, forPeople, recipesFor, roundAverage, roundLabel, roundMains, roundRange, roundStatus, SLOTS } from "@/domain/plan/week";
 import { recipeById } from "@/domain/recipes/library";
 import styles from "./Plan.module.css";
 
@@ -21,7 +21,7 @@ type Props = {
 
 export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) {
   const status = roundStatus(R);
-  const mains = recipesFor(R.mains);
+  const mains = recipesFor(roundMains(R, week.cells));
   const avg = roundAverage(R, week.cells);
   const eggs = eggCount(R, week.cells);
   const empty = !R.confirmed && !R.mains.length;
@@ -30,7 +30,9 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
     <section className={styles.round} aria-label={roundLabel(R, weekStart)}>
       <div className={styles.roundHead}>
         <div>
-          <span className="t-eyebrow">{roundLabel(R, weekStart)}</span>
+          <span className="t-eyebrow">
+            {roundLabel(R, weekStart)} · {forPeople()}
+          </span>
           <h2 className="t-h2">{roundRange(weekStart, R)}</h2>
         </div>
         <Tag tone={R.cooked ? "success" : R.confirmed ? "accent" : "neutral"}>{status}</Tag>

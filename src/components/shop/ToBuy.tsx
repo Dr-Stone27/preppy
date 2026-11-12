@@ -5,7 +5,7 @@ import { BowlCollage } from "@/components/bowl/BowlCollage";
 import { Icon } from "@/components/ui/Icon";
 import { dayName, weekStartFromKey } from "@/domain/plan/dates";
 import type { Extra, Round, Week } from "@/domain/plan/types";
-import { recipesFor, slug } from "@/domain/plan/week";
+import { forPeople, recipesFor, roundMains, slug } from "@/domain/plan/week";
 import { groupOf, guessGroup, pantryItems, pantryMatch, SHOP_ORDER, stockOf, type Stock } from "@/domain/shop/pantry";
 import { amountNeed, amountText, shopLines, tickKey, type ShopLine } from "@/domain/shop/list";
 import { track } from "@/lib/analytics";
@@ -74,13 +74,15 @@ export function ToBuy({ weekKey, week, round: R, statuses, empty }: Props) {
       <section className={styles.summary}>
         <div className={styles.summaryRow}>
           <div>
-            <span className="t-eyebrow">Shop before {dayName(weekStartFromKey(weekKey), R.cook, true)}</span>
+            <span className="t-eyebrow">
+              Shop before {dayName(weekStartFromKey(weekKey), R.cook, true)} · {forPeople()}
+            </span>
             <p className={styles.big}>
               {got}
               <small> of {total}</small>
             </p>
           </div>
-          <BowlCollage recipes={recipesFor(R.mains)} size={44} />
+          <BowlCollage recipes={recipesFor(roundMains(R, week.cells))} size={44} />
         </div>
         <div className={styles.bar} role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Shopping progress">
           <i style={{ width: `${pct}%` }} />

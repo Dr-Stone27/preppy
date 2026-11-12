@@ -68,3 +68,33 @@
 .add button:disabled {
   opacity: 0.45;
 }
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.stepper button {
+  width: var(--touch);
+  height: var(--touch);
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+  font: inherit;
+  font-size: 1.25rem;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.stepper button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.stepper output {
+  min-width: 6.5em;
+  text-align: center;
+  font-weight: 600;
+}

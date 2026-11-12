@@ -3,12 +3,12 @@ import { recipeById } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
 import { dayName } from "./dates";
 import type { Cell, CookPlan, Round } from "./types";
-import { cellKey, SLOTS, usesOf } from "./week";
+import { cellKey, householdSize, SLOTS, usesOf } from "./week";
 
-/** Mains cooked today and how many portions each. Sweets are made fresh, so they're left out. */
+/** Mains cooked today and how many portions each (meals × people). Sweets are made fresh, so they're left out. */
 export function cookDishes(R: Round, cells: Record<string, Cell>): { recipe: Recipe; portions: number }[] {
   return [...usesOf(R, cells).rec]
-    .map(([id, n]) => ({ recipe: recipeById(id)!, portions: n }))
+    .map(([id, n]) => ({ recipe: recipeById(id)!, portions: n * householdSize() }))
     .filter((d) => d.recipe && d.recipe.kind !== "sweet");
 }
 

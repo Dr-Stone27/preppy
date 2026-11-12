@@ -6,8 +6,8 @@ import { Profile } from "@/components/account/Profile";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { updatePrefs, useData } from "@/state/store";
-import { cookDaysOf } from "@/domain/plan/week";
-import { CookDaysEditor, NeverEditor, SidesEditor } from "./PrefEditors";
+import { cookDaysOf, peopleOf } from "@/domain/plan/week";
+import { CookDaysEditor, NeverEditor, PeopleEditor, SidesEditor } from "./PrefEditors";
 import styles from "./Preferences.module.css";
 
 export function Preferences() {
@@ -28,6 +28,14 @@ export function Preferences() {
       <h1 className="t-h1">Settings</h1>
 
       <Profile />
+
+      <section className={styles.section}>
+        <div>
+          <h2 className="t-h3">People</h2>
+          <p className="t-small t-muted">How many people each meal feeds. Shopping lists and portions are sized for this.</p>
+        </div>
+        <PeopleEditor people={peopleOf(data.prefs)} onChange={(people) => updatePrefs((p) => ({ ...p, people }))} />
+      </section>
 
       <section className={styles.section}>
         <div>

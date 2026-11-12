@@ -4,10 +4,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Button, IconButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { addDays, dateLabel, dayName, today0, weekKey, ymd } from "@/domain/plan/dates";
+import { addDays, dateLabel, dayName, daysBetween, today0, weekKey, ymd } from "@/domain/plan/dates";
 import type { RoundId, SlotId } from "@/domain/plan/types";
-import { openWeekStart, roundIsOpen, roundLabel, roundOfDay, stepWeek, weekStartFor } from "@/domain/plan/week";
-import { getWeek, repeatWeek, useData } from "@/state/store";
+import { missedCook, openWeekStart, roundIsOpen, roundLabel, roundOfDay, stepWeek, weekStartFor } from "@/domain/plan/week";
+import { cookToday, getWeek, repeatWeek, useData } from "@/state/store";
 import { MealSheet } from "./MealSheet";
 import { RoundBuilder } from "./RoundBuilder";
 import { RoundCard } from "./RoundCard";
@@ -40,6 +40,16 @@ export function PlanScreen() {
   // Offer last week's cooks when nothing here is planned yet.
   const prevKey = weekKey(stepWeek(data.weeks, data.prefs, weekStart, -1));
   const canRepeat = !week.rounds.some((R) => R.confirmed) && !!data.weeks[prevKey]?.rounds.some((R) => R.confirmed) && shown.length > 0;
+  // Someone starting partway through a week whose cook has passed unplanned can cook today for the days left.
+  const nowStart = weekStartFor(data.weeks, data.prefs, today);
+  const nowKey = weekKey(nowStart);
+  const missed = missedCook(getWeek(data, nowKey), nowStart, today);
+  const startToday = () => {
+    const id = cookToday(nowKey, daysBetween(nowStart, today));
+    if (!id) return;
+    setPicked(0);
+    router.replace(`/plan?build=${id}`, { scroll: false });
+  };
   const build = (id: RoundId | null) => router.replace(id ? `/plan?build=${id}` : "/plan", { scroll: false });
 
   return (
@@ -75,7 +85,19 @@ export function PlanScreen() {
         })}
       </ol>
 
-      {picked === null && open.moved && <p className="t-small t-muted">This week’s cook days have passed, so here’s next week.</p>}
+      {picked === null && open.moved && !missed && <p className="t-small t-muted">This week’s cook days have passed, so here’s next week.</p>}
+
+      {missed && offset <= 1 && (
+        <div className={styles.repeat}>
+          <p className="t-small">
+            {roundLabel(missed, nowStart)} has passed. Cook today to cover {dayName(nowStart, daysBetween(nowStart, today), true)}
+            {missed.days.at(-1)! > daysBetween(nowStart, today) ? ` to ${dayName(nowStart, missed.days.at(-1)!, true)}` : ""}.
+          </p>
+          <Button size="sm" onClick={startToday}>
+            Plan a cook for today
+          </Button>
+        </div>
+      )}
 
       {!thisWeek && (
         <button type="button" className={styles.link} onClick={() => setOffset(() => 0)}>
@@ -83,7 +105,7 @@ export function PlanScreen() {
         </button>
       )}
 
-      {thisWeek && passed.length > 0 && (
+      {thisWeek && passed.length > 0 && !missed && (
         <p className="t-small t-muted">
           {passed.map((R) => roundLabel(R, weekStart)).join(" and ")} {passed.length > 1 ? "have" : "has"} passed.
         </p>

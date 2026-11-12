@@ -16,7 +16,7 @@ Tatashe, scotch bonnet and onion, with or without tomatoes, blended and fried do
 |---|---|
 | Party Jollof, Nigerian Chicken Stew, Spaghetti Jollof, Suya Jollof, Peppered Turkey Wings, Gizdodo, Moi Moi | Tatashe → red bell pepper (close) · Fresh tomatoes → tinned tomatoes (close) · Scotch bonnet → chilli flakes or cayenne (changes the taste: hot but not fruity) |
 
-### 2. Palm oil and iru
+### 2. Palm oil base
 Palm oil heated until it clears, then onion, pepper, iru and crayfish. The flavour is earthy and fermented, and the colour is deep red.
 
 - **Fat and colour:** palm oil
@@ -85,6 +85,6 @@ A dry rub of garlic powder, paprika and pepper, sometimes finished with a sticky
 ## Calls I made that you may want to change
 
 1. **Suya Jollof goes under Pepper base, not a Suya base of its own.** The rice is a standard jollof; the suya spice is on the beef.
-2. **Red Red goes under Palm oil and iru, even though it has no iru.** It's palm oil and pepper, which is closer to that group than to the vegetable-oil pepper base. The same applies to Asaro and Honey Beans.
+2. **Red Red goes under the palm oil base, even though it has no iru.** It's palm oil and pepper, which is closer to that group than to the vegetable-oil pepper base. The same applies to Asaro and Honey Beans.
 3. **Pepper soup is a base with only one dish.** I kept it because it's distinctive and saved recipes will add to it. The alternative is to leave the dish untagged.
 4. **Pineapple Chicken goes under Soy, garlic and ginger.** It's sweet-sour, but soy is what holds the sauce together.

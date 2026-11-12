@@ -3,7 +3,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Icon, type IconName } from "@/components/ui/Icon";
-import { LibraryCollections } from "@/components/recipes/LibraryCollections";
 import { recipeById } from "@/domain/recipes/library";
 import { groupOf, pantryItems, SHOP_ORDER, STOCK_LABEL, stockOf, type Stock } from "@/domain/shop/pantry";
 import { setStock, useData } from "@/state/store";
@@ -28,9 +27,6 @@ export function Play() {
         <p className="t-eyebrow">Scratch page</p>
         <h1 className="t-h1">Play</h1>
       </header>
-      <Section title="4 · Library as collections" note="Flavour bases as stacked cards you swipe, cuisines as bowl tiles, sweets as one card, then every recipe. Tap any collection to open it.">
-        <LibraryCollections />
-      </Section>
       <Bowls />
       <Pantry />
       <CookStep />
@@ -61,8 +57,8 @@ function Bowls() {
       {recipes.map((r) => (
         <div key={r.id} className={styles.bowlRow}>
           <div className={styles.bowlPair}>
-            <BowlIllustration recipe={r} size={120} decorative />
-            <BowlIllustration recipe={r} size={40} decorative />
+            <BowlIllustration recipe={r} size={120} look="flat" decorative />
+            <BowlIllustration recipe={r} size={40} look="flat" decorative />
           </div>
           <div className={styles.bowlPair}>
             <BowlIllustration recipe={r} size={120} look="inked" decorative />

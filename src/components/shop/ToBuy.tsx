@@ -11,6 +11,7 @@ import { amountNeed, amountText, shopLines, tickKey, type ShopLine } from "@/dom
 import { track } from "@/lib/analytics";
 import { addExtra, newExtraId, removeExtra, setBought, setExtraDone, setStock } from "@/state/store";
 import { GroupTitle } from "./GroupTitle";
+import { itemIcon } from "./itemIcon";
 import styles from "./Shop.module.css";
 
 type Props = { weekKey: string; week: Week; round: Round; statuses: Record<string, Stock>; empty?: ReactNode };
@@ -215,6 +216,9 @@ function Line({ line: l, weekKey, round: R }: { line: ShopLine; weekKey: string;
       >
         <span className={styles.box} aria-hidden>
           {l.done && <Icon name="check" size={16} strokeWidth={2.4} />}
+        </span>
+        <span className={styles.lineIcon} aria-hidden>
+          <Icon name={itemIcon(nameOf(l), l.group)} size={18} strokeWidth={1.7} />
         </span>
         <span className={styles.lineText}>
           <span>

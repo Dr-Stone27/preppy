@@ -9,7 +9,7 @@ import type { Recipe } from "@/domain/recipes/types";
 export const BOWL_SIZES = { xs: 40, sm: 64, md: 104, lg: 160, hero: 232 } as const;
 export type BowlSize = keyof typeof BOWL_SIZES;
 
-/** "flat" is the original style; "inked" outlines each piece and lifts it off the base with a shadow. */
+/** "inked" (the default) outlines each piece and lifts it off the base with a shadow; "flat" is the original style. */
 export type BowlLook = "flat" | "inked";
 
 type Props = {
@@ -56,7 +56,7 @@ function draw(s: Shape, i: number, ink?: { color: string; width: number }) {
  * Preppy's signature dish art: a top-down ceramic bowl drawn from the recipe's own ingredients.
  * Deterministic per recipe id, vector only, legible from 40px to hero size.
  */
-export function BowlIllustration({ recipe, spec, size = "md", look = "flat", decorative, label, className }: Props) {
+export function BowlIllustration({ recipe, spec, size = "md", look = "inked", decorative, label, className }: Props) {
   const px = typeof size === "number" ? size : BOWL_SIZES[size];
   const bowl: BowlSpec =
     spec ?? (recipe ? bowlFromRecipe(recipe) : { cuisine: "other", base: "sauce", color: "#B97A4A", pieces: [], extras: [], seed: "generic" });

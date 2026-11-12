@@ -12,7 +12,7 @@ export type Base = { id: BaseId; name: string; about: string; /** How to make it
 
 export const BASES: Base[] = [
   { id: "pepper", name: "Pepper base", about: "Tatashe, scotch bonnet and onion, often with tomatoes, blended and fried down in oil until the oil rises.", once: "Blend the peppers, tomatoes and onions in one go, fry it down once, then divide it." },
-  { id: "palm", name: "Palm oil and iru", about: "Palm oil with onion, pepper, and usually iru and crayfish. Earthy, deep red.", once: "Heat the palm oil and fry the onion, pepper and iru once, then divide it." },
+  { id: "palm", name: "Palm oil base", about: "Palm oil with onion, pepper, and usually iru and crayfish. Earthy, deep red.", once: "Heat the palm oil and fry the onion, pepper and iru once, then divide it." },
   { id: "curry", name: "Curry and thyme", about: "Curry powder and dried thyme cooked into oil with onion. Lighter than the pepper base.", once: "Fry the onion with the curry and thyme once, then divide it." },
   { id: "pepper-soup", name: "Pepper soup", about: "Meat simmered with pepper soup spice, ginger and garlic, finished with scent leaf.", once: "Make one pot of spiced broth, then divide it." },
   { id: "soy", name: "Soy, garlic and ginger", about: "Soy sauce with garlic and ginger, something sweet, and often something hot or tart.", once: "Grate all the garlic and ginger at once and mix the sauces side by side." },

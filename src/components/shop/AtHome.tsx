@@ -7,19 +7,22 @@ import { allNeeded } from "@/domain/shop/list";
 import { groupOf, pantryItems, SHOP_ORDER, STOCK_LABEL, stockOf, type Stock } from "@/domain/shop/pantry";
 import { setStock } from "@/state/store";
 import { GroupTitle } from "./GroupTitle";
+import { itemIcon } from "./itemIcon";
 import styles from "./Shop.module.css";
 
 const LEVELS: Stock[] = ["have", "low", "out"];
 const LEVEL_ICON = { have: "jarFull", low: "jarLow", out: "jarEmpty" } as const;
-const TOP = 20;
+const TOP = 24;
 
 /**
- * What's in the kitchen: every dry good, spice and sauce, most used by the recipes first.
- * Have keeps it off shopping lists; Low and Out put it on. Fresh food isn't here because it's always bought.
+ * What's in the kitchen: every dry good, spice and sauce as a tile, most used by the recipes first.
+ * The tile's colour is how much you have. Tap it to choose Have, Low or Out; Low and Out put it on shopping lists.
+ * Fresh food isn't here because it's always bought.
  */
 export function AtHome({ statuses, bases }: { statuses: Record<string, Stock>; bases: string[] }) {
   const [query, setQuery] = useState("");
   const [everything, setEverything] = useState(false);
+  const [open, setOpen] = useState<string | null>(null);
 
   const uses = new Map(allNeeded(bases).map((x) => [x.key, x.from.size]));
   const items = pantryItems()
@@ -31,6 +34,7 @@ export function AtHome({ statuses, bases }: { statuses: Record<string, Stock>; b
   const q = query.trim().toLowerCase();
   const matching = q ? items.filter((p) => p.name.toLowerCase().includes(q)) : items;
   const shown = q || everything ? matching : matching.slice(0, TOP);
+  const openItem = items.find((p) => p.id === open);
 
   return (
     <>
@@ -41,7 +45,14 @@ export function AtHome({ statuses, bases }: { statuses: Record<string, Stock>; b
           <small> of {items.length}</small>
         </p>
         <p className="t-small t-muted">
-          Dry goods, spices and sauces, the ones recipes use most first. Mark what you have and it stays off your shopping lists. Fresh food isn’t here: it’s always on the list, because it doesn’t keep.
+          Dry goods, spices and sauces, the ones recipes use most first. Tap one to say how much you have; anything low or out goes on your shopping list. Fresh food isn’t here: it’s always on the list, because it doesn’t keep.
+        </p>
+        <p className={styles.legend} aria-hidden>
+          {LEVELS.map((l) => (
+            <span key={l} className={styles[l]}>
+              <Icon name={LEVEL_ICON[l]} size={16} /> {STOCK_LABEL[l]}
+            </span>
+          ))}
         </p>
       </section>
 
@@ -61,32 +72,18 @@ export function AtHome({ statuses, bases }: { statuses: Record<string, Stock>; b
         return (
           <section key={g} className={styles.group}>
             <GroupTitle group={g} />
-            <ul className={styles.stockList}>
+            <ul className={styles.tiles}>
               {list.map((p) => {
                 const s = stockOf(statuses, p.id);
                 return (
                   <li key={p.id}>
-                    <span className={styles.lineText}>
-                      <span className={styles.lineName}>{p.name}</span>
-                      {p.uses > 0 && <span className="t-label t-muted">In {p.uses === 1 ? "1 recipe" : `${p.uses} recipes`}</span>}
-                    </span>
-                    <span className={styles.levels} role="radiogroup" aria-label={`${p.name}: how much you have`}>
-                      {LEVELS.map((level) => (
-                        <button
-                          key={level}
-                          type="button"
-                          role="radio"
-                          aria-checked={s === level}
-                          className={s === level ? styles[level] : undefined}
-                          onClick={() => setStock(p.id, level)}
-                          aria-label={STOCK_LABEL[level]}
-                          title={STOCK_LABEL[level]}
-                        >
-                          <Icon name={LEVEL_ICON[level]} size={20} />
-                          {s === level && <span aria-hidden>{STOCK_LABEL[level]}</span>}
-                        </button>
-                      ))}
-                    </span>
+                    <button type="button" className={`${styles.tile} ${styles[s]}`} onClick={() => setOpen(p.id)} aria-haspopup="dialog" aria-label={`${p.name}: ${STOCK_LABEL[s]}`}>
+                      <Icon name={itemIcon(p.name, p.group)} size={28} strokeWidth={1.6} />
+                      <span className={styles.tileName}>{p.name}</span>
+                      <span className={styles.tileState}>
+                        <Icon name={LEVEL_ICON[s]} size={13} strokeWidth={2} /> {STOCK_LABEL[s]}
+                      </span>
+                    </button>
                   </li>
                 );
               })}
@@ -99,6 +96,44 @@ export function AtHome({ statuses, bases }: { statuses: Record<string, Stock>; b
         <Button variant="secondary" block onClick={() => setEverything(true)}>
           Show all {items.length}
         </Button>
+      )}
+
+      {openItem && (
+        <div className={styles.sheetBack} onClick={() => setOpen(null)}>
+          <div className={styles.sheet} role="dialog" aria-modal="true" aria-label={`${openItem.name}: how much you have`} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.sheetHead}>
+              <span className={styles.sheetIcon}>
+                <Icon name={itemIcon(openItem.name, openItem.group)} size={26} strokeWidth={1.6} />
+              </span>
+              <span>
+                <span className="t-h3">{openItem.name}</span>
+                {openItem.uses > 0 && <span className="t-label t-muted"> · in {openItem.uses === 1 ? "1 recipe" : `${openItem.uses} recipes`}</span>}
+              </span>
+            </div>
+            <div className={styles.sheetLevels} role="radiogroup" aria-label="How much you have">
+              {LEVELS.map((l) => {
+                const on = stockOf(statuses, openItem.id) === l;
+                return (
+                  <button
+                    key={l}
+                    type="button"
+                    role="radio"
+                    aria-checked={on}
+                    autoFocus={on}
+                    className={`${styles.sheetLevel} ${on ? styles[l] : ""}`}
+                    onClick={() => {
+                      setStock(openItem.id, l);
+                      setOpen(null);
+                    }}
+                  >
+                    <Icon name={LEVEL_ICON[l]} size={32} />
+                    {STOCK_LABEL[l]}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

@@ -32,7 +32,7 @@ export function Privacy() {
 
         <h2 className="t-h3">How Preppy is used</h2>
         <p>
-          Preppy records which screens are opened and a few steps, like finishing setup or planning a round, using PostHog. This shows where the app is confusing. It
+          Preppy records which screens are opened and a few steps, like finishing setup or planning a cook, using PostHog. This shows where the app is confusing. It
           does not record what you type, and it is not used for advertising.
         </p>
 

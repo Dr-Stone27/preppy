@@ -41,7 +41,7 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
           <p className="t-small t-muted">
             Pick what to cook on {dayName(weekStart, R.cook, true)} for {R.days.length === 1 ? "this day" : `these ${R.days.length} days`}.
           </p>
-          <Button onClick={onPlan}>Plan this round</Button>
+          <Button onClick={onPlan}>Plan this cook</Button>
         </div>
       ) : (
         <>
@@ -104,7 +104,7 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
 
           <div className={styles.roundActions}>
             <Button variant="secondary" size="sm" onClick={onPlan}>
-              Edit round
+              Edit this cook
             </Button>
             {R.confirmed && (
               <ButtonLink href={`/plan/cook?week=${weekKey(weekStart)}&round=${R.id}`} size="sm" variant={R.cooked ? "secondary" : "primary"}>

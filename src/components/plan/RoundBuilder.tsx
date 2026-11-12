@@ -92,7 +92,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
         )}
         {step === 2 && sweets.length > 0 && (
           <div className={styles.ok} role="status">
-            {eggs ? `${count(eggs, "egg")} this round, all inside these.` : "No eggs in these."}
+            {eggs ? `${count(eggs, "egg")} this cook, all inside these.` : "No eggs in these."}
           </div>
         )}
 
@@ -114,7 +114,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
         </Button>
       ) : (
         <Button block onClick={() => setStep(3)}>
-          {sweets.length ? "Next" : "Skip, no sweets this round"}
+          {sweets.length ? "Next" : "Skip, no sweets this cook"}
         </Button>
       );
   }
@@ -135,7 +135,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
     body = (
       <>
         <div className={styles.intro}>
-          <h1 className="t-h1">Check your round</h1>
+          <h1 className="t-h1">Check your cook</h1>
           <p className="t-muted">{roundRange(weekStart, R)}</p>
         </div>
         <div className={styles.hero}>
@@ -178,12 +178,12 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
             </li>
           ))}
         </ul>
-        {R.confirmed && <p className="t-small t-muted">Saving replaces this round’s timetable, including any meals you changed by hand.</p>}
+        {R.confirmed && <p className="t-small t-muted">Saving replaces this cook’s timetable, including any meals you changed by hand.</p>}
       </>
     );
     foot = (
       <Button block onClick={confirm}>
-        Save round
+        Save this cook
       </Button>
     );
   }
@@ -194,7 +194,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
         <div className={styles.hero}>
           <BowlCollage recipes={recipesFor(mains)} size={90} />
         </div>
-        <h1 className="t-h1">Round planned</h1>
+        <h1 className="t-h1">Cook planned</h1>
         <p className="t-muted">
           {count(Object.keys(cells).length, "meal")} from {dayName(weekStart, R.days[0], true)} to {dayName(weekStart, R.days.at(-1)!, true)}.
         </p>

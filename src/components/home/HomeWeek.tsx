@@ -84,7 +84,7 @@ export function HomeWeek() {
           <>
             <p className="t-small">Nothing picked for {dayName(weekStart, R.cook, true)}’s cook yet.</p>
             <ButtonLink href={`/plan?build=${R.id}`} block>
-              Plan this round
+              Plan this cook
             </ButtonLink>
           </>
         )}

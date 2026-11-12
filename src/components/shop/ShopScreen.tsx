@@ -62,7 +62,7 @@ export function ShopScreen() {
       {view === "stock" && <StockUp statuses={data.pantry} bases={data.prefs.bases} />}
       {view === "buy" && (
         <>
-          <div className={styles.rounds} role="group" aria-label="Round">
+          <div className={styles.rounds} role="group" aria-label="Which cook">
             {week.rounds.map((x) => (
               <button key={x.id} type="button" aria-pressed={x.id === R.id} onClick={() => go({ round: x.id })}>
                 {roundLabel(x, weekStart)} · {dayName(weekStart, x.cook)} {roundDates(weekStart, x).cook.getDate()}
@@ -81,7 +81,7 @@ export function ShopScreen() {
                 body={`Plan ${dayName(weekStart, R.cook, true)}’s cook and its shopping list fills in. Or add items above.`}
                 action={
                   <ButtonLink href={`/plan?build=${R.id}`} size="sm">
-                    Plan this round
+                    Plan this cook
                   </ButtonLink>
                 }
               />

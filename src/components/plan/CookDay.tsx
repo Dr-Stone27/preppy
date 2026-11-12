@@ -131,11 +131,11 @@ export function CookDay() {
   if (!dishes.length) {
     body = (
       <EmptyState
-        title="No mains planned for this round"
-        body="Plan the round first, then come back to cook."
+        title="No mains planned for this cook"
+        body="Plan this cook first, then come back to cook it."
         action={
           <ButtonLink href={`/plan?build=${R.id}`} size="sm">
-            Plan this round
+            Plan this cook
           </ButtonLink>
         }
       />

@@ -31,7 +31,7 @@ export function GettingStarted() {
   const items = [
     ...(data.prefs.onboarded ? [] : [{ label: "Set what you don’t eat", done: false, href: "/settings" }]),
     { label: "Save a recipe", done: data.recipes.length > 0, href: "/add" },
-    { label: "Plan a round", done: Object.values(data.weeks).some((w) => w.rounds.some((r) => r.confirmed)), href: "/plan" },
+    { label: "Plan a cook", done: Object.values(data.weeks).some((w) => w.rounds.some((r) => r.confirmed)), href: "/plan" },
     // Done once a handful of things are marked, not after a single tap.
     { label: "Mark what’s in your kitchen", done: Object.values(data.pantry).filter((s) => s !== "out").length >= 5, href: "/shop?view=home" },
   ];

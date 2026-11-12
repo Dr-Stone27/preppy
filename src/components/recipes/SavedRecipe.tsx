@@ -39,7 +39,7 @@ export function SavedRecipe() {
           <div className={styles.delete}>
             {confirming ? (
               <>
-                <p className="t-small">Delete this recipe? It also comes out of any round it’s planned in. This can’t be undone.</p>
+                <p className="t-small">Delete this recipe? It also comes out of any cook it’s planned in. This can’t be undone.</p>
                 <div className={styles.row}>
                   <Button variant="secondary" size="sm" onClick={() => setConfirming(false)}>
                     Keep it

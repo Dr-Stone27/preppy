@@ -97,7 +97,7 @@ export function Profile() {
         <Avatar size={56} />
         <div className={styles.text}>
           <p className={styles.name}>Not signed in</p>
-          <p className="t-label t-muted">Sign in to keep your plans on every device and read recipes from posts.</p>
+          <p className="t-label t-muted">Your plans are saved in this browser only, so clearing it or changing phone loses them. Sign in to keep them on every device and to read recipes from posts.</p>
         </div>
       </div>
       {open ? (

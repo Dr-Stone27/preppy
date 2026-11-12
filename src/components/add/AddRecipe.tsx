@@ -227,6 +227,7 @@ function AddRecipeForm() {
         </p>
         {w.items.length > 0 && <p className={styles.warn}>{warningSentence(w.items)}</p>}
         {r.note && <p className="t-small t-muted">{r.note}</p>}
+        {state.s === "saved" && <p className="t-small t-muted">It’s in your library under Saved by you. Pick it when you plan a cook.</p>}
         <div className={styles.actions}>
           <ButtonLink href={recipeHref(r)} block>
             Open recipe
@@ -346,7 +347,7 @@ function AddRecipeForm() {
           <FromInstagram />
 
           <p className="t-label t-muted">
-            Recipes you save show in the <Link href="/library">library</Link> under Saved by you.
+            Recipes you save show in the <Link href="/library">library</Link> under Saved by you, and you can pick them when you plan a cook.
           </p>
         </>
       )}

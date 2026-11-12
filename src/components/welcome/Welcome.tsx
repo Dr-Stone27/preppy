@@ -19,7 +19,7 @@ import styles from "./Welcome.module.css";
 const COOK = 1, NEVER = 2, SIDES = 3, KITCHEN = 4, SIGN_IN = 5, DONE = 6;
 const HOW = [
   { title: "Cook a few times, eat all week", body: "Pick the days you cook. Each cook covers the days until the next one." },
-  { title: "Keep it interesting", body: "Pick two or three mains per round. Preppy tells you when two taste the same." },
+  { title: "Keep it interesting", body: "Pick two or three mains for each cook. Preppy tells you when two taste the same." },
   { title: "One cooking session", body: "With a free account, cook day puts every dish in one order. Then it tells you what goes in the fridge and what to freeze for later in the week." },
 ];
 
@@ -166,7 +166,7 @@ export function Welcome() {
     foot = (
       <>
         <Button block onClick={() => finish("/plan")}>
-          Plan your first round
+          Plan your first cook
         </Button>
         <Button variant="secondary" block onClick={() => finish("/")}>
           Go home

@@ -90,7 +90,7 @@ export function MealSheet({ weekKey, week, prefs, meal, onClose }: Props) {
           {inRound.length ? (
             <div className={styles.options}>{inRound.map(option)}</div>
           ) : (
-            <p className="t-small t-muted">No {slot.kind === "main" ? "mains" : "breakfasts or sweets"} picked for this round yet.</p>
+            <p className="t-small t-muted">No {slot.kind === "main" ? "mains" : "breakfasts or sweets"} picked for this cook yet.</p>
           )}
 
           {others.length > 0 && (

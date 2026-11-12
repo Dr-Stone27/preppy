@@ -116,7 +116,13 @@ export function LibraryBrowser({ recipes: exported }: { recipes: Recipe[] }) {
       </div>
 
       <p className="t-small t-muted" aria-live="polite">
-        {filtered ? `${shown.length} of ${recipes.length} recipes` : `${recipes.length} recipes`}
+        {filter.kind === "shared"
+          ? Array.isArray(shared) && shared.length > 0
+            ? `${shown.length} shared by other cooks`
+            : ""
+          : filtered
+            ? `${shown.length} of ${own.length} recipes`
+            : `${own.length} recipes`}
       </p>
 
       {filter.kind === "shared" && shared === "loading" ? (

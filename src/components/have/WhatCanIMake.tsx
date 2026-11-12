@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { type ChangeEvent, type FormEvent, useEffect, useRef, useState } from "react";
-import { AccountPanel } from "@/components/account/AccountPanel";
+import { type FormEvent, useEffect, useState } from "react";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { FilterChip } from "@/components/ui/Chip";
@@ -14,10 +13,7 @@ import { allRecipes, recipeHref } from "@/domain/recipes/library";
 import { cardLabel } from "@/domain/recipes/search";
 import { groupOf, guessGroup, pantryItems, pantryMatch, SHOP_ORDER } from "@/domain/shop/pantry";
 import { track } from "@/lib/analytics";
-import { shrink } from "@/lib/images";
-import { authHeader } from "@/lib/supabase";
 import { addExtra, getWeek, newExtraId, useData } from "@/state/store";
-import { useSync } from "@/state/sync";
 import prefs from "@/components/prefs/Preferences.module.css";
 import styles from "./WhatCanIMake.module.css";
 
@@ -37,17 +33,13 @@ function load(): Picked {
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const list = (xs: string[], max = 3) => (xs.length > max ? `${xs.slice(0, max).join(", ")} and ${xs.length - max} more` : xs.join(", "));
 
-/** Pick the fresh food you have, by tapping or from a photo, and see which dishes it makes. */
+/** Pick the fresh food you have and see which dishes it makes. */
 export function WhatCanIMake() {
   const data = useData();
-  const sync = useSync();
   const [picked, setPicked] = useState<Picked>(load);
   const [typed, setTyped] = useState("");
   const [note, setNote] = useState("");
-  const [photo, setPhoto] = useState<"idle" | "reading" | "sign-in" | "error">("idle");
-  const [photoNote, setPhotoNote] = useState("");
   const [more, setMore] = useState(false);
-  const file = useRef<HTMLInputElement>(null);
 
   useEffect(() => track("what_can_i_make_opened"), []);
   useEffect(() => {
@@ -70,42 +62,6 @@ export function WhatCanIMake() {
     const key = match?.id ?? slug(name);
     setPicked((p) => ({ keys: p.keys.includes(key) ? p.keys : [...p.keys, key], custom: match ? p.custom : { ...p.custom, [key]: name } }));
     setTyped("");
-  };
-
-  const readPhoto = async (e: ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    e.target.value = "";
-    if (!f) return;
-    setPhoto("reading");
-    setPhotoNote("");
-    try {
-      const shot = await shrink(f);
-      const res = await fetch("/api/read-fridge", {
-        method: "POST",
-        headers: { "content-type": "application/json", ...(await authHeader()) },
-        body: JSON.stringify({ image: { mime: shot.mime, data: shot.data } }),
-      });
-      if (res.status === 401) return setPhoto("sign-in");
-      if (!res.ok) {
-        setPhoto("error");
-        return setPhotoNote(res.status === 402 ? "You’ve used today’s AI reads. Tick things by hand, or try tomorrow." : "Couldn’t read that photo. Try again in better light, or tick things by hand.");
-      }
-      const { items } = (await res.json()) as { items: string[] };
-      const found: Picked = { keys: [], custom: {} };
-      for (const name of items) {
-        const m = pantryMatch(name);
-        const key = m?.id ?? slug(name);
-        if (!found.keys.includes(key)) found.keys.push(key);
-        if (!m) found.custom[key] = name.toLowerCase();
-      }
-      setPicked((p) => ({ keys: [...new Set([...p.keys, ...found.keys])], custom: { ...p.custom, ...found.custom } }));
-      track("fridge_photo_read", { found: items.length });
-      setPhoto("idle");
-      setPhotoNote(items.length ? `Found ${list(items.map((x) => x.toLowerCase()), 6)}. Untick anything that’s wrong.` : "Couldn’t see any food in that photo. Try one closer up.");
-    } catch {
-      setPhoto("error");
-      setPhotoNote("Couldn’t read that photo. Try again, or tick things by hand.");
-    }
   };
 
   const next = nextOpenCook(data.weeks, data.prefs, today0(), (k) => getWeek(data, k));
@@ -137,28 +93,6 @@ export function WhatCanIMake() {
         <h1 className="t-h1">What can I make?</h1>
         <p className="t-muted">Tick the fresh food you have. Dry goods, spices and sauces come from what you’ve marked at home.</p>
       </div>
-
-      <section className={styles.photo}>
-        <div>
-          <h2 className="t-h3">Snap your fridge</h2>
-          <p className="t-small t-muted">Take a photo and Preppy ticks what it can see. Uses one of your daily AI reads.</p>
-        </div>
-        <Button variant="secondary" disabled={photo === "reading"} onClick={() => file.current?.click()}>
-          {photo === "reading" ? "Looking…" : "Take a photo"}
-        </Button>
-        <input ref={file} type="file" accept="image/*" capture="environment" hidden onChange={readPhoto} />
-        {photoNote && (
-          <p className={photo === "error" ? styles.bad : styles.good} role="status">
-            {photoNote}
-          </p>
-        )}
-        {photo === "sign-in" && !sync.email && (
-          <div className={styles.signIn}>
-            <p className="t-small">Reading a photo needs a free account. Sign in with the code we email you, then take the photo again.</p>
-            <AccountPanel />
-          </div>
-        )}
-      </section>
 
       {groups.map(({ g, items }) => (
         <section key={g} className={styles.group}>

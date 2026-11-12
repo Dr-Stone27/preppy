@@ -1,0 +1,170 @@
+.wrap {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.shelf {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.shelfHead {
+  display: grid;
+  gap: var(--space-1);
+}
+
+/* Flavour bases: a rail of stacked cards you swipe through. */
+.rail {
+  display: flex;
+  gap: var(--space-4);
+  margin: 0 calc(var(--gutter) * -1);
+  padding: var(--space-3) var(--gutter) var(--space-4);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 var(--gutter);
+  scrollbar-width: none;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.deck {
+  position: relative;
+  flex: none;
+  width: 196px;
+  height: 196px;
+  scroll-snap-align: start;
+  text-align: left;
+}
+
+.deck:active .deckFront {
+  transform: scale(0.97);
+}
+
+.deckBack,
+.deckMid,
+.deckFront {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-feature);
+}
+
+/* The two cards behind peek out, so it reads as a collection rather than a single dish. */
+.deckBack {
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  transform: translate(10px, -8px) rotate(5deg);
+}
+
+.deckMid {
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  transform: translate(5px, -4px) rotate(2.5deg);
+}
+
+.deckFront {
+  display: grid;
+  align-content: end;
+  gap: 2px;
+  padding: var(--space-4);
+  box-shadow: var(--shadow-card), inset 0 0 0 1px rgba(30, 27, 24, 0.04);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.deckFront .fan {
+  margin-bottom: auto;
+}
+
+.deckTitle {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1.2;
+}
+
+.fan {
+  display: flex;
+  align-items: center;
+}
+
+.fanItem {
+  position: relative;
+  display: flex;
+}
+
+/* Cuisines: bowl tiles with a label pill sitting on the edge. */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5) var(--space-2);
+}
+
+.tile {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: var(--space-3) 0 var(--space-5);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.tile:active {
+  transform: scale(0.97);
+}
+
+.pill {
+  position: absolute;
+  bottom: -12px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-floating);
+  font-size: var(--text-label);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Breakfast & sweets: one wide card. */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-feature);
+  background: var(--color-warning-soft);
+  text-align: left;
+}
+
+.banner > span:nth-child(2) {
+  flex: 1;
+}
+
+/* An opened collection. */
+.back {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 40px;
+  font-weight: 700;
+  color: var(--color-action);
+}
+
+.openHead {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  border-radius: var(--radius-feature);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.once {
+  padding: var(--space-3);
+  border-radius: var(--radius-input);
+  background: var(--color-surface);
+  font-size: var(--text-small);
+}

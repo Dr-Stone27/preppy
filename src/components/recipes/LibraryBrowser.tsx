@@ -27,28 +27,29 @@ export function LibraryBrowser({ recipes: exported }: { recipes: Recipe[] }) {
   const open = useSearchParams().get("c");
   // Saved recipes register with the library once the store loads in the browser.
   const own = useMemo(() => (data ? libraryRecipes() : exported), [data, exported]);
-  const [shared, setShared] = useState<Recipe[] | "loading" | "error" | null>(null);
-  const recipes = useMemo(() => (Array.isArray(shared) ? [...own, ...shared] : own), [own, shared]);
+  const [shared, setShared] = useState<{ recipe: Recipe; by: string | null }[] | "loading" | "error" | null>(null);
+  const recipes = useMemo(() => (Array.isArray(shared) ? [...own, ...shared.map((s) => s.recipe)] : own), [own, shared]);
   const [typed, setTyped] = useState("");
   const query = useDeferredValue(typed);
 
+  const toRows = (list: Awaited<ReturnType<typeof listShared>>) => (list ?? []).map((s) => ({ recipe: s.recipe, by: s.mine ? "you" : s.sharedBy }));
   const loadShared = () => {
     setShared("loading");
     listShared()
-      .then((list) => setShared((list ?? []).map((s) => s.recipe)))
+      .then((list) => setShared(toRows(list)))
       .catch(() => setShared("error"));
   };
   useEffect(() => {
-    // Other cooks' recipes load only when that collection is opened. Until they arrive, it shows as loading.
-    if (open !== "shared" || shared !== null) return;
+    // Other cooks' newest recipes load with the library, when accounts are on. Until they arrive, they show as loading.
+    if (!accountsOn || shared !== null) return;
     let live = true;
     listShared()
-      .then((list) => live && setShared((list ?? []).map((s) => s.recipe)))
+      .then((list) => live && setShared(toRows(list)))
       .catch(() => live && setShared("error"));
     return () => {
       live = false;
     };
-  }, [open, shared]);
+  }, [shared]);
 
   const go = (key: string | null) => {
     setTyped("");
@@ -130,14 +131,7 @@ export function LibraryBrowser({ recipes: exported }: { recipes: Recipe[] }) {
           )}
         </>
       ) : (
-        <>
-          <CollectionsHome recipes={own} onOpen={go} showShared={accountsOn} />
-          <section className={styles.all}>
-            <h2 className="t-h3">Every recipe</h2>
-            <p className="t-small t-muted">{own.length} recipes</p>
-            {grid(own)}
-          </section>
-        </>
+        <CollectionsHome recipes={own} onOpen={go} shared={accountsOn ? (shared ?? "loading") : null} />
       )}
     </div>
   );

@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Icon } from "@/components/ui/Icon";
 import { cuisineOf } from "@/domain/bowl/fromRecipe";
 import type { CuisineFamily } from "@/domain/bowl/types";
 import { baseById, baseOf, basesIn, BASES, type BaseId } from "@/domain/recipes/bases";
+import { recipeHref } from "@/domain/recipes/library";
 import { CUISINE_LABEL, cuisinesIn } from "@/domain/recipes/search";
 import type { Recipe } from "@/domain/recipes/types";
 import styles from "./LibraryCollections.module.css";
@@ -36,6 +38,7 @@ export function collection(key: CollectionKey, recipes: Recipe[]) {
     return { title: CUISINE_LABEL[id as CuisineFamily], list: recipes.filter((r) => r.kind === "main" && r.origin !== "shared" && cuisineOf(r) === id) };
   }
   if (kind === "sweet") return { title: "Breakfast & sweets", list: recipes.filter((r) => r.kind === "sweet" && r.origin !== "shared") };
+  if (kind === "all") return { title: "All recipes", list: recipes.filter((r) => r.origin !== "shared") };
   if (kind === "you") return { title: "Saved by you", list: recipes.filter((r) => r.origin === "you") };
   if (kind === "shared") return { title: "From other cooks", list: recipes.filter((r) => r.origin === "shared") };
   return null;
@@ -48,7 +51,16 @@ const covers = (list: Recipe[]) =>
 const count = (n: number) => (n === 1 ? "1 dish" : `${n} dishes`);
 
 /** The library's front page: flavour bases as stacked cards, cuisines as bowl tiles, then sweets and your own. */
-export function CollectionsHome({ recipes, onOpen, showShared }: { recipes: Recipe[]; onOpen: (key: CollectionKey) => void; showShared: boolean }) {
+export function CollectionsHome({
+  recipes,
+  onOpen,
+  shared,
+}: {
+  recipes: Recipe[];
+  onOpen: (key: CollectionKey) => void;
+  /** Other cooks' newest recipes: null when accounts aren't on, so the row doesn't show. */
+  shared: { recipe: Recipe; by: string | null }[] | "loading" | "error" | null;
+}) {
   const own = recipes.filter((r) => r.origin !== "shared");
   const mains = own.filter((r) => r.kind === "main");
   const sweets = own.filter((r) => r.kind === "sweet");
@@ -56,6 +68,38 @@ export function CollectionsHome({ recipes, onOpen, showShared }: { recipes: Reci
 
   return (
     <div className={styles.wrap}>
+      {shared !== null && (
+        <section className={styles.shelf}>
+          <div className={styles.shelfTop}>
+            <h2 className="t-h3">New from other cooks</h2>
+            {Array.isArray(shared) && shared.length > 0 && (
+              <button type="button" className={styles.seeAll} onClick={() => onOpen("shared")}>
+                See all
+              </button>
+            )}
+          </div>
+          {shared === "loading" ? (
+            <p className="t-small t-muted" aria-busy="true">
+              Loading what other cooks shared…
+            </p>
+          ) : shared === "error" ? (
+            <p className="t-small t-muted">Couldn’t load recipes from other cooks just now.</p>
+          ) : shared.length === 0 ? (
+            <p className="t-small t-muted">Nothing shared yet. Share one of your saved recipes from its page and it shows up here for everyone.</p>
+          ) : (
+            <div className={styles.rail}>
+              {shared.slice(0, 8).map(({ recipe: r, by }) => (
+                <Link key={r.id} href={recipeHref(r)} className={styles.mini}>
+                  <BowlIllustration recipe={r} size={76} decorative />
+                  <span className={styles.miniTitle}>{r.title}</span>
+                  <span className="t-label t-muted">{by ? `by ${by}` : "by a Preppy cook"}</span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
       <section className={styles.shelf}>
         <div className={styles.shelfHead}>
           <h2 className="t-h3">Cook by flavour base</h2>
@@ -98,24 +142,18 @@ export function CollectionsHome({ recipes, onOpen, showShared }: { recipes: Reci
 
       <section className={styles.shelf}>
         <h2 className="t-h3">More to browse</h2>
+        <Banner title="All recipes" note={count(own.length)} recipes={mains} tint="var(--color-surface)" onClick={() => onOpen("all")} />
         {sweets.length > 0 && <Banner title="Breakfast & sweets" note={count(sweets.length)} recipes={sweets} tint="var(--color-warning-soft)" onClick={() => onOpen("sweet")} />}
         {yours.length > 0 && <Banner title="Saved by you" note={count(yours.length)} recipes={yours} tint="var(--color-action-soft)" onClick={() => onOpen("you")} />}
-        {showShared && <Banner title="From other cooks" note="Recipes other Preppy cooks chose to share" recipes={[]} tint="var(--color-success-soft)" icon="user" onClick={() => onOpen("shared")} />}
       </section>
     </div>
   );
 }
 
-function Banner({ title, note, recipes, tint, icon, onClick }: { title: string; note: string; recipes: Recipe[]; tint: string; icon?: "user"; onClick: () => void }) {
+function Banner({ title, note, recipes, tint, onClick }: { title: string; note: string; recipes: Recipe[]; tint: string; onClick: () => void }) {
   return (
     <button type="button" className={styles.banner} style={{ background: tint }} onClick={onClick}>
-      {recipes.length ? (
-        <Fan recipes={recipes} size={52} />
-      ) : (
-        <span className={styles.bannerIcon}>
-          <Icon name={icon ?? "library"} size={24} />
-        </span>
-      )}
+      <Fan recipes={recipes} size={52} />
       <span className={styles.bannerText}>
         <span className={styles.deckTitle}>{title}</span>
         <span className="t-label t-muted">{note}</span>

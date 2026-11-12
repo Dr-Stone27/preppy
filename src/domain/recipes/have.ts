@@ -1,5 +1,5 @@
 import { slug } from "@/domain/plan/week";
-import { pantryItem, stockOf, type Stock } from "@/domain/shop/pantry";
+import { pantryItem, pantryMatch, stockOf, type Stock } from "@/domain/shop/pantry";
 import { swapFor } from "./bases";
 import type { Recipe } from "./types";
 
@@ -34,7 +34,7 @@ export function cookFromWhatYouHave(recipes: Recipe[], fresh: Set<string>, statu
     const m: Match = { recipe, have: [], needFresh: [], needShelf: [], swaps: [] };
     let freshSwaps = 0;
     for (const ing of recipe.ingredients) {
-      const key = slug(ing.name);
+      const key = pantryMatch(ing.name)?.id ?? slug(ing.name);
       if (key === "water" || seen.has(key)) continue;
       seen.add(key);
       const item = pantryItem(key);

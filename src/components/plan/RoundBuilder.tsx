@@ -2,6 +2,7 @@
 
 import { count } from "@/lib/words";
 import { track } from "@/lib/analytics";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { FilterChip } from "@/components/ui/Chip";
@@ -18,7 +19,7 @@ import { dayName } from "@/domain/plan/dates";
 import type { Prefs, Round } from "@/domain/plan/types";
 import { dayMacros, fillCells, recipesFor, roundLabel, roundRange, SLOTS } from "@/domain/plan/week";
 import { sharedBases } from "@/domain/plan/cook";
-import { libraryRecipes, recipeById } from "@/domain/recipes/library";
+import { libraryRecipes, recipeById, recipeHref } from "@/domain/recipes/library";
 import { ruleWarnings } from "@/domain/recipes/rules";
 import type { Recipe } from "@/domain/recipes/types";
 import { updateWeek, useData } from "@/state/store";
@@ -305,21 +306,26 @@ function PickCard({ recipe: r, never, selected, onToggle, note }: { recipe: Reci
   const { items } = ruleWarnings(r, never);
   const m = r.macros;
   return (
-    <button type="button" className={styles.pick} aria-pressed={selected} onClick={onToggle}>
-      {selected && (
-        <span className={styles.tick} aria-hidden>
-          <Icon name="check" size={16} strokeWidth={2.4} />
+    <div className={styles.pickWrap}>
+      <button type="button" className={styles.pick} aria-pressed={selected} onClick={onToggle}>
+        {selected && (
+          <span className={styles.tick} aria-hidden>
+            <Icon name="check" size={16} strokeWidth={2.4} />
+          </span>
+        )}
+        <BowlIllustration recipe={r} size={88} decorative />
+        <span className={styles.pickTitle}>{r.title}</span>
+        <span className={styles.pickMeta}>
+          <Tag tone="accent">{cardLabel(r)}</Tag>
+          {m?.protein ? <span className="t-label t-muted">{m.protein} g protein</span> : null}
         </span>
-      )}
-      <BowlIllustration recipe={r} size={88} decorative />
-      <span className={styles.pickTitle}>{r.title}</span>
-      <span className={styles.pickMeta}>
-        <Tag tone="accent">{cardLabel(r)}</Tag>
-        {m?.protein ? <span className="t-label t-muted">{m.protein} g protein</span> : null}
-      </span>
-      {note && <span className={styles.pickNote}>{note}</span>}
-      {items.length > 0 && <span className={styles.pickWarn}>Has {items.join(", ")}</span>}
-    </button>
+        {note && <span className={styles.pickNote}>{note}</span>}
+        {items.length > 0 && <span className={styles.pickWarn}>Has {items.join(", ")}</span>}
+      </button>
+      <Link href={recipeHref(r)} className={styles.pickInfo} aria-label={`See the recipe for ${r.title}`}>
+        Recipe
+      </Link>
+    </div>
   );
 }
 

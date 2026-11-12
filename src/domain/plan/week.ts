@@ -1,5 +1,6 @@
 import { recipeById } from "@/domain/recipes/library";
 import { LOOSE, normUnit } from "@/domain/shop/amounts";
+import { pantryMatch } from "@/domain/shop/pantry";
 import type { Recipe } from "@/domain/recipes/types";
 import { addDays, dateLabel, dayName, daysBetween, weekKey, weekStartFromKey, weekStartOf } from "./dates";
 import type { Cell, Prefs, Round, RoundId, SlotId, Week } from "./types";
@@ -188,7 +189,8 @@ export function needs(R: Round, cells: Record<string, Cell>): NeedLine[] {
   const { rec, bases } = usesOf(R, cells);
   const lines = new Map<string, NeedLine>();
   const add = (name: string, qty: number | null, unit: string, from: string) => {
-    const key = slug(name);
+    // "onion" in a typed recipe joins "Onions" from the library.
+    const key = pantryMatch(name)?.id ?? slug(name);
     if (key === "water") return;
     let l = lines.get(key);
     if (!l) lines.set(key, (l = { key, name, amounts: new Map(), loose: false, from: new Set() }));

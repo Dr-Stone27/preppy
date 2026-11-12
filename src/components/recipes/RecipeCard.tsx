@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cardLabel } from "@/domain/recipes/search";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Tag } from "@/components/ui/Chip";
 import { recipeHref } from "@/domain/recipes/library";
@@ -13,7 +14,7 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
       <BowlIllustration recipe={recipe} size="md" decorative />
       <h3 className={styles.title}>{recipe.title}</h3>
       <div className={styles.meta}>
-        {recipe.flavour && <Tag tone="accent">{recipe.flavour}</Tag>}
+        <Tag tone="accent">{cardLabel(recipe)}</Tag>
         {m?.protein ? <span className="t-label t-muted">{m.protein} g protein</span> : null}
       </div>
     </Link>

@@ -7,7 +7,7 @@ import { dayName, weekStartFromKey } from "@/domain/plan/dates";
 import type { Extra, Round, Week } from "@/domain/plan/types";
 import { recipesFor, slug } from "@/domain/plan/week";
 import { groupOf, guessGroup, pantryItems, pantryMatch, SHOP_ORDER, stockOf, type Stock } from "@/domain/shop/pantry";
-import { amountText, shopLines, tickKey, type ShopLine } from "@/domain/shop/list";
+import { amountNeed, amountText, shopLines, tickKey, type ShopLine } from "@/domain/shop/list";
 import { track } from "@/lib/analytics";
 import { addExtra, removeExtra, setBought, setExtraDone, setStock } from "@/state/store";
 import styles from "./Shop.module.css";
@@ -201,7 +201,8 @@ export function ToBuy({ weekKey, week, round: R, statuses, empty }: Props) {
 
 function Line({ line: l, weekKey, round: R }: { line: ShopLine; weekKey: string; round: Round }) {
   const tick = tickKey(R, l.key);
-  const from = [...l.from].join(", ");
+  const need = amountNeed(l);
+  const from = [need, [...l.from].join(", ")].filter(Boolean).join(" · ");
   return (
     <li data-done={l.done || undefined}>
       <button

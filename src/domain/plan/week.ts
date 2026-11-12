@@ -1,4 +1,5 @@
 import { recipeById } from "@/domain/recipes/library";
+import { LOOSE, normUnit } from "@/domain/shop/amounts";
 import type { Recipe } from "@/domain/recipes/types";
 import { addDays, dateLabel, dayName, weekKey, weekStartFromKey, weekStartOf } from "./dates";
 import type { Cell, Prefs, Round, RoundId, SlotId, Week } from "./types";
@@ -166,11 +167,9 @@ export function needs(R: Round, cells: Record<string, Cell>): NeedLine[] {
     if (key === "water") return;
     let l = lines.get(key);
     if (!l) lines.set(key, (l = { key, name, amounts: new Map(), loose: false, from: new Set() }));
-    if (qty == null || Number.isNaN(qty)) l.loose = true;
-    else {
-      const u = (unit ?? "").trim().toLowerCase();
-      l.amounts.set(u, (l.amounts.get(u) ?? 0) + qty);
-    }
+    const u = normUnit(unit);
+    if (qty == null || Number.isNaN(qty) || u === LOOSE) l.loose = true;
+    else l.amounts.set(u, (l.amounts.get(u) ?? 0) + qty);
     l.from.add(from);
   };
   for (const [id, n] of rec) {

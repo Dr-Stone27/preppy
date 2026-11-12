@@ -1,4 +1,5 @@
 import { slug } from "@/domain/plan/week";
+import { isMeasure } from "@/domain/shop/amounts";
 import type { Ingredient, Macros, Recipe } from "./types";
 
 /** The iOS Shortcut shares "link\ncaption" for an Instagram or TikTok post. Returns null for anything else. */
@@ -79,26 +80,58 @@ export function recipeFromAi(d: unknown, link: string): Recipe {
   };
 }
 
-/** "500 g | Chicken thighs", "2 | Onions", "| Garlic". A line without "|" is taken as a name. */
+const FRAC: Record<string, number> = { "½": 0.5, "¼": 0.25, "¾": 0.75, "⅓": 1 / 3, "⅔": 2 / 3, "⅛": 0.125 };
+
+/** "1", "1.5", "1,5", "1/2", "½", "1½", "1 1/2" → a number, or null. */
+function readQty(q: string): number | null {
+  const t = q.trim().replace(",", ".");
+  const mixed = t.match(/^(\d+)\s*([½¼¾⅓⅔⅛]|\d+\/\d+)$/);
+  if (mixed) return Number(mixed[1]) + (readQty(mixed[2]) ?? 0);
+  if (t in FRAC) return FRAC[t];
+  if (t.includes("/")) {
+    const [n, d] = t.split("/").map(Number);
+    return d ? n / d : null;
+  }
+  const n = Number(t);
+  return Number.isFinite(n) ? n : null;
+}
+
+const QTY = "(\\d+\\s+\\d+\\/\\d+|\\d+\\s*[½¼¾⅓⅔⅛]|[\\d.,]+\\/\\d+|[\\d.,]+|[½¼¾⅓⅔⅛])";
+
+/**
+ * One ingredient per line, written the way people type: "500 g chicken thighs", "2 onions", "3 cloves garlic", "salt".
+ * The older "500 g | Chicken thighs" form still works, and is what's shown for amounts with longer units.
+ */
 export function parseIngredientLines(text: string): Ingredient[] {
   return text
     .split("\n")
-    .map((l) => l.trim())
+    .map((l) => l.trim().replace(/^[-•*]\s*/, ""))
     .filter(Boolean)
-    .map((l) => {
-      if (!l.includes("|")) return { name: l, qty: null, unit: "" };
-      const [amt, ...rest] = l.split("|");
-      const name = rest.join("|").trim();
-      const m = amt.trim().match(/^([\d.,/½¼¾⅓⅔]+)\s*(.*)$/);
-      if (!m) return { name, qty: null, unit: amt.trim() };
-      const q = m[1].replace(",", ".");
-      const frac: Record<string, number> = { "½": 0.5, "¼": 0.25, "¾": 0.75, "⅓": 1 / 3, "⅔": 2 / 3 };
-      const qty = frac[q] ?? (q.includes("/") ? Number(q.split("/")[0]) / Number(q.split("/")[1]) : Number(q));
-      return { name, qty: Number.isFinite(qty) ? qty : null, unit: m[2].trim() };
+    .map((l): Ingredient => {
+      if (l.includes("|")) {
+        const [amt, ...rest] = l.split("|");
+        const name = rest.join("|").trim();
+        const m = amt.trim().match(new RegExp(`^${QTY}\\s*(.*)$`));
+        if (!m) return { name, qty: null, unit: amt.trim() };
+        return { name, qty: readQty(m[1]), unit: m[2].trim() };
+      }
+      const m = l.match(new RegExp(`^${QTY}\\s*(.*)$`));
+      if (!m) return { name: l, qty: null, unit: "" };
+      const rest = m[2].trim().split(/\s+/);
+      const unit = rest.length > 1 && isMeasure(rest[0]) ? rest.shift()! : "";
+      if (rest[0] === "of") rest.shift();
+      return { name: rest.join(" "), qty: readQty(m[1]), unit };
     })
     .filter((i) => i.name);
 }
 
+/** Back to text for editing: plain lines where the unit is simple, the "|" form where it isn't. */
 export function ingredientLines(list: Ingredient[]): string {
-  return list.map((i) => `${i.qty == null ? "" : `${i.qty} `}${i.unit}`.trim() + ` | ${i.name}`).join("\n");
+  return list
+    .map((i) => {
+      const amt = `${i.qty == null ? "" : `${i.qty} `}${i.unit}`.trim();
+      if (!amt) return i.name;
+      return !i.unit || isMeasure(i.unit) ? `${amt} ${i.name}` : `${amt} | ${i.name}`;
+    })
+    .join("\n");
 }

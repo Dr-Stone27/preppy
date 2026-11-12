@@ -39,3 +39,10 @@ export function filterRecipes(recipes: Recipe[], f: LibraryFilter): Recipe[] {
     return q.split(/\s+/).every((word) => hay.includes(word));
   });
 }
+
+/** The tag on a dish card: its cuisine for mains (so every main card speaks the same way), its flavour for sweets. */
+export function cardLabel(r: Recipe): string {
+  if (r.kind === "sweet") return r.flavour || "Sweet";
+  const c = cuisineOf(r);
+  return c === "other" ? r.flavour || "Other" : CUISINE_LABEL[c];
+}

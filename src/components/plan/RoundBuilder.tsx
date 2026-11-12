@@ -2,7 +2,12 @@
 
 import { count } from "@/lib/words";
 import { track } from "@/lib/analytics";
+import { useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { FilterChip } from "@/components/ui/Chip";
+import { lastCookFresh, dishesUsingLeftovers } from "@/domain/plan/useup";
+import { cardLabel, CUISINE_LABEL, cuisinesIn, filterRecipes } from "@/domain/recipes/search";
+import type { CuisineFamily } from "@/domain/bowl/types";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink, IconButton } from "@/components/ui/Button";
@@ -15,7 +20,7 @@ import { dayMacros, eggCount, fillCells, recipesFor, repeatedFlavours, roundLabe
 import { libraryRecipes } from "@/domain/recipes/library";
 import { ruleWarnings } from "@/domain/recipes/rules";
 import type { Recipe } from "@/domain/recipes/types";
-import { updateWeek } from "@/state/store";
+import { updateWeek, useData } from "@/state/store";
 import styles from "./RoundBuilder.module.css";
 
 type Props = { weekKey: string; weekStart: Date; round: Round; prefs: Prefs; onClose: () => void };
@@ -23,9 +28,26 @@ type Step = 1 | 2 | 3 | "done";
 
 /** Full-screen, three steps: mains, then breakfast and sweets, then a review before the timetable is filled. */
 export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: Props) {
-  const [step, setStep] = useState<Step>(1);
-  const [mains, setMains] = useState<string[]>(R.mains);
-  const [sweets, setSweets] = useState<string[]>(R.sweets);
+  // The step lives in the address, so the phone's back gesture goes back a step and a reload stays put.
+  const params = useSearchParams();
+  const router = useRouter();
+  const [done, setDone] = useState(false);
+  const urlStep = Number(params.get("step"));
+  const step: Step = done ? "done" : urlStep === 2 || urlStep === 3 ? urlStep : 1;
+  const setStep = (n: Step) => {
+    if (n === "done") return setDone(true);
+    router.push(`/plan?build=${R.id}&step=${n}`, { scroll: false });
+  };
+  // Picks survive a reload until the cook is saved.
+  const draftKey = `preppy:pick:${weekKey}:${R.id}`;
+  const [draft] = useState(() => readDraft(draftKey));
+  const [mains, setMains] = useState<string[]>(draft?.mains ?? R.mains);
+  const [sweets, setSweets] = useState<string[]>(draft?.sweets ?? R.sweets);
+  useEffect(() => writeDraft(draftKey, { mains, sweets }), [draftKey, mains, sweets]);
+  const [query, setQuery] = useState("");
+  const [cuisine, setCuisine] = useState<CuisineFamily | "all">("all");
+  const data = useData();
+  const leftovers = useMemo(() => (data ? lastCookFresh(data.weeks, weekKey, R) : null), [data, weekKey, R]);
 
   useEffect(() => {
     const prev = document.body.style.overflow;
@@ -57,6 +79,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
       return w;
     });
     track("round_planned", { mains: mains.length, sweets: sweets.length });
+    writeDraft(draftKey, null);
     setStep("done");
   };
 
@@ -68,7 +91,10 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
     const kind = step === 1 ? "main" : "sweet";
     const picked = step === 1 ? mains : sweets;
     const setPicked = step === 1 ? setMains : setSweets;
-    const list = libraryRecipes().filter((r) => r.kind === kind);
+    const all = libraryRecipes().filter((r) => r.kind === kind);
+    const list = filterRecipes(all, { query, kind: "all", cuisine: step === 1 ? cuisine : "all" });
+    const cuisines = step === 1 ? cuisinesIn(all) : [];
+    const useUp = step === 1 && leftovers && !query && cuisine === "all" ? dishesUsingLeftovers(all, leftovers) : [];
     const variety = repeatedFlavours(mains);
     const eggs = eggCount(R, cells);
 
@@ -79,7 +105,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
           <p className="t-muted">
             {step === 1
               ? `Pick what to cook on ${dayName(weekStart, R.cook, true)}. Two or three is easiest to cook in one go, and different flavours keep the week interesting.`
-              : "Quick to make fresh each day. A good place to hide eggs."}
+              : "Quick to make fresh each day. Skip this if you eat breakfast out."}
           </p>
         </div>
 
@@ -96,12 +122,58 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
           </div>
         )}
 
+        {useUp.length > 0 && leftovers && (
+          <section className={styles.useUp} aria-label="Use it up">
+            <h2 className="t-h3">Use it up</h2>
+            <p className="t-small t-muted">These use fresh food you bought for {leftovers.label}.</p>
+            <div className={styles.grid}>
+              {useUp.map(({ recipe: r, uses }) => (
+                <PickCard
+                  key={r.id}
+                  recipe={r}
+                  never={prefs.never}
+                  selected={picked.includes(r.id)}
+                  onToggle={() => toggle(setPicked, r.id)}
+                  note={`Uses ${uses.slice(0, 3).join(", ")}`}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {all.length > 6 && (
+          <div className={styles.finder}>
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={step === 1 ? "Search mains or ingredients" : "Search breakfasts and sweets"}
+              aria-label="Search dishes"
+              autoComplete="off"
+            />
+            {cuisines.length > 1 && (
+              <div className={styles.cuisines} role="group" aria-label="Cuisine">
+                <FilterChip selected={cuisine === "all"} onClick={() => setCuisine("all")}>
+                  All
+                </FilterChip>
+                {cuisines.map((c) => (
+                  <FilterChip key={c} selected={cuisine === c} onClick={() => setCuisine(cuisine === c ? "all" : c)}>
+                    {CUISINE_LABEL[c]}
+                  </FilterChip>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {list.length ? (
           <div className={styles.grid}>
             {list.map((r) => (
               <PickCard key={r.id} recipe={r} never={prefs.never} selected={picked.includes(r.id)} onToggle={() => toggle(setPicked, r.id)} />
             ))}
           </div>
+        ) : all.length ? (
+          <EmptyState title="Nothing matches" body="Try another word, or clear the filter." />
         ) : (
           <EmptyState title={step === 1 ? "No mains saved yet" : "No breakfasts or sweets saved yet"} />
         )}
@@ -215,7 +287,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
   return (
     <div className={styles.overlay} role="dialog" aria-modal="true" aria-label={`Plan ${roundLabel(R, weekStart)}`}>
       <div className={styles.top}>
-        <IconButton label={back ? "Back" : "Close"} onClick={() => (back ? setStep((s) => ((s as number) - 1) as Step) : onClose())}>
+        <IconButton label={back ? "Back" : "Close"} onClick={() => (back ? router.back() : onClose())}>
           <Icon name={back ? "back" : "close"} size={20} />
         </IconButton>
         {step !== "done" && (
@@ -235,7 +307,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
   );
 }
 
-function PickCard({ recipe: r, never, selected, onToggle }: { recipe: Recipe; never: string[]; selected: boolean; onToggle: () => void }) {
+function PickCard({ recipe: r, never, selected, onToggle, note }: { recipe: Recipe; never: string[]; selected: boolean; onToggle: () => void; note?: string }) {
   const { items } = ruleWarnings(r, never);
   const m = r.macros;
   return (
@@ -248,10 +320,29 @@ function PickCard({ recipe: r, never, selected, onToggle }: { recipe: Recipe; ne
       <BowlIllustration recipe={r} size={88} decorative />
       <span className={styles.pickTitle}>{r.title}</span>
       <span className={styles.pickMeta}>
-        {r.flavour && <Tag tone="accent">{r.flavour}</Tag>}
+        <Tag tone="accent">{cardLabel(r)}</Tag>
         {m?.protein ? <span className="t-label t-muted">{m.protein} g protein</span> : null}
       </span>
+      {note && <span className={styles.pickNote}>{note}</span>}
       {items.length > 0 && <span className={styles.pickWarn}>Has {items.join(", ")}</span>}
     </button>
   );
+}
+
+type Draft = { mains: string[]; sweets: string[] };
+
+function readDraft(key: string): Draft | null {
+  try {
+    const d = typeof window === "undefined" ? null : JSON.parse(sessionStorage.getItem(key) ?? "null");
+    return d && Array.isArray(d.mains) && Array.isArray(d.sweets) ? d : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeDraft(key: string, d: Draft | null) {
+  try {
+    if (d) sessionStorage.setItem(key, JSON.stringify(d));
+    else sessionStorage.removeItem(key);
+  } catch {}
 }

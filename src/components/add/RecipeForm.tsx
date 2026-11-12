@@ -24,13 +24,18 @@ export function RecipeForm({ initial = {}, submitLabel, onSubmit, onCancel }: Pr
   const [prot, setProt] = useState(m.protein?.toString() ?? "");
   const [carbs, setCarbs] = useState(m.carbs?.toString() ?? "");
   const [fat, setFat] = useState(m.fat?.toString() ?? "");
-  const [error, setError] = useState("");
+  const [error, setError] = useState<{ at: "title" | "ingredients"; text: string } | null>(null);
+  const fail = (at: "title" | "ingredients", text: string) => {
+    setError({ at, text });
+    document.getElementById(`recipe-${at}`)?.focus();
+  };
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const ingredients = parseIngredientLines(ing);
-    if (!title.trim()) return setError("Give the recipe a name.");
-    if (!ingredients.length) return setError("Add at least one ingredient.");
+    if (!title.trim()) return fail("title", "Give the recipe a name.");
+    if (!ingredients.length) return fail("ingredients", "Add at least one ingredient.");
+    setError(null);
     const num = (v: string) => (v.trim() === "" || Number.isNaN(Number(v)) ? undefined : Math.round(Number(v)));
     const macros = { kcal: num(kcal), protein: num(prot), carbs: num(carbs), fat: num(fat) };
     const hasMacros = Object.values(macros).some((v) => v != null);
@@ -58,7 +63,8 @@ export function RecipeForm({ initial = {}, submitLabel, onSubmit, onCancel }: Pr
     <form className={styles.form} onSubmit={submit} noValidate>
       <label className={styles.field}>
         <span>Name</span>
-        <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Gochujang chicken" required />
+        <input id="recipe-title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Gochujang chicken" required aria-invalid={error?.at === "title" || undefined} />
+        {error?.at === "title" && <small className={styles.error} role="alert">{error.text}</small>}
       </label>
       <div className={styles.pair}>
         <label className={styles.field}>
@@ -87,8 +93,8 @@ export function RecipeForm({ initial = {}, submitLabel, onSubmit, onCancel }: Pr
       </label>
       <label className={styles.field}>
         <span>Ingredients</span>
-        <textarea rows={8} value={ing} onChange={(e) => setIng(e.target.value)} placeholder={"500 g | Chicken thighs\n2 tbsp | Gochujang\n| Garlic"} />
-        <small>One per line: amount, then a bar, then the ingredient.</small>
+        <textarea id="recipe-ingredients" rows={8} value={ing} onChange={(e) => setIng(e.target.value)} placeholder={"500 g chicken thighs\n2 tbsp gochujang\n3 cloves garlic\nsalt"} aria-invalid={error?.at === "ingredients" || undefined} />
+        {error?.at === "ingredients" ? <small className={styles.error} role="alert">{error.text}</small> : <small>One per line, like “500 g chicken thighs”.</small>}
       </label>
       <label className={styles.field}>
         <span>Method</span>
@@ -117,11 +123,6 @@ export function RecipeForm({ initial = {}, submitLabel, onSubmit, onCancel }: Pr
         <span>Link</span>
         <input type="url" inputMode="url" value={source} onChange={(e) => setSource(e.target.value)} placeholder="https://www.instagram.com/reel/…" />
       </label>
-      {error && (
-        <p className={styles.error} role="alert">
-          {error}
-        </p>
-      )}
       <div className={styles.actions}>
         <Button type="submit" block>
           {submitLabel}

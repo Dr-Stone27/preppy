@@ -1,7 +1,7 @@
 import { libraryRecipes } from "@/domain/recipes/library";
-import { formatQty } from "@/domain/recipes/scale";
 import type { Round, Week } from "@/domain/plan/types";
 import { needs, slug, type NeedLine } from "@/domain/plan/week";
+import { shopAmount } from "./amounts";
 import { groupOf, pantryItem, stockOf, type PantryItem, type Stock } from "./pantry";
 
 export type ShopLine = NeedLine & { item?: PantryItem; group: string; fresh: boolean; done: boolean };
@@ -24,20 +24,13 @@ export function shopLines(R: Round, week: Week, statuses: Record<string, Stock>)
   return { buy, stocked };
 }
 
-/** "1.2 kg + 2 tbsp", "some" when the recipe gives no amount. */
-export function amountText(l: NeedLine): string {
-  const parts = [...l.amounts].map(([unit, q]) => {
-    let u = unit;
-    let n = q;
-    const [head, ...rest] = u.split(" ");
-    if ((head === "g" || head === "ml") && n >= 1000) {
-      n /= 1000;
-      u = [head === "g" ? "kg" : "l", ...rest].join(" ");
-    }
-    return `${formatQty(n, u)} ${u}`.trim();
-  });
-  if (l.loose) parts.push(parts.length ? "some" : "as needed");
-  return parts.join(" + ");
+/** What to buy, in plain amounts ("2 onions", "1 bulb"), plus what the recipes use when that differs. */
+export function amountText(l: ShopLine): string {
+  return shopAmount(l.key, l.amounts, l.loose, l.fresh).text;
+}
+
+export function amountNeed(l: ShopLine): string | undefined {
+  return shopAmount(l.key, l.amounts, l.loose, l.fresh).need;
 }
 
 /** Every ingredient any saved recipe or side uses, with the recipes that use it. */

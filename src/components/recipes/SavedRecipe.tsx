@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Layout";
 import { recipeById } from "@/domain/recipes/library";
@@ -14,6 +14,10 @@ export function SavedRecipe() {
   const id = useSearchParams().get("id") ?? "";
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
+  const confirmRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (confirming) confirmRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [confirming]);
   if (!data) return <div style={{ minHeight: "60vh" }} aria-busy="true" />;
 
   const r = recipeById(id);
@@ -38,7 +42,7 @@ export function SavedRecipe() {
         r.origin === "you" && (
           <div className={styles.delete}>
             {confirming ? (
-              <>
+              <div ref={confirmRef} className={styles.confirm}>
                 <p className="t-small">Delete this recipe? It also comes out of any cook it’s planned in. This can’t be undone.</p>
                 <div className={styles.row}>
                   <Button variant="secondary" size="sm" onClick={() => setConfirming(false)}>
@@ -55,7 +59,7 @@ export function SavedRecipe() {
                     Delete
                   </Button>
                 </div>
-              </>
+              </div>
             ) : (
               <Button variant="text" size="sm" onClick={() => setConfirming(true)}>
                 Delete recipe

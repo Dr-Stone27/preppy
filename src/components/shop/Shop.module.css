@@ -123,6 +123,23 @@
   box-shadow: var(--shadow-card);
 }
 
+.groupTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.groupIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-ink);
+}
+
 .groupHead {
   display: flex;
   align-items: baseline;
@@ -385,7 +402,11 @@ li[data-done] .lineName {
 }
 
 .levels button {
-  min-width: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 40px;
   min-height: 36px;
   padding: 0 var(--space-2);
   border-radius: var(--radius-pill);

@@ -10,6 +10,7 @@ import { groupOf, guessGroup, pantryItems, pantryMatch, SHOP_ORDER, stockOf, typ
 import { amountNeed, amountText, shopLines, tickKey, type ShopLine } from "@/domain/shop/list";
 import { track } from "@/lib/analytics";
 import { addExtra, newExtraId, removeExtra, setBought, setExtraDone, setStock } from "@/state/store";
+import { GroupTitle } from "./GroupTitle";
 import styles from "./Shop.module.css";
 
 type Props = { weekKey: string; week: Week; round: Round; statuses: Record<string, Stock>; empty?: ReactNode };
@@ -141,7 +142,7 @@ export function ToBuy({ weekKey, week, round: R, statuses, empty }: Props) {
         return (
           <section key={g} className={styles.group}>
             <div className={styles.groupHead}>
-              <h2 className="t-h3">{g}</h2>
+              <GroupTitle group={g} />
               <span className="t-small t-muted">
                 {list.filter(rowDone).length} of {list.length}
               </span>

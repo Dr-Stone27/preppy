@@ -52,3 +52,16 @@ export function guessGroup(name: string): string {
     for (const k of list) if (k.includes(" ") ? text.includes(` ${k}`) : words.has(k)) return group;
   return "Other";
 }
+
+/** The icon shown beside each shopping group's heading. */
+export const GROUP_ICON = {
+  Produce: "produce",
+  Protein: "protein",
+  Dairy: "dairy",
+  Carbs: "carbs",
+  "Fats & oils": "oil",
+  Baking: "baking",
+  Spices: "spices",
+  Sauces: "sauces",
+  Other: "other",
+} as const satisfies Record<string, string>;

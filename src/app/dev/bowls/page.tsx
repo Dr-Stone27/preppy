@@ -25,7 +25,8 @@ export default function BowlGallery() {
               <div>
                 <h2 className="t-h3">{r.title}</h2>
                 <p className="t-label t-muted">
-                  {spec.cuisine} · {spec.base} · {spec.toppings.map((t) => t.type).join(", ") || "no toppings"}
+                  {spec.cuisine} · {spec.base}
+                  {spec.rice ? ` (${spec.rice}${spec.split ? ", beside the sauce" : ""})` : ""} · {[...spec.pieces, ...spec.extras].join(", ") || "nothing on top"}
                 </p>
               </div>
               <div className={styles.sizes}>
@@ -46,7 +47,7 @@ export default function BowlGallery() {
       <div className={styles.all}>
         {all.map((r) => (
           <figure key={r.id} className={styles.cell}>
-            <BowlIllustration recipe={r} size="md" />
+            <BowlIllustration recipe={r} size="lg" />
             <figcaption className="t-label">{r.title}</figcaption>
           </figure>
         ))}

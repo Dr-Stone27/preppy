@@ -1,4 +1,4 @@
-/** Cuisine family drives the bowl's base colour. Mapping lives in palette.ts. */
+/** Cuisine family: used for filters and as the last-resort sauce colour. Mapping lives in palette.ts. */
 export type CuisineFamily =
   | "nigerian"
   | "korean"
@@ -14,31 +14,69 @@ export type CuisineFamily =
   | "dessert"
   | "other";
 
-/** What fills the bowl underneath the toppings. */
-export type BaseType = "rice" | "noodles" | "stew" | "soup" | "beans" | "custard" | "cake" | "oats";
-
-export type ToppingType =
-  | "chicken"
-  | "beef"
-  | "goat"
+/**
+ * What fills the bowl. Savoury: rice, noodles, a sauce or stew, a soup, beans, porridge.
+ * Sweet dishes each have their own shape so a flan never reads as a mug cake.
+ */
+export type BaseType =
+  | "rice"
+  | "noodles"
+  | "sauce"
+  | "soup"
   | "beans"
-  | "egg"
+  | "porridge"
+  | "custard"
+  | "cake"
+  | "oats"
+  | "mousse"
+  | "pancakes"
+  | "flan"
+  | "loaf"
+  | "toast"
+  | "moimoi"
+  | "akara";
+
+/** White rice, jollof (tomato-red) or fried rice (curry-gold). */
+export type RiceStyle = "white" | "jollof" | "fried";
+
+/** How a soup's surface reads: clear broth, leafy greens, or egusi curds. */
+export type SoupStyle = "broth" | "greens" | "egusi";
+
+/** The main pieces, by how they're cut, so strips, bites and a stewed drumstick look different. */
+export type PieceType =
+  | "chicken"
+  | "chicken-strips"
+  | "chicken-bites"
+  | "wings"
+  | "gizzard"
+  | "beef"
+  | "beef-strips"
+  | "mince"
+  | "ribs"
+  | "goat"
   | "plantain"
   | "yam"
-  | "vegetable"
-  | "pepper"
+  | "beans"
   | "banana"
   | "choc"
-  | "garnish";
+  | "peanuts";
 
-export type BowlTopping = { type: ToppingType; quantity?: number };
+/** Small things scattered on top, only when the recipe has them. */
+export type ExtraType = "peas-carrot" | "spring-onion" | "sesame" | "cucumber" | "pepper" | "greens" | "chilli" | "lime" | "cabbage" | "drizzle";
 
 export type BowlSpec = {
   cuisine: CuisineFamily;
   base: BaseType;
-  toppings: BowlTopping[];
-  /** Optional flavour tint, used for desserts (vanilla, banana, chocolate…). */
-  tint?: string;
+  /** The colour of the sauce, stew, soup or dessert filling. */
+  color: string;
+  rice?: RiceStyle;
+  soup?: SoupStyle;
+  /** Rice on one side and the sauce on the other, for dishes served over rice. */
+  split?: boolean;
+  /** Red palm-oil drops on the surface. */
+  oil?: boolean;
+  pieces: PieceType[];
+  extras: ExtraType[];
   /** Stable seed (usually the recipe id) so the composition never reshuffles. */
   seed: string;
 };

@@ -52,6 +52,75 @@ const paths = {
       <path d="M12 10v4M12 17v.5" />
     </>
   ),
+  /* Pantry levels: the same jar, full, low, empty. */
+  jarFull: (
+    <>
+      <path d="M8 3.5h8M5 7h14v11.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 5 18.5z" />
+      <path d="M6.2 10.5h11.6v8a1.6 1.6 0 0 1-1.6 1.6H7.8a1.6 1.6 0 0 1-1.6-1.6z" fill="currentColor" stroke="none" />
+    </>
+  ),
+  jarLow: (
+    <>
+      <path d="M8 3.5h8M5 7h14v11.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 5 18.5z" />
+      <path d="M6.2 16.5h11.6v2a1.6 1.6 0 0 1-1.6 1.6H7.8a1.6 1.6 0 0 1-1.6-1.6z" fill="currentColor" stroke="none" />
+    </>
+  ),
+  jarEmpty: <path d="M8 3.5h8M5 7h14v11.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 5 18.5z" />,
+  /* Shopping groups. */
+  produce: (
+    <>
+      <path d="M5 19C5 10 11 5 19 5c0 8-5 14-14 14z" />
+      <path d="M5 19l8-8" />
+    </>
+  ),
+  protein: (
+    <>
+      <path d="M14.5 4.5a5 5 0 0 1 5 5c0 3-3 5.5-6.5 5.5l-3.5 3.5" />
+      <path d="M14.5 4.5c-3 0-5.5 3-5.5 6.5L5.5 14.5" />
+      <circle cx="5" cy="19" r="1.6" />
+      <circle cx="4.8" cy="14.8" r="1.4" />
+    </>
+  ),
+  dairy: (
+    <>
+      <path d="M8 3h8v3l2 3v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9l2-3z" />
+      <path d="M6 12h12" />
+    </>
+  ),
+  carbs: (
+    <>
+      <path d="M12 21V8" />
+      <path d="M12 8c-2.5 0-4-2-4-5 2.5 0 4 2 4 5zM12 8c2.5 0 4-2 4-5-2.5 0-4 2-4 5z" />
+      <path d="M12 14c-2.5 0-4-2-4-4.5 2.5 0 4 2 4 4.5zM12 14c2.5 0 4-2 4-4.5-2.5 0-4 2-4 4.5z" />
+    </>
+  ),
+  oil: <path d="M12 3c3 4.5 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-6.5 6-11z" />,
+  baking: (
+    <>
+      <path d="M5 12h14l-1.5 8h-11z" />
+      <path d="M6 12a6 4 0 0 1 12 0" />
+      <path d="M12 8V5" />
+    </>
+  ),
+  spices: (
+    <>
+      <path d="M8 9h8v10a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z" />
+      <path d="M9 9V6a3 3 0 0 1 6 0v3" />
+      <path d="M11 5.5h.01M13 5.5h.01M12 4h.01" />
+    </>
+  ),
+  sauces: (
+    <>
+      <path d="M10 3h4v4l2 3v10a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V10l2-3z" />
+      <path d="M8 14h8" />
+    </>
+  ),
+  other: (
+    <>
+      <path d="M4 8l8-4 8 4v8l-8 4-8-4z" />
+      <path d="M4 8l8 4 8-4M12 12v8" />
+    </>
+  ),
 } as const;
 
 export type IconName = keyof typeof paths;

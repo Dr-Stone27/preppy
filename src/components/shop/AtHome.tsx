@@ -6,9 +6,11 @@ import { Icon } from "@/components/ui/Icon";
 import { allNeeded } from "@/domain/shop/list";
 import { groupOf, pantryItems, SHOP_ORDER, STOCK_LABEL, stockOf, type Stock } from "@/domain/shop/pantry";
 import { setStock } from "@/state/store";
+import { GroupTitle } from "./GroupTitle";
 import styles from "./Shop.module.css";
 
 const LEVELS: Stock[] = ["have", "low", "out"];
+const LEVEL_ICON = { have: "jarFull", low: "jarLow", out: "jarEmpty" } as const;
 const TOP = 20;
 
 /**
@@ -58,7 +60,7 @@ export function AtHome({ statuses, bases }: { statuses: Record<string, Stock>; b
         if (!list.length) return null;
         return (
           <section key={g} className={styles.group}>
-            <h2 className="t-h3">{g}</h2>
+            <GroupTitle group={g} />
             <ul className={styles.stockList}>
               {list.map((p) => {
                 const s = stockOf(statuses, p.id);
@@ -77,8 +79,11 @@ export function AtHome({ statuses, bases }: { statuses: Record<string, Stock>; b
                           aria-checked={s === level}
                           className={s === level ? styles[level] : undefined}
                           onClick={() => setStock(p.id, level)}
+                          aria-label={STOCK_LABEL[level]}
+                          title={STOCK_LABEL[level]}
                         >
-                          {STOCK_LABEL[level]}
+                          <Icon name={LEVEL_ICON[level]} size={20} />
+                          {s === level && <span aria-hidden>{STOCK_LABEL[level]}</span>}
                         </button>
                       ))}
                     </span>

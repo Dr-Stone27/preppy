@@ -47,7 +47,7 @@ function draw(s: Shape, i: number) {
 export function BowlIllustration({ recipe, spec, size = "md", decorative, label, className }: Props) {
   const px = typeof size === "number" ? size : BOWL_SIZES[size];
   const bowl: BowlSpec =
-    spec ?? (recipe ? bowlFromRecipe(recipe) : { cuisine: "other", base: "stew", toppings: [], seed: "generic" });
+    spec ?? (recipe ? bowlFromRecipe(recipe) : { cuisine: "other", base: "sauce", color: "#B97A4A", pieces: [], extras: [], seed: "generic" });
   const { base, shapes } = composeBowl(bowl, detailFor(px));
   const id = `bowl-${hashSeed(bowl.seed + px).toString(36)}`;
   const name = label ?? recipe?.title ?? "Dish";

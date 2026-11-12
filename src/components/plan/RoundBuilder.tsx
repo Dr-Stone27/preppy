@@ -1,5 +1,6 @@
 "use client";
 
+import { count } from "@/lib/words";
 import { track } from "@/lib/analytics";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
@@ -77,7 +78,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
           <h1 className="t-h1">{step === 1 ? "Choose your mains" : "Breakfast and sweets"}</h1>
           <p className="t-muted">
             {step === 1
-              ? `Pick 2 or 3 to cook on ${dayName(weekStart, R.cook, true)}. Different flavours keep the week interesting.`
+              ? `Pick what to cook on ${dayName(weekStart, R.cook, true)}. Two or three is easiest to cook in one go, and different flavours keep the week interesting.`
               : "Quick to make fresh each day. A good place to hide eggs."}
           </p>
         </div>
@@ -91,7 +92,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
         )}
         {step === 2 && sweets.length > 0 && (
           <div className={styles.ok} role="status">
-            {eggs ? `${eggs} eggs this round, all inside these.` : "No eggs in these."}
+            {eggs ? `${count(eggs, "egg")} this round, all inside these.` : "No eggs in these."}
           </div>
         )}
 
@@ -119,10 +120,15 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
   }
 
   if (step === 3) {
-    const days = R.days.map((d) => dayMacros(d, cells)).filter((m) => m.known);
+    const all = R.days.map((d) => dayMacros(d, cells));
+    const known = all.reduce((a, m) => a + m.known, 0);
+    const unknown = all.reduce((a, m) => a + m.unknown, 0);
+    // A daily figure built from a few meals reads as a mistake ("430 kcal a day"), so show it only when most meals have numbers.
+    const enough = known > 0 && known / (known + unknown) >= 0.75;
+    const days = enough ? all.filter((m) => m.known) : [];
     const kcal = days.length ? Math.round(days.reduce((a, m) => a + m.kcal, 0) / days.length) : null;
     const protein = days.length ? Math.round(days.reduce((a, m) => a + m.protein, 0) / days.length) : null;
-    const partial = days.some((m) => m.unknown);
+    const partial = enough && unknown > 0;
     const dishes = recipesFor([...mains, ...sweets]);
     const meals = (id: string) => Object.values(cells).filter((c) => c.r === id).length;
 
@@ -158,7 +164,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
           </div>
         </dl>
         {partial && <p className="t-label t-muted">* Some dishes have no nutrition info, so the real numbers are higher.</p>}
-        {kcal == null && <p className="t-label t-muted">None of these dishes have nutrition info.</p>}
+        {kcal == null && <p className="t-label t-muted">{known ? "Too few of these dishes have nutrition info to add up a day." : "None of these dishes have nutrition info."}</p>}
         <ul className={styles.review}>
           {dishes.map((r) => (
             <li key={r.id}>
@@ -166,7 +172,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
               <span>
                 <span className={styles.reviewTitle}>{r.title}</span>
                 <span className="t-label t-muted">
-                  {r.kind === "sweet" ? "Made fresh" : `Cooked ${dayName(weekStart, R.cook, true)}`} · {meals(r.id)} meals
+                  {r.kind === "sweet" ? "Made fresh" : `Cooked ${dayName(weekStart, R.cook, true)}`} · {count(meals(r.id), "meal")}
                 </span>
               </span>
             </li>
@@ -190,7 +196,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
         </div>
         <h1 className="t-h1">Round planned</h1>
         <p className="t-muted">
-          {Object.keys(cells).length} meals from {dayName(weekStart, R.days[0], true)} to {dayName(weekStart, R.days.at(-1)!, true)}.
+          {count(Object.keys(cells).length, "meal")} from {dayName(weekStart, R.days[0], true)} to {dayName(weekStart, R.days.at(-1)!, true)}.
         </p>
       </div>
     );
@@ -207,7 +213,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
   }
 
   return (
-    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label={`Plan ${roundLabel(R, weekStart).toLowerCase()}`}>
+    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label={`Plan ${roundLabel(R, weekStart)}`}>
       <div className={styles.top}>
         <IconButton label={back ? "Back" : "Close"} onClick={() => (back ? setStep((s) => ((s as number) - 1) as Step) : onClose())}>
           <Icon name={back ? "back" : "close"} size={20} />

@@ -128,6 +128,8 @@ export function fillCells(R: Round, mains: string[], sweets: string[], bases: st
     for (const slot of SLOTS) {
       const list = slot.kind === "main" ? m : s;
       if (!list.length) continue;
+      // With a single sweet dish, serving it at breakfast and again as dessert every day looks careless.
+      if (slot.kind === "sweet" && list.length === 1 && slot.id === "dessert") continue;
       const id = list[(slot.kind === "main" ? i++ : j++) % list.length];
       const cell: Cell = { r: id };
       if (slot.kind === "main" && bases.length && !recipeById(id)!.withCarb) cell.base = bases[b++ % bases.length];
@@ -207,8 +209,12 @@ export function dayMacros(day: number, cells: Record<string, Cell>) {
 
 /** Average known kcal and protein a day. `partial` means some meals have no numbers. */
 export function roundAverage(R: Round, cells: Record<string, Cell>) {
-  const ds = R.days.map((d) => dayMacros(d, cells)).filter((m) => m.known);
-  if (!ds.length) return null;
+  const all = R.days.map((d) => dayMacros(d, cells));
+  const known = all.reduce((a, m) => a + m.known, 0);
+  const unknown = all.reduce((a, m) => a + m.unknown, 0);
+  // Too few meals with numbers makes a daily total look wrong, so give none.
+  if (!known || known / (known + unknown) < 0.75) return null;
+  const ds = all.filter((m) => m.known);
   return {
     kcal: Math.round(ds.reduce((a, m) => a + m.kcal, 0) / ds.length),
     protein: Math.round(ds.reduce((a, m) => a + m.protein, 0) / ds.length),

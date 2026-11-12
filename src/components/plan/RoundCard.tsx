@@ -1,5 +1,6 @@
 "use client";
 
+import { count } from "@/lib/words";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink } from "@/components/ui/Button";
@@ -38,7 +39,7 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
       {empty ? (
         <div className={styles.roundEmpty}>
           <p className="t-small t-muted">
-            Pick what to cook on {dayName(weekStart, R.cook, true)} for these {R.days.length} days.
+            Pick what to cook on {dayName(weekStart, R.cook, true)} for {R.days.length === 1 ? "this day" : `these ${R.days.length} days`}.
           </p>
           <Button onClick={onPlan}>Plan this round</Button>
         </div>
@@ -60,7 +61,7 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
                   About {avg.kcal.toLocaleString()} kcal · {avg.protein} g protein a day{avg.partial ? " +" : ""}
                 </Tag>
               )}
-              {eggs > 0 && <Tag>{eggs} eggs</Tag>}
+              {eggs > 0 && <Tag>{count(eggs, "egg")}</Tag>}
             </div>
           )}
 

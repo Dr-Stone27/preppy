@@ -61,7 +61,7 @@ export function FromInstagram() {
               <li>In Chrome, open the ⋮ menu and tap Add to home screen, then Install.</li>
               <li>In Instagram or TikTok, tap the share button on a post, then Preppy. The link comes in by itself.</li>
               <li>
-                For the caption: hold the home button or bar to open Circle to Search, circle the caption, and tap Copy. Paste it below and tap Read recipe.
+                For the caption: hold the home button or bar to open Circle to Search, circle the caption, and tap Copy. Paste it into the Caption box above and tap Read recipe.
               </li>
             </ol>
             <p className="t-label t-muted">Circle to Search is on most recent Samsung and Pixel phones. Without it, copy the caption by hand.</p>

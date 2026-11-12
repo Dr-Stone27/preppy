@@ -22,7 +22,7 @@
 }
 
 .segment button {
-  min-height: 40px;
+  min-height: 44px;
   border-radius: var(--radius-pill);
   font-size: var(--text-small);
   font-weight: 600;
@@ -50,7 +50,7 @@
 
 .rounds button {
   flex: none;
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 var(--space-4);
   border-radius: var(--radius-pill);
   font-size: var(--text-small);
@@ -367,4 +367,10 @@ li[data-done] .lineName {
   width: var(--touch);
   height: var(--touch);
   color: var(--color-muted);
+}
+
+/* The list box has its own clear button; hide the browser's second one. */
+.finder input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }

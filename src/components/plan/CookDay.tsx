@@ -1,5 +1,6 @@
 "use client";
 
+import { count } from "@/lib/words";
 import { track } from "@/lib/analytics";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
@@ -137,7 +138,7 @@ export function CookDay() {
               <BowlIllustration recipe={r} size={44} decorative />
               <span>
                 <span className={builder.reviewTitle}>{r.title}</span>
-                <span className="t-label t-muted">{portions} portions</span>
+                <span className="t-label t-muted">{count(portions, "portion")}</span>
               </span>
             </li>
           ))}
@@ -283,7 +284,7 @@ export function CookDay() {
   }
 
   return (
-    <div className={builder.overlay} role="dialog" aria-modal="true" aria-label={`Cook day, ${roundLabel(R, weekStart).toLowerCase()}`}>
+    <div className={builder.overlay} role="dialog" aria-modal="true" aria-label={`Cook day, ${roundLabel(R, weekStart)}`}>
       <div className={builder.top}>
         <IconButton label="Close" onClick={close}>
           <Icon name="close" size={20} />

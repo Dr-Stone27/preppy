@@ -5,6 +5,8 @@ import { FilterChip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { coverText, MAX_COOK_DAYS } from "@/domain/plan/week";
 import { customTerms, hasOption, NEVER_OPTIONS, SIDE_OPTIONS, toggleOption } from "@/domain/prefs/options";
+import { allNeeded } from "@/domain/shop/list";
+import { stockOf, type Stock } from "@/domain/shop/pantry";
 import styles from "./PrefEditors.module.css";
 
 function AddWord({ placeholder, label, onAdd }: { placeholder: string; label: string; onAdd: (w: string) => void }) {
@@ -110,6 +112,33 @@ export function CookDaysEditor({ days, onChange, required = false }: { days: num
         {days.length ? coverText(days) : "Pick up to three."}
         {full && days.length ? " That’s the most." : ""}
       </p>
+    </div>
+  );
+}
+
+/** The dry goods, spices and sauces the library uses most, most used first. */
+export function kitchenStaples(limit = 24) {
+  return allNeeded([])
+    .filter((x) => x.item && !x.item.fresh)
+    .sort((a, b) => b.from.size - a.from.size || a.name.localeCompare(b.name))
+    .slice(0, limit)
+    .map((x) => x.item!);
+}
+
+/** Tap what's already in the kitchen; those stay off shopping lists. Nothing is ticked to start with. */
+export function KitchenEditor({ statuses, onChange }: { statuses: Record<string, Stock>; onChange: (id: string, stock: Stock) => void }) {
+  return (
+    <div className={styles.editor}>
+      <div className={styles.chips}>
+        {kitchenStaples().map((p) => {
+          const have = stockOf(statuses, p.id) === "have";
+          return (
+            <FilterChip key={p.id} selected={have} onClick={() => onChange(p.id, have ? "out" : "have")}>
+              {p.name}
+            </FilterChip>
+          );
+        })}
+      </div>
     </div>
   );
 }

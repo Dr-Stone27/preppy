@@ -5,18 +5,18 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
-import { CookDaysEditor, NeverEditor, SidesEditor } from "@/components/prefs/PrefEditors";
+import { CookDaysEditor, KitchenEditor, NeverEditor, SidesEditor } from "@/components/prefs/PrefEditors";
 import { Button, IconButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { libraryRecipes, recipeById } from "@/domain/recipes/library";
-import { updatePrefs, useData } from "@/state/store";
+import { setStock, updatePrefs, useData } from "@/state/store";
 import { markSeen, setSetupPending, useSync } from "@/state/sync";
 import { AccountPanel } from "@/components/account/AccountPanel";
 import builder from "@/components/plan/RoundBuilder.module.css";
 import styles from "./Welcome.module.css";
 
 // Steps in order. The progress dots cover the four questions between the intro and the end.
-const COOK = 1, NEVER = 2, SIDES = 3, SIGN_IN = 4, DONE = 5;
+const COOK = 1, NEVER = 2, SIDES = 3, KITCHEN = 4, SIGN_IN = 5, DONE = 6;
 const HOW = [
   { title: "Cook a few times, eat all week", body: "Pick the days you cook. Each cook covers the days until the next one." },
   { title: "Keep it interesting", body: "Pick two or three mains per round. Preppy tells you when two taste the same." },
@@ -119,6 +119,16 @@ export function Welcome() {
         <SidesEditor bases={data.prefs.bases} onChange={(bases) => updatePrefs((p) => ({ ...p, bases }))} />
       </>
     );
+  } else if (step === KITCHEN) {
+    body = (
+      <>
+        <div className={builder.intro}>
+          <h1 className="t-h1">What’s already in your kitchen?</h1>
+          <p className="t-muted">Tap the dry goods, spices and sauces you have. They stay off your shopping lists. Fresh food is always on the list, because it doesn’t keep.</p>
+        </div>
+        <KitchenEditor statuses={data.pantry} onChange={setStock} />
+      </>
+    );
   } else if (step === SIGN_IN) {
     body = (
       <>
@@ -165,7 +175,7 @@ export function Welcome() {
     );
   }
 
-  if (step === NEVER || step === SIDES)
+  if (step === NEVER || step === SIDES || step === KITCHEN)
     foot = (
       <Button block onClick={() => setStep(step + 1)}>
         Next
@@ -184,7 +194,7 @@ export function Welcome() {
         )}
         {step > 0 && step < DONE ? (
           <span className={builder.progress} aria-label={`Step ${step} of ${DONE - 1}`}>
-            {[COOK, NEVER, SIDES, SIGN_IN].map((n) => (
+            {[COOK, NEVER, SIDES, KITCHEN, SIGN_IN].map((n) => (
               <i key={n} data-on={n <= step || undefined} />
             ))}
           </span>

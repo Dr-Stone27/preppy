@@ -6,7 +6,8 @@ import styles from "./Shop.module.css";
 
 /** Every pantry item with its stock level. Tap the level to cycle Have → Low → Out. */
 export function AtHome({ statuses }: { statuses: Record<string, Stock> }) {
-  const items = pantryItems();
+  // Fresh food is always on the list because it doesn’t keep, so only things that keep get a level here.
+  const items = pantryItems().filter((p) => !p.fresh);
   const counts: Record<Stock, number> = { have: 0, low: 0, out: 0 };
   for (const p of items) counts[stockOf(statuses, p.id)]++;
 
@@ -20,7 +21,7 @@ export function AtHome({ statuses }: { statuses: Record<string, Stock> }) {
           </div>
         ))}
       </dl>
-      <p className="t-small t-muted">Tap a level to change it. Spices, sauces and dry goods you have stay off your lists.</p>
+      <p className="t-small t-muted">Tap a level to change it. Things marked Have stay off your lists. Fresh food isn’t here: it’s always on the list, because it doesn’t keep.</p>
       {GROUPS.map((g) => {
         const list = items.filter((p) => (p.group || "Other") === g).sort((a, b) => a.name.localeCompare(b.name));
         if (!list.length) return null;

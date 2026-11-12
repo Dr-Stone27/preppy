@@ -31,7 +31,12 @@ export function recipeById(id: string): Recipe | undefined {
 }
 
 /** Saved recipes open on a client page; exported ones are prerendered. */
-export const recipeHref = (r: Recipe) => (r.origin === "you" ? `/library/saved?id=${encodeURIComponent(r.id)}` : `/library/${r.id}`);
+export const recipeHref = (r: Recipe) =>
+  r.origin === "you"
+    ? `/library/saved?id=${encodeURIComponent(r.id)}`
+    : r.origin === "shared"
+      ? `/library/shared?id=${encodeURIComponent(r.id.replace(/^shared-/, ""))}`
+      : `/library/${r.id}`;
 
 /** An earlier save of the same post, matched on the link without its query string. */
 export function findBySource(link: string): Recipe | undefined {

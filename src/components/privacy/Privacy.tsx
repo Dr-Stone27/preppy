@@ -30,6 +30,13 @@ export function Privacy() {
           what is sent to improve its products, so leave anything personal out.
         </p>
 
+        <h2 className="t-h3">Recipes you share</h2>
+        <p>
+          A recipe you save stays private unless you switch on Share with everyone on its page. A shared recipe can be read and copied by anyone using Preppy,
+          with the first name you choose, if any. Your email is never shown. Switching it off or deleting the recipe takes it out of the library; copies other
+          cooks already saved stay with them. Recipes reported by several people are hidden until they’re checked.
+        </p>
+
         <h2 className="t-h3">How Preppy is used</h2>
         <p>
           Preppy records which screens are opened and a few steps, like finishing setup or planning a cook, using PostHog. This shows where the app is confusing. It
@@ -41,11 +48,11 @@ export function Privacy() {
 
         <h2 className="t-h3">Removing it</h2>
         <p>
-          <Link href="/settings">Settings</Link> → Delete my account removes your account and everything saved to it. Signing out clears this device.
+          <Link href="/settings">Settings</Link> → Delete my account removes your account, everything saved to it and every recipe you shared. Signing out clears this device.
         </p>
 
         <p>Nothing is sold or shared for advertising. Questions: reply to any sign-in email.</p>
-        <p className="t-small t-muted">Updated 8 November 2026.</p>
+        <p className="t-small t-muted">Updated 12 November 2026.</p>
       </div>
     </div>
   );

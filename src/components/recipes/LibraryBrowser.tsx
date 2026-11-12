@@ -1,6 +1,8 @@
 "use client";
 
 import { useDeferredValue, useMemo, useState } from "react";
+import { accountsOn } from "@/lib/supabase";
+import { listShared } from "@/state/share";
 import { FilterChip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
@@ -26,7 +28,16 @@ const EMPTY: LibraryFilter = { query: "", kind: "all", cuisine: "all", base: "al
 export function LibraryBrowser({ recipes: exported }: { recipes: Recipe[] }) {
   const data = useData();
   // Saved recipes register with the library once the store loads in the browser.
-  const recipes = useMemo(() => (data ? libraryRecipes() : exported), [data, exported]);
+  const [shared, setShared] = useState<Recipe[] | "loading" | "error" | null>(null);
+  const own = useMemo(() => (data ? libraryRecipes() : exported), [data, exported]);
+  const recipes = useMemo(() => (Array.isArray(shared) ? [...own, ...shared] : own), [own, shared]);
+  const loadShared = () => {
+    if (shared !== null && shared !== "error") return;
+    setShared("loading");
+    listShared()
+      .then((list) => setShared((list ?? []).map((s) => s.recipe)))
+      .catch(() => setShared("error"));
+  };
   const [filter, setFilter] = useState<LibraryFilter>(EMPTY);
   const query = useDeferredValue(filter.query);
   const cuisines = useMemo(() => cuisinesIn(recipes), [recipes]);
@@ -58,8 +69,19 @@ export function LibraryBrowser({ recipes: exported }: { recipes: Recipe[] }) {
         </label>
 
         <div className={styles.chips} role="group" aria-label="Type">
-          {[...KINDS, ...(recipes.some((r) => r.origin === "you") ? [{ value: "you" as const, label: "Saved by you" }] : [])].map((k) => (
-            <FilterChip key={k.value} selected={filter.kind === k.value} onClick={() => set({ kind: k.value, ...(k.value === "sweet" ? { cuisine: "all", base: "all" } : {}) })}>
+          {[
+            ...KINDS,
+            ...(recipes.some((r) => r.origin === "you") ? [{ value: "you" as const, label: "Saved by you" }] : []),
+            ...(accountsOn ? [{ value: "shared" as const, label: "From other cooks" }] : []),
+          ].map((k) => (
+            <FilterChip
+              key={k.value}
+              selected={filter.kind === k.value}
+              onClick={() => {
+                if (k.value === "shared") loadShared();
+                set({ kind: k.value, ...(k.value === "sweet" ? { cuisine: "all", base: "all" } : {}) });
+              }}
+            >
               {k.label}
             </FilterChip>
           ))}
@@ -97,7 +119,21 @@ export function LibraryBrowser({ recipes: exported }: { recipes: Recipe[] }) {
         {filtered ? `${shown.length} of ${recipes.length} recipes` : `${recipes.length} recipes`}
       </p>
 
-      {shown.length > 0 ? (
+      {filter.kind === "shared" && shared === "loading" ? (
+        <p className="t-small t-muted" aria-busy="true">Loading recipes from other cooks…</p>
+      ) : filter.kind === "shared" && shared === "error" ? (
+        <EmptyState
+          title="Couldn’t load them"
+          body="Check your connection and try again."
+          action={
+            <Button variant="secondary" size="sm" onClick={loadShared}>
+              Try again
+            </Button>
+          }
+        />
+      ) : filter.kind === "shared" && !recipes.some((r) => r.origin === "shared") ? (
+        <EmptyState title="Nothing shared yet" body="When cooks share a recipe they saved, it shows up here. Share one of yours from its page." />
+      ) : shown.length > 0 ? (
         <div className={cardStyles.grid}>
           {shown.map((r) => (
             <RecipeCard key={r.id} recipe={r} />

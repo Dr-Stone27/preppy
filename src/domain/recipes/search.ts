@@ -19,7 +19,7 @@ export const CUISINE_LABEL: Record<CuisineFamily, string> = {
   other: "Other",
 };
 
-export type LibraryFilter = { query: string; kind: RecipeKind | "all" | "you"; cuisine: CuisineFamily | "all"; base?: BaseId | "all" };
+export type LibraryFilter = { query: string; kind: RecipeKind | "all" | "you" | "shared"; cuisine: CuisineFamily | "all"; base?: BaseId | "all" };
 
 /** Cuisines present in the library, most common first, for the filter chips. */
 export function cuisinesIn(recipes: Recipe[]): CuisineFamily[] {
@@ -35,7 +35,9 @@ export function cuisinesIn(recipes: Recipe[]): CuisineFamily[] {
 export function filterRecipes(recipes: Recipe[], f: LibraryFilter): Recipe[] {
   const q = f.query.trim().toLowerCase();
   return recipes.filter((r) => {
-    if (f.kind === "you" ? r.origin !== "you" : f.kind !== "all" && r.kind !== f.kind) return false;
+    // Other cooks' recipes show only under their own filter.
+    if ((f.kind === "shared") !== (r.origin === "shared")) return false;
+    if (f.kind === "you" ? r.origin !== "you" : f.kind !== "all" && f.kind !== "shared" && r.kind !== f.kind) return false;
     if (f.cuisine !== "all" && cuisineOf(r) !== f.cuisine) return false;
     const base = baseOf(r);
     if (f.base && f.base !== "all" && base !== f.base) return false;

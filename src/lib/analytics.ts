@@ -23,7 +23,11 @@ export type Event =
   | "cook_day_opened"
   | "list_item_added"
   | "what_can_i_make_opened"
-  | "account_deleted";
+  | "account_deleted"
+  | "recipe_shared"
+  | "recipe_unshared"
+  | "shared_recipe_saved"
+  | "recipe_reported";
 
 let client: PostHog | null = null;
 let loading: Promise<PostHog | null> | null = null;

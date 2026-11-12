@@ -49,6 +49,8 @@ export type Prefs = {
   bases: string[];
   /** Days of the week (0 = Sunday) this person cooks on, one to three of them. Missing means Sunday and Wednesday. */
   cookDays?: number[];
+  /** The first name shown on recipes this person shares. Empty shows none. */
+  shareName?: string;
   /** How many people each meal feeds. Missing means one. */
   people?: number;
   /** Set once the first-run setup is finished or skipped. */

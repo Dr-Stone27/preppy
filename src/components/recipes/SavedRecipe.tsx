@@ -6,7 +6,9 @@ import { Button, ButtonLink } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Layout";
 import { recipeById } from "@/domain/recipes/library";
 import { deleteRecipe, useData } from "@/state/store";
+import { unshareRecipe } from "@/state/share";
 import { RecipeView } from "./RecipeView";
+import { ShareRecipe } from "./ShareRecipe";
 import styles from "./SavedRecipe.module.css";
 
 export function SavedRecipe() {
@@ -40,10 +42,17 @@ export function SavedRecipe() {
       never={data.prefs.never}
       footer={
         r.origin === "you" && (
+          <>
+          {r.copiedFrom && (
+            <p className="t-small t-muted">
+              Saved from another cook{r.sharedBy ? `, ${r.sharedBy}` : ""}. It’s your copy: it stays even if they stop sharing it.
+            </p>
+          )}
+          <ShareRecipe recipe={r} />
           <div className={styles.delete}>
             {confirming ? (
               <div ref={confirmRef} className={styles.confirm}>
-                <p className="t-small">Delete this recipe? It also comes out of any cook it’s planned in. This can’t be undone.</p>
+                <p className="t-small">Delete this recipe? It also comes out of any cook it’s planned in, and out of the library if you shared it. This can’t be undone.</p>
                 <div className={styles.row}>
                   <Button variant="secondary" size="sm" onClick={() => setConfirming(false)}>
                     Keep it
@@ -52,6 +61,8 @@ export function SavedRecipe() {
                     variant="danger"
                     size="sm"
                     onClick={() => {
+                      // Deleting a shared recipe also takes it out of the library.
+                      unshareRecipe(r.id).catch(() => {});
                       deleteRecipe(r.id);
                       router.replace("/library");
                     }}
@@ -66,6 +77,7 @@ export function SavedRecipe() {
               </Button>
             )}
           </div>
+          </>
         )
       }
     />

@@ -4,6 +4,9 @@ export type RoundId = "r1" | "r2" | "r3";
 /** One meal in the timetable. `base` is the side served with a main that has no carb of its own. */
 export type Cell = { r: string; base?: string };
 
+/** Something added to a round's shopping list by hand. `group` is the food type it's listed under. */
+export type Extra = { id: string; name: string; group: string; done?: boolean };
+
 export type Round = {
   id: RoundId;
   /** Day of the week the round is cooked on, counted from the week's first day (0..6). */
@@ -12,6 +15,8 @@ export type Round = {
   days: number[];
   mains: string[];
   sweets: string[];
+  /** Items added to this round's shopping list by hand. */
+  extras?: Extra[];
   confirmed?: boolean;
   cooked?: boolean;
   cookPlan?: CookPlan;

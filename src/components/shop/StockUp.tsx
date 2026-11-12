@@ -2,7 +2,7 @@
 
 import { EmptyState } from "@/components/ui/Layout";
 import { allNeeded } from "@/domain/shop/list";
-import { stockOf, WHERE, WHERE_ORDER, type Stock } from "@/domain/shop/pantry";
+import { groupOf, SHOP_ORDER, stockOf, type Stock } from "@/domain/shop/pantry";
 import { setStock } from "@/state/store";
 import styles from "./Shop.module.css";
 
@@ -30,13 +30,13 @@ export function StockUp({ statuses, bases }: { statuses: Record<string, Stock>; 
       {!todo.length ? (
         <EmptyState title="All stocked" body="Everything your recipes need from the shelf is at home." />
       ) : (
-        WHERE_ORDER.map((w) => {
-          const list = todo.filter((x) => x.item!.where === w).sort((a, b) => b.from.size - a.from.size || a.name.localeCompare(b.name));
+        SHOP_ORDER.map((g) => {
+          const list = todo.filter((x) => groupOf(x.item!.group) === g).sort((a, b) => b.from.size - a.from.size || a.name.localeCompare(b.name));
           if (!list.length) return null;
           return (
-            <section key={w} className={styles.group}>
+            <section key={g} className={styles.group}>
               <div className={styles.groupHead}>
-                <h2 className="t-h3">{WHERE[w]}</h2>
+                <h2 className="t-h3">{g}</h2>
                 <span className="t-small t-muted">{list.length}</span>
               </div>
               <ul className={styles.lines}>

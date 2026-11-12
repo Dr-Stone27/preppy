@@ -223,6 +223,30 @@ export function Landing() {
         </Feature>
       </section>
 
+      <section className={styles.phone} data-reveal aria-label="Keep Preppy on your phone">
+        <div className={styles.homeScreen} aria-hidden>
+          {Array.from({ length: 5 }, (_, i) => (
+            <span key={i} className={styles.otherApp} />
+          ))}
+          <span className={styles.appIcon}>{hero && <BowlIllustration recipe={hero} size={50} decorative />}</span>
+        </div>
+        <div className={styles.phoneText}>
+          <h2 className={styles.phoneTitle}>Keep it on your home screen</h2>
+          <p className={styles.featureBody}>Open Preppy like any app, with its own icon. Nothing to download.</p>
+          <ul className={styles.howTo}>
+            <li>
+              <b>iPhone</b>
+              <span>Tap the Share button, then Add to Home Screen.</span>
+            </li>
+            <li>
+              <b>Android</b>
+              <span>Tap the ⋮ menu, then Install app.</span>
+            </li>
+          </ul>
+          <p className={styles.phoneNote}>Then open it from your home screen and sign in once with the code we email you.</p>
+        </div>
+      </section>
+
       <section className={styles.close} data-reveal>
         <div className={styles.closeArt} aria-hidden>
           <Steam />

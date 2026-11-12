@@ -2,22 +2,22 @@ import { libraryRecipes } from "@/domain/recipes/library";
 import { formatQty } from "@/domain/recipes/scale";
 import type { Round, Week } from "@/domain/plan/types";
 import { needs, slug, type NeedLine } from "@/domain/plan/week";
-import { pantryItem, stockOf, type PantryItem, type Stock, type Where } from "./pantry";
+import { groupOf, pantryItem, stockOf, type PantryItem, type Stock } from "./pantry";
 
-export type ShopLine = NeedLine & { item?: PantryItem; where: Where; fresh: boolean; done: boolean };
+export type ShopLine = NeedLine & { item?: PantryItem; group: string; fresh: boolean; done: boolean };
 
 export const tickKey = (R: Round, key: string) => `${R.id}|${key}`;
 
 /**
  * The round's list. Fresh food is always bought; shelf items you already have go to "Already at home".
- * Unknown ingredients count as fresh and can be bought anywhere.
+ * Unknown ingredients count as fresh and are listed under Other.
  */
 export function shopLines(R: Round, week: Week, statuses: Record<string, Stock>) {
   const buy: ShopLine[] = [];
   const stocked: ShopLine[] = [];
   for (const l of needs(R, week.cells)) {
     const item = pantryItem(l.key);
-    const line: ShopLine = { ...l, item, where: item?.where ?? "any", fresh: item ? item.fresh : true, done: !!week.bought[tickKey(R, l.key)] };
+    const line: ShopLine = { ...l, item, group: groupOf(item?.group), fresh: item ? item.fresh : true, done: !!week.bought[tickKey(R, l.key)] };
     if (item && !item.fresh && stockOf(statuses, l.key) === "have" && !line.done) stocked.push(line);
     else buy.push(line);
   }

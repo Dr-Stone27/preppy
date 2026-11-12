@@ -722,3 +722,100 @@
     transform: none;
   }
 }
+
+/* Keep it on your phone */
+.phone {
+  display: grid;
+  gap: var(--space-5);
+  align-items: center;
+  margin-bottom: var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-feature);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+@media (min-width: 720px) {
+  .phone {
+    grid-template-columns: auto 1fr;
+    gap: var(--space-8);
+    padding: var(--space-6) var(--space-8);
+  }
+}
+
+.homeScreen {
+  justify-self: center;
+  display: grid;
+  grid-template-columns: repeat(3, 62px);
+  grid-auto-rows: 62px;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-sheet);
+  background: var(--color-surface-subtle);
+}
+
+.otherApp {
+  border-radius: 15px;
+  background: var(--color-border);
+  opacity: 0.8;
+}
+
+.appIcon {
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: var(--color-accent-soft);
+  box-shadow: 0 6px 14px rgba(30, 27, 24, 0.14);
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.page [data-in] .appIcon {
+  animation: pop 600ms 500ms var(--ease) forwards, bob 4s 1.4s ease-in-out infinite;
+}
+
+.phoneText {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.phoneTitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-h2);
+  line-height: 1.15;
+}
+
+.howTo {
+  display: grid;
+  gap: var(--space-2);
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+}
+
+.howTo li {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: var(--space-3);
+  align-items: baseline;
+  font-size: var(--text-small);
+  line-height: 1.45;
+}
+
+.howTo b {
+  font-weight: 700;
+}
+
+.phoneNote {
+  margin-top: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .appIcon {
+    opacity: 1;
+    transform: none;
+  }
+}

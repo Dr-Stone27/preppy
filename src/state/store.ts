@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { weekStartFromKey } from "@/domain/plan/dates";
 import { DEFAULT_PREFS, defaultWeek } from "@/domain/plan/week";
-import type { Prefs, Week } from "@/domain/plan/types";
+import type { Extra, Prefs, Week } from "@/domain/plan/types";
 import type { Stock } from "@/domain/shop/pantry";
 import { registerSavedRecipes } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
@@ -102,6 +102,39 @@ export function updateWeek(key: string, fn: (w: Week) => Week) {
 export function updatePrefs(fn: (p: Prefs) => Prefs) {
   const d = snapshot();
   write({ ...d, prefs: fn({ ...d.prefs }) });
+}
+
+const MAX_EXTRAS = 100;
+
+/** Adds your own item to a round's shopping list. Returns false if it's a duplicate or the list is full. */
+export function addExtra(weekKey: string, roundId: string, extra: Extra): boolean {
+  let added = false;
+  updateWeek(weekKey, (w) => {
+    const r = w.rounds.find((x) => x.id === roundId);
+    if (!r) return w;
+    const list = (r.extras ??= []);
+    if (list.length >= MAX_EXTRAS || list.some((e) => e.name.toLowerCase() === extra.name.toLowerCase())) return w;
+    list.push(extra);
+    added = true;
+    return w;
+  });
+  return added;
+}
+
+export function setExtraDone(weekKey: string, roundId: string, id: string, done: boolean) {
+  updateWeek(weekKey, (w) => {
+    const e = w.rounds.find((x) => x.id === roundId)?.extras?.find((x) => x.id === id);
+    if (e) e.done = done || undefined;
+    return w;
+  });
+}
+
+export function removeExtra(weekKey: string, roundId: string, id: string) {
+  updateWeek(weekKey, (w) => {
+    const r = w.rounds.find((x) => x.id === roundId);
+    if (r?.extras) r.extras = r.extras.filter((x) => x.id !== id);
+    return w;
+  });
 }
 
 export function setStock(id: string, stock: Stock) {

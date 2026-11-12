@@ -68,19 +68,24 @@ export function ShopScreen() {
               </button>
             ))}
           </div>
-          {R.mains.length || R.sweets.length ? (
-            <ToBuy weekKey={key} week={week} round={R} statuses={data.pantry} />
-          ) : (
-            <EmptyState
-              title="Nothing to buy yet"
-              body={`Plan the ${roundLabel(R, weekStart).toLowerCase()} and its shopping list fills in.`}
-              action={
-                <ButtonLink href={`/plan?build=${R.id}`} size="sm">
-                  Plan this round
-                </ButtonLink>
-              }
-            />
-          )}
+          <ToBuy
+            key={`${key}-${R.id}`}
+            weekKey={key}
+            week={week}
+            round={R}
+            statuses={data.pantry}
+            empty={
+              <EmptyState
+                title="Nothing to buy yet"
+                body={`Plan the ${roundLabel(R, weekStart).toLowerCase()} and its shopping list fills in. Or add items above.`}
+                action={
+                  <ButtonLink href={`/plan?build=${R.id}`} size="sm">
+                    Plan this round
+                  </ButtonLink>
+                }
+              />
+            }
+          />
         </>
       )}
     </div>

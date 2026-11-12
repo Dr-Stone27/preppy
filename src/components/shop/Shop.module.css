@@ -277,3 +277,94 @@ li[data-done] .lineName {
   background: var(--color-danger-soft);
   color: var(--color-danger);
 }
+
+/* Find or add an item: stays at the top while you scroll the list in the shop. */
+.finderWrap {
+  position: sticky;
+  top: var(--safe-top);
+  z-index: 5;
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  background: var(--color-canvas);
+}
+
+.finder {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch);
+  padding: 0 var(--space-3) 0 var(--space-4);
+  border-radius: var(--radius-input);
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1.5px var(--color-border-strong);
+  color: var(--color-muted);
+}
+
+.finder:focus-within {
+  box-shadow: inset 0 0 0 2px var(--color-action);
+}
+
+.finder input {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--touch);
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 1rem; /* 16px or more, so iPhone doesn't zoom the page when it's tapped */
+  color: var(--color-ink);
+  outline: none;
+}
+
+.finder button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--color-muted);
+}
+
+.addBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--touch);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-input);
+  background: var(--color-action);
+  color: var(--color-on-action);
+  font-weight: 700;
+  text-align: left;
+}
+
+.addBtn:active {
+  background: var(--color-action-pressed);
+}
+
+.note {
+  min-height: 1em;
+  margin-top: calc(-1 * var(--space-2));
+}
+
+.extraRow {
+  display: flex;
+  align-items: center;
+}
+
+.extraRow .line {
+  flex: 1;
+  width: auto;
+  min-width: 0;
+}
+
+.removeBtn {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--touch);
+  height: var(--touch);
+  color: var(--color-muted);
+}

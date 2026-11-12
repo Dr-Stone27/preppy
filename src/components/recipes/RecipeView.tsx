@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
+import { FoodRuleWarning } from "@/components/recipes/FoodRuleWarning";
 import { Ingredients } from "@/components/recipes/Ingredients";
 import { Tag } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
@@ -13,7 +14,8 @@ const MACRO_SOURCE = { post: "From the post", estimate: "Estimate", you: "Your n
 /** The full recipe: bowl, tags, food-rule warnings, macros, scalable ingredients, method and source. */
 export function RecipeView({ recipe: r, never, footer }: { recipe: Recipe; never?: string[]; footer?: ReactNode }) {
 
-  const warnings = ruleWarnings(r, never);
+  // When the caller doesn't know this person's food rules (library pages are drawn on the server), the browser reads them.
+  const warnings = ruleWarnings(r, never ?? []);
   const m = r.macros;
   const macros = m ? ([["kcal", m.kcal, ""], ["Protein", m.protein, "g"], ["Carbs", m.carbs, "g"], ["Fat", m.fat, "g"]] as const).filter(([, v]) => v != null) : [];
   let host = "";
@@ -48,7 +50,8 @@ export function RecipeView({ recipe: r, never, footer }: { recipe: Recipe; never
         </div>
       </header>
 
-      {(warnings.items.length > 0 || warnings.notes.length > 0) && (
+      {never === undefined && <FoodRuleWarning recipe={r} />}
+      {never !== undefined && (warnings.items.length > 0 || warnings.notes.length > 0) && (
         <div className={styles.warning} role="note">
           <Icon name="alert" size={20} />
           <div>

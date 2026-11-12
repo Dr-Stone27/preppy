@@ -1,3 +1,4 @@
+import { baseById, baseOf, type Base } from "@/domain/recipes/bases";
 import { recipeById } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
 import { dayName } from "./dates";
@@ -69,4 +70,25 @@ export function storePlan(R: Round, cells: Record<string, Cell>, weekStart: Date
       }
     return { recipe, fridge, freezer };
   });
+}
+
+/** Bases two or more of today's dishes share, so the cook can make each once. */
+export function sharedBases(recipes: Recipe[]): { base: Base; dishes: string[] }[] {
+  const by = new Map<string, string[]>();
+  for (const r of recipes) {
+    const b = baseOf(r);
+    if (b) by.set(b, [...(by.get(b) ?? []), r.title]);
+  }
+  return [...by].filter(([, d]) => d.length > 1).map(([b, dishes]) => ({ base: baseById(b as Base["id"]), dishes }));
+}
+
+/** What to store apart so it stays crisp or fresh, or null. */
+export function keepApart(r: Recipe): string | null {
+  const names = r.ingredients.map((i) => i.name.toLowerCase());
+  const crisp = /crispy|fried chicken|suya|akara/i.test(r.title);
+  const fresh = names.some((n) => /cucumber|watercress|lettuce/.test(n));
+  if (crisp && fresh) return "Keep the salad in its own container, and reheat the rest in the oven or air fryer, not the microwave, so it stays crisp.";
+  if (crisp) return "Store it apart from any sauce or rice, and reheat it in the oven or air fryer, not the microwave, so it stays crisp.";
+  if (fresh) return "Keep the cucumber and other raw bits in their own container. They go watery if packed with hot food.";
+  return null;
 }

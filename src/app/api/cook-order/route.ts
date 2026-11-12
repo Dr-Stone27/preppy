@@ -1,6 +1,13 @@
 import { aiError, geminiJson, guard } from "@/server/gemini";
 
-type Dish = { title: string; portions: number; servings: number; ingredients: string[]; steps: string[] };
+type Dish = { title: string; portions: number; servings: number; ingredients: string[]; steps: string[]; base: string };
+
+function shared(dishes: Dish[]) {
+  const by = new Map<string, string[]>();
+  for (const d of dishes) if (d.base) by.set(d.base, [...(by.get(d.base) ?? []), d.title]);
+  const lines = [...by].filter(([, t]) => t.length > 1).map(([b, t]) => `${t.join(" and ")} share a ${b.toLowerCase()}: make it once in one pot and divide it.`);
+  return lines.length ? `\n${lines.join("\n")}` : "";
+}
 
 function prompt(dishes: Dish[]) {
   return `Plan one batch-cooking session for a home cook in Nigeria with an ordinary home kitchen: a stove and an oven. Use a microwave or air fryer only where a recipe calls for one. They are cooking these recipes today, scaled to the portions shown:
@@ -11,7 +18,8 @@ Ingredients: ${d.ingredients.join("; ")}
 Steps: ${d.steps.join(" ")}`)
   .join("\n\n")}
 
-Order the work so things run in parallel: start the longest hands-off items first (beans, rice, stews), use the stove and oven at the same time, do prep in the gaps, and merge shared prep (chop all the onions at once). Scale amounts to the portions. Include a cooling step before portioning.
+Order the work so things run in parallel: start the longest hands-off items first (beans, rice, stews), use the stove and oven at the same time, do prep in the gaps, and merge shared prep (chop all the onions at once). Scale amounts to the portions. Include a cooling step before portioning.${shared(dishes)}
+In storeTips, say which crisp or raw parts to keep apart from sauces and rice.
 Reply with only JSON: {"minutes": number, "steps": [{"title": short imperative, "detail": one or two sentences with scaled amounts, "appliance": "Prep" | "Stove" | "Air fryer" | "Microwave" | "Oven" | "Counter", "recipe": a recipe title or "All", "minutes": number or null (only for timed cooking), "meanwhile": string or null (what is already running)}], "storeTips": [string]}
 Use 8 to 16 steps.`;
 }
@@ -28,6 +36,7 @@ export async function POST(req: Request) {
       servings: Number(d.servings) || 1,
       ingredients: (d.ingredients ?? []).slice(0, 40).map((x) => String(x).slice(0, 120)),
       steps: (d.steps ?? []).slice(0, 30).map((x) => String(x).slice(0, 600)),
+      base: String(d.base ?? "").slice(0, 40),
     }));
   } catch {
     return Response.json({ error: "bad-request" }, { status: 400 });

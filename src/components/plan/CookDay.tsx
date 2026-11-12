@@ -12,7 +12,8 @@ import { Button, ButtonLink, IconButton } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { EmptyState } from "@/components/ui/Layout";
-import { cookDishes, fallbackPlan, planFromAi, storePlan } from "@/domain/plan/cook";
+import { cookDishes, fallbackPlan, keepApart, planFromAi, sharedBases, storePlan } from "@/domain/plan/cook";
+import { baseById, baseOf } from "@/domain/recipes/bases";
 import { today0, weekKey, weekStartFromKey } from "@/domain/plan/dates";
 import type { RoundId } from "@/domain/plan/types";
 import { roundLabel, weekStartFor } from "@/domain/plan/week";
@@ -85,6 +86,10 @@ export function CookDay() {
             servings: r.servings,
             ingredients: r.ingredients.map((x) => `${x.qty ?? ""} ${x.unit} ${x.name}`.trim()),
             steps: r.steps,
+            base: (() => {
+              const b = baseOf(r);
+              return b ? baseById(b).name : "";
+            })(),
           })),
         }),
       });
@@ -172,6 +177,14 @@ export function CookDay() {
             {fresh.some((l) => !l.done) && <p className="t-label t-muted">The orange ones aren’t ticked off your shopping list yet.</p>}
           </section>
         )}
+        {sharedBases(dishes.map((d) => d.recipe)).map(({ base, dishes: titles }) => (
+          <section key={base.id} className={styles.card}>
+            <h2 className="t-h3">Shared base: {base.name}</h2>
+            <p className="t-small">
+              {titles.length > 2 ? `${titles.slice(0, -1).join(", ")} and ${titles.at(-1)} all` : `${titles.join(" and ")} both`} start from it. {base.once}
+            </p>
+          </section>
+        ))}
         <p className="t-small t-muted">Breakfasts and sweets aren’t part of the batch. Make them fresh each day.</p>
         {signInNeeded && <WhenSignedIn run={workOut} />}
         {signInNeeded && !sync.email && (
@@ -282,6 +295,7 @@ export function CookDay() {
                 <b>Freezer ({freezer.length}):</b> {freezer.join(", ")}. Move each to the fridge the night before.
               </p>
             )}
+            {keepApart(r) && <p className="t-small t-muted">{keepApart(r)}</p>}
           </section>
         ))}
         {plan && plan.storeTips.length > 0 && (

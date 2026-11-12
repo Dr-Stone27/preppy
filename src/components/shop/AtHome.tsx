@@ -1,29 +1,60 @@
 "use client";
 
-import { GROUPS, NEXT_STOCK, pantryItems, STOCK_LABEL, stockOf, type Stock } from "@/domain/shop/pantry";
+import { useState } from "react";
+import { Button } from "@/components/ui/Button";
+import { Icon } from "@/components/ui/Icon";
+import { allNeeded } from "@/domain/shop/list";
+import { groupOf, pantryItems, SHOP_ORDER, STOCK_LABEL, stockOf, type Stock } from "@/domain/shop/pantry";
 import { setStock } from "@/state/store";
 import styles from "./Shop.module.css";
 
-/** Every pantry item with its stock level. Tap the level to cycle Have → Low → Out. */
-export function AtHome({ statuses }: { statuses: Record<string, Stock> }) {
-  // Fresh food is always on the list because it doesn’t keep, so only things that keep get a level here.
-  const items = pantryItems().filter((p) => !p.fresh);
-  const counts: Record<Stock, number> = { have: 0, low: 0, out: 0 };
-  for (const p of items) counts[stockOf(statuses, p.id)]++;
+const LEVELS: Stock[] = ["have", "low", "out"];
+const TOP = 20;
+
+/**
+ * What's in the kitchen: every dry good, spice and sauce, most used by the recipes first.
+ * Have keeps it off shopping lists; Low and Out put it on. Fresh food isn't here because it's always bought.
+ */
+export function AtHome({ statuses, bases }: { statuses: Record<string, Stock>; bases: string[] }) {
+  const [query, setQuery] = useState("");
+  const [everything, setEverything] = useState(false);
+
+  const uses = new Map(allNeeded(bases).map((x) => [x.key, x.from.size]));
+  const items = pantryItems()
+    .filter((p) => !p.fresh)
+    .map((p) => ({ ...p, uses: uses.get(p.id) ?? 0 }))
+    .sort((a, b) => b.uses - a.uses || a.name.localeCompare(b.name));
+  const have = items.filter((p) => stockOf(statuses, p.id) !== "out").length;
+
+  const q = query.trim().toLowerCase();
+  const matching = q ? items.filter((p) => p.name.toLowerCase().includes(q)) : items;
+  const shown = q || everything ? matching : matching.slice(0, TOP);
 
   return (
     <>
-      <dl className={styles.counts}>
-        {(["have", "low", "out"] as Stock[]).map((s) => (
-          <div key={s}>
-            <dd>{counts[s]}</dd>
-            <dt>{STOCK_LABEL[s].toLowerCase()}</dt>
-          </div>
-        ))}
-      </dl>
-      <p className="t-small t-muted">Tap a level to change it. Things marked Have stay off your lists. Fresh food isn’t here: it’s always on the list, because it doesn’t keep.</p>
-      {GROUPS.map((g) => {
-        const list = items.filter((p) => (p.group || "Other") === g).sort((a, b) => a.name.localeCompare(b.name));
+      <section className={styles.summary}>
+        <span className="t-eyebrow">In your kitchen</span>
+        <p className={styles.big}>
+          {have}
+          <small> of {items.length}</small>
+        </p>
+        <p className="t-small t-muted">
+          Dry goods, spices and sauces, the ones recipes use most first. Mark what you have and it stays off your shopping lists. Fresh food isn’t here: it’s always on the list, because it doesn’t keep.
+        </p>
+      </section>
+
+      <div className={styles.finderWrap}>
+        <label className={styles.finder}>
+          <Icon name="search" size={18} />
+          <span className="visually-hidden">Find something in your kitchen</span>
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Find, like curry powder" type="search" autoComplete="off" enterKeyHint="search" />
+        </label>
+      </div>
+
+      {!shown.length && <p className="t-small t-muted">Nothing called “{query.trim()}” here. Add it on the To buy list instead.</p>}
+
+      {SHOP_ORDER.map((g) => {
+        const list = shown.filter((p) => groupOf(p.group) === g);
         if (!list.length) return null;
         return (
           <section key={g} className={styles.group}>
@@ -33,15 +64,24 @@ export function AtHome({ statuses }: { statuses: Record<string, Stock> }) {
                 const s = stockOf(statuses, p.id);
                 return (
                   <li key={p.id}>
-                    <span className={styles.lineName}>{p.name}</span>
-                    <button
-                      type="button"
-                      className={`${styles.pill} ${styles[s]}`}
-                      onClick={() => setStock(p.id, NEXT_STOCK[s])}
-                      aria-label={`${p.name}: ${STOCK_LABEL[s]}. Change to ${STOCK_LABEL[NEXT_STOCK[s]]}`}
-                    >
-                      {STOCK_LABEL[s]}
-                    </button>
+                    <span className={styles.lineText}>
+                      <span className={styles.lineName}>{p.name}</span>
+                      {p.uses > 0 && <span className="t-label t-muted">In {p.uses === 1 ? "1 recipe" : `${p.uses} recipes`}</span>}
+                    </span>
+                    <span className={styles.levels} role="radiogroup" aria-label={`${p.name}: how much you have`}>
+                      {LEVELS.map((level) => (
+                        <button
+                          key={level}
+                          type="button"
+                          role="radio"
+                          aria-checked={s === level}
+                          className={s === level ? styles[level] : undefined}
+                          onClick={() => setStock(p.id, level)}
+                        >
+                          {STOCK_LABEL[level]}
+                        </button>
+                      ))}
+                    </span>
                   </li>
                 );
               })}
@@ -49,6 +89,12 @@ export function AtHome({ statuses }: { statuses: Record<string, Stock> }) {
           </section>
         );
       })}
+
+      {!q && !everything && items.length > TOP && (
+        <Button variant="secondary" block onClick={() => setEverything(true)}>
+          Show all {items.length}
+        </Button>
+      )}
     </>
   );
 }

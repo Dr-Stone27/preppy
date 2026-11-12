@@ -9,15 +9,13 @@ import type { RoundId } from "@/domain/plan/types";
 import { nextRound, openWeekStart, roundDates, roundLabel } from "@/domain/plan/week";
 import { getWeek, useData } from "@/state/store";
 import { AtHome } from "./AtHome";
-import { StockUp } from "./StockUp";
 import { ToBuy } from "./ToBuy";
 import styles from "./Shop.module.css";
 
-type View = "buy" | "home" | "stock";
+type View = "buy" | "home";
 const VIEWS: { id: View; label: string }[] = [
   { id: "buy", label: "To buy" },
   { id: "home", label: "At home" },
-  { id: "stock", label: "Stock up" },
 ];
 
 export function ShopScreen() {
@@ -26,7 +24,9 @@ export function ShopScreen() {
   const router = useRouter();
   if (!data) return <div className={styles.loading} aria-busy="true" />;
 
-  const view = (params.get("view") as View) || "buy";
+  // "stock" was the old Stock up tab, now part of At home.
+  const raw = params.get("view");
+  const view: View = raw === "home" || raw === "stock" ? "home" : "buy";
   const today = today0();
   const wParam = params.get("week");
   const weekStart =
@@ -58,8 +58,7 @@ export function ShopScreen() {
         ))}
       </div>
 
-      {view === "home" && <AtHome statuses={data.pantry} />}
-      {view === "stock" && <StockUp statuses={data.pantry} bases={data.prefs.bases} />}
+      {view === "home" && <AtHome statuses={data.pantry} bases={data.prefs.bases} />}
       {view === "buy" && (
         <>
           <div className={styles.rounds} role="group" aria-label="Which cook">

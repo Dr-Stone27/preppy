@@ -99,7 +99,7 @@ export function HomeWeek() {
         <h2 className="t-h2">
           {dayName(nextCook, 0, true)} {dateLabel(nextCook)}
         </h2>
-        <p className="t-small t-muted">This week’s cooking is done.</p>
+        <p className="t-small t-muted">{week.rounds.some((x) => x.confirmed) ? "This week’s cooking is done." : "No cook days left this week."}</p>
         <ButtonLink href="/plan?week=next" block>
           Plan next week
         </ButtonLink>

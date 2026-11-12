@@ -6,7 +6,7 @@ import { IconButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { addDays, dateLabel, dayName, today0, weekKey, ymd } from "@/domain/plan/dates";
 import type { RoundId, SlotId } from "@/domain/plan/types";
-import { roundOfDay, stepWeek, weekStartFor } from "@/domain/plan/week";
+import { openWeekStart, roundIsOpen, roundLabel, roundOfDay, stepWeek, weekStartFor } from "@/domain/plan/week";
 import { getWeek, useData } from "@/state/store";
 import { MealSheet } from "./MealSheet";
 import { RoundBuilder } from "./RoundBuilder";
@@ -17,18 +17,25 @@ export function PlanScreen() {
   const data = useData();
   const params = useSearchParams();
   const router = useRouter();
-  const [offset, setOffset] = useState(() => (params.get("week") === "next" ? 1 : 0));
+  // null until someone moves between weeks: until then the screen opens on the week that still has something to plan.
+  const [picked, setPicked] = useState<number | null>(() => (params.get("week") === "next" ? 1 : null));
   const [meal, setMeal] = useState<{ day: number; slot: SlotId } | null>(null);
   const building = params.get("build") as RoundId | null;
 
   if (!data) return <div className={styles.loading} aria-busy="true" />;
 
   const today = today0();
+  const open = openWeekStart(data.weeks, data.prefs, today, (k) => getWeek(data, k));
+  const offset = picked ?? (open.moved ? 1 : 0);
+  const setOffset = (fn: (o: number) => number) => setPicked(fn(offset));
   let weekStart = weekStartFor(data.weeks, data.prefs, today);
   for (let n = 0; n < Math.abs(offset); n++) weekStart = stepWeek(data.weeks, data.prefs, weekStart, offset > 0 ? 1 : -1);
   const key = weekKey(weekStart);
   const week = getWeek(data, key);
   const thisWeek = offset === 0;
+  // On this week, a cook that's over and was never planned is just noise.
+  const shown = thisWeek ? week.rounds.filter((R) => R.confirmed || roundIsOpen(R, weekStart, today)) : week.rounds;
+  const passed = thisWeek ? week.rounds.filter((R) => !shown.includes(R)) : [];
   const build = (id: RoundId | null) => router.replace(id ? `/plan?build=${id}` : "/plan", { scroll: false });
 
   return (
@@ -64,13 +71,21 @@ export function PlanScreen() {
         })}
       </ol>
 
+      {picked === null && open.moved && <p className="t-small t-muted">This week’s cook days have passed, so here’s next week.</p>}
+
       {!thisWeek && (
-        <button type="button" className={styles.link} onClick={() => setOffset(0)}>
+        <button type="button" className={styles.link} onClick={() => setOffset(() => 0)}>
           Back to this week
         </button>
       )}
 
-      {week.rounds.map((R) => (
+      {thisWeek && passed.length > 0 && (
+        <p className="t-small t-muted">
+          {passed.map((R) => roundLabel(R, weekStart)).join(" and ")} {passed.length > 1 ? "have" : "has"} passed.
+        </p>
+      )}
+
+      {shown.map((R) => (
         <RoundCard key={R.id} round={R} week={week} weekStart={weekStart} onPlan={() => build(R.id)} onMeal={(day, slot) => setMeal({ day, slot })} />
       ))}
 

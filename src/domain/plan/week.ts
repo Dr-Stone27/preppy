@@ -227,6 +227,25 @@ export function repeatedFlavours(mains: string[]) {
   return { flavours: seen.size, repeats: [...seen.values()].filter((v) => v.n > 1).map((v) => v.label) };
 }
 
+/**
+ * A round you can still do something with: its cook day hasn't passed, or it's planned and still feeding today or later.
+ * An unplanned round whose cook day has gone can't be cooked any more.
+ */
+export function roundIsOpen(R: Round, weekStart: Date, today: Date) {
+  const { cook, last } = roundDates(weekStart, R);
+  return cook >= today || (!!R.confirmed && last >= today);
+}
+
+/**
+ * The week Plan and Shop open on: this week while it still has an open round, otherwise next week.
+ * Someone starting on a Thursday with Sunday and Wednesday cook days lands on next week, not on two cooks that are over.
+ */
+export function openWeekStart(weeks: Record<string, Week>, prefs: Prefs, today: Date, getWeek: (key: string) => Week): { start: Date; moved: boolean } {
+  const start = weekStartFor(weeks, prefs, today);
+  if (getWeek(weekKey(start)).rounds.some((R) => roundIsOpen(R, start, today))) return { start, moved: false };
+  return { start: stepWeek(weeks, prefs, start, 1), moved: true };
+}
+
 /** The next round that hasn't been cooked and whose cook day is today or later. */
 export function nextRound(w: Week, weekStart: Date, today: Date) {
   return w.rounds.find((R) => !R.cooked && roundDates(weekStart, R).cook >= today) ?? null;

@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Layout";
 import { dayName, today0, weekKey, weekStartFromKey } from "@/domain/plan/dates";
 import type { RoundId } from "@/domain/plan/types";
-import { nextRound, roundDates, roundLabel, weekStartFor } from "@/domain/plan/week";
+import { nextRound, openWeekStart, roundDates, roundLabel } from "@/domain/plan/week";
 import { getWeek, useData } from "@/state/store";
 import { AtHome } from "./AtHome";
 import { StockUp } from "./StockUp";
@@ -29,7 +29,8 @@ export function ShopScreen() {
   const view = (params.get("view") as View) || "buy";
   const today = today0();
   const wParam = params.get("week");
-  const weekStart = wParam && /^w-\d{4}-\d{2}-\d{2}$/.test(wParam) ? weekStartFromKey(wParam) : weekStartFor(data.weeks, data.prefs, today);
+  const weekStart =
+    wParam && /^w-\d{4}-\d{2}-\d{2}$/.test(wParam) ? weekStartFromKey(wParam) : openWeekStart(data.weeks, data.prefs, today, (k) => getWeek(data, k)).start;
   const key = weekKey(weekStart);
   const week = getWeek(data, key);
   const rParam = params.get("round") as RoundId | null;
@@ -77,7 +78,7 @@ export function ShopScreen() {
             empty={
               <EmptyState
                 title="Nothing to buy yet"
-                body={`Plan the ${roundLabel(R, weekStart).toLowerCase()} and its shopping list fills in. Or add items above.`}
+                body={`Plan ${dayName(weekStart, R.cook, true)}’s cook and its shopping list fills in. Or add items above.`}
                 action={
                   <ButtonLink href={`/plan?build=${R.id}`} size="sm">
                     Plan this round

@@ -17,7 +17,7 @@ import { EmptyState } from "@/components/ui/Layout";
 import { dayName } from "@/domain/plan/dates";
 import type { Prefs, Round } from "@/domain/plan/types";
 import { dayMacros, eggCount, fillCells, recipesFor, repeatedFlavours, roundLabel, roundRange, SLOTS } from "@/domain/plan/week";
-import { libraryRecipes } from "@/domain/recipes/library";
+import { libraryRecipes, recipeById } from "@/domain/recipes/library";
 import { ruleWarnings } from "@/domain/recipes/rules";
 import type { Recipe } from "@/domain/recipes/types";
 import { updateWeek, useData } from "@/state/store";
@@ -41,8 +41,11 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
   // Picks survive a reload until the cook is saved.
   const draftKey = `preppy:pick:${weekKey}:${R.id}`;
   const [draft] = useState(() => readDraft(draftKey));
-  const [mains, setMains] = useState<string[]>(draft?.mains ?? R.mains);
-  const [sweets, setSweets] = useState<string[]>(draft?.sweets ?? R.sweets);
+  const [arriving] = useState(() => recipeById(params.get("add") ?? ""));
+  const withArriving = (list: string[], kind: "main" | "sweet") =>
+    arriving && arriving.kind === kind && !list.includes(arriving.id) ? [...list, arriving.id] : list;
+  const [mains, setMains] = useState<string[]>(() => withArriving(draft?.mains ?? R.mains, "main"));
+  const [sweets, setSweets] = useState<string[]>(() => withArriving(draft?.sweets ?? R.sweets, "sweet"));
   useEffect(() => writeDraft(draftKey, { mains, sweets }), [draftKey, mains, sweets]);
   const [query, setQuery] = useState("");
   const [cuisine, setCuisine] = useState<CuisineFamily | "all">("all");

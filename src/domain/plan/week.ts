@@ -251,6 +251,15 @@ export function openWeekStart(weeks: Record<string, Week>, prefs: Prefs, today: 
   return { start: stepWeek(weeks, prefs, start, 1), moved: true };
 }
 
+/** The next cook that can still be planned or shopped for: in the week Plan opens on, the first whose cook day hasn't passed. */
+export function nextOpenCook(weeks: Record<string, Week>, prefs: Prefs, today: Date, getWeek: (key: string) => Week) {
+  const { start } = openWeekStart(weeks, prefs, today, getWeek);
+  const key = weekKey(start);
+  const week = getWeek(key);
+  const round = week.rounds.find((R) => !R.cooked && roundDates(start, R).cook >= today) ?? week.rounds[0];
+  return { weekKey: key, weekStart: start, round };
+}
+
 /** The next round that hasn't been cooked and whose cook day is today or later. */
 export function nextRound(w: Week, weekStart: Date, today: Date) {
   return w.rounds.find((R) => !R.cooked && roundDates(weekStart, R).cook >= today) ?? null;

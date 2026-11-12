@@ -8,6 +8,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { addDays, dateLabel, dayName, daysBetween, today0, weekKey } from "@/domain/plan/dates";
+import { goesInFreezer } from "@/domain/plan/cook";
 import { cellKey, dayMacros, nextRound, recipesFor, roundDates, roundRange, SLOTS, stepWeek, weekStartFor } from "@/domain/plan/week";
 import { recipeById, recipeHref } from "@/domain/recipes/library";
 import { shopLines } from "@/domain/shop/list";
@@ -30,6 +31,20 @@ export function HomeWeek() {
   const R = nextRound(week, weekStart, today);
   const dayIndex = daysBetween(weekStart, today);
   const m = dayMacros(dayIndex, week.cells);
+
+  // Tomorrow's meals that went in the freezer (more than two days after their cook): thaw tonight.
+  const tomorrow = addDays(today, 1);
+  const tStart = weekStartFor(data.weeks, data.prefs, tomorrow);
+  const tWeek = getWeek(data, weekKey(tStart));
+  const tDay = daysBetween(tStart, tomorrow);
+  const tR = tWeek.rounds.find((x) => x.days.includes(tDay));
+  const thaw =
+    tR && tR.confirmed && roundDates(tStart, tR).cook <= today && goesInFreezer(tR, tDay)
+      ? SLOTS.filter((x) => x.kind === "main").flatMap((x) => {
+          const r = recipeById(tWeek.cells[cellKey(tDay, x.id)]?.r ?? "");
+          return r ? [{ slot: x.label, title: r.title }] : [];
+        })
+      : [];
 
   let next: ReactNode;
   if (R) {
@@ -110,6 +125,14 @@ export function HomeWeek() {
   return (
     <>
       {next}
+      {thaw.length > 0 && (
+        <section className={styles.tonight} aria-label="Tonight">
+          <span className="t-eyebrow">Tonight</span>
+          <h2 className="t-h3">Take tomorrow’s meals out of the freezer</h2>
+          <p className="t-small">{thaw.map((x) => `${x.slot}: ${x.title}`).join(" · ")}</p>
+          <p className="t-label t-muted">Thaw them overnight in the fridge.</p>
+        </section>
+      )}
       <section className={styles.today}>
         <div className={styles.todayHead}>
           <h2 className="t-h3">Today</h2>

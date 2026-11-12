@@ -7,7 +7,8 @@ import { FilterChip } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { dayName, weekStartFromKey } from "@/domain/plan/dates";
 import type { Prefs, SlotId, Week } from "@/domain/plan/types";
-import { cellKey, recipesFor, roundOfDay, SLOTS } from "@/domain/plan/week";
+import { cellKey, needs, recipesFor, roundOfDay, slug, SLOTS } from "@/domain/plan/week";
+import { pantryItem } from "@/domain/shop/pantry";
 import { libraryRecipes } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
 import { updateWeek } from "@/state/store";
@@ -33,7 +34,15 @@ export function MealSheet({ weekKey, week, prefs, meal, onClose }: Props) {
   const cell = meal ? week.cells[key] : undefined;
   const R = meal ? roundOfDay(week, meal.day) : null;
   const inRound = slot && R ? recipesFor(slot.kind === "main" ? R.mains : R.sweets) : [];
-  const others = slot ? libraryRecipes().filter((r) => r.kind === slot.kind && !inRound.some((x) => x.id === r.id)) : [];
+  // For a main, other dishes that use fresh food already on this cook's list come first: swapping to one adds less shopping.
+  const onList = slot?.kind === "main" && R ? new Set(needs(R, week.cells).filter((l) => !pantryItem(l.key) || pantryItem(l.key)!.fresh).map((l) => l.key)) : new Set<string>();
+  const shared = (r: Recipe) => new Set(r.ingredients.map((i) => slug(i.name)).filter((k) => onList.has(k))).size;
+  const others = slot
+    ? libraryRecipes()
+        .filter((r) => r.kind === slot.kind && !inRound.some((x) => x.id === r.id))
+        .map((r) => ({ r, n: shared(r) }))
+        .sort((a, b) => b.n - a.n || a.r.title.localeCompare(b.r.title))
+    : [];
 
   const set = (patch: (c: Week["cells"][string] | undefined) => Week["cells"][string] | undefined) =>
     updateWeek(weekKey, (w) => {
@@ -43,7 +52,7 @@ export function MealSheet({ weekKey, week, prefs, meal, onClose }: Props) {
       return w;
     });
 
-  const option = (r: Recipe) => (
+  const option = (r: Recipe, n = 0) => (
     <button
       key={r.id}
       type="button"
@@ -55,6 +64,7 @@ export function MealSheet({ weekKey, week, prefs, meal, onClose }: Props) {
       <span className={styles.optionText}>
         <span className={styles.optionTitle}>{r.title}</span>
         <span className="t-label t-muted">{macroLine(r)}</span>
+        {n >= 2 && <span className={styles.sharedNote}>Uses {n} fresh things already on your list</span>}
       </span>
       {cell?.r === r.id && <Icon name="check" size={20} />}
     </button>
@@ -88,15 +98,17 @@ export function MealSheet({ weekKey, week, prefs, meal, onClose }: Props) {
       {meal && slot && R && (
         <div className={styles.sheetBody}>
           {inRound.length ? (
-            <div className={styles.options}>{inRound.map(option)}</div>
+            <div className={styles.options}>{inRound.map((r) => option(r))}</div>
           ) : (
             <p className="t-small t-muted">No {slot.kind === "main" ? "mains" : "breakfasts or sweets"} picked for this cook yet.</p>
           )}
 
           {others.length > 0 && (
             <details className={styles.more}>
-              <summary>Other recipes ({others.length})</summary>
-              <div className={styles.options}>{others.map(option)}</div>
+              <summary>
+                Other recipes ({others.length}){slot.kind === "main" && others[0]?.n >= 2 ? ", least extra shopping first" : ""}
+              </summary>
+              <div className={styles.options}>{others.map(({ r, n }) => option(r, n))}</div>
             </details>
           )}
 

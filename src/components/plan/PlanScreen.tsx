@@ -2,12 +2,12 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { IconButton } from "@/components/ui/Button";
+import { Button, IconButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { addDays, dateLabel, dayName, today0, weekKey, ymd } from "@/domain/plan/dates";
 import type { RoundId, SlotId } from "@/domain/plan/types";
 import { openWeekStart, roundIsOpen, roundLabel, roundOfDay, stepWeek, weekStartFor } from "@/domain/plan/week";
-import { getWeek, useData } from "@/state/store";
+import { getWeek, repeatWeek, useData } from "@/state/store";
 import { MealSheet } from "./MealSheet";
 import { RoundBuilder } from "./RoundBuilder";
 import { RoundCard } from "./RoundCard";
@@ -20,6 +20,7 @@ export function PlanScreen() {
   // null until someone moves between weeks: until then the screen opens on the week that still has something to plan.
   const [picked, setPicked] = useState<number | null>(() => (params.get("week") === "next" ? 1 : null));
   const [meal, setMeal] = useState<{ day: number; slot: SlotId } | null>(null);
+  const [copied, setCopied] = useState("");
   const building = params.get("build") as RoundId | null;
 
   if (!data) return <div className={styles.loading} aria-busy="true" />;
@@ -36,6 +37,9 @@ export function PlanScreen() {
   // On this week, a cook that's over and was never planned is just noise.
   const shown = thisWeek ? week.rounds.filter((R) => R.confirmed || roundIsOpen(R, weekStart, today)) : week.rounds;
   const passed = thisWeek ? week.rounds.filter((R) => !shown.includes(R)) : [];
+  // Offer last week's cooks when nothing here is planned yet.
+  const prevKey = weekKey(stepWeek(data.weeks, data.prefs, weekStart, -1));
+  const canRepeat = !week.rounds.some((R) => R.confirmed) && !!data.weeks[prevKey]?.rounds.some((R) => R.confirmed) && shown.length > 0;
   const build = (id: RoundId | null) => router.replace(id ? `/plan?build=${id}` : "/plan", { scroll: false });
 
   return (
@@ -82,6 +86,27 @@ export function PlanScreen() {
       {thisWeek && passed.length > 0 && (
         <p className="t-small t-muted">
           {passed.map((R) => roundLabel(R, weekStart)).join(" and ")} {passed.length > 1 ? "have" : "has"} passed.
+        </p>
+      )}
+
+      {canRepeat && (
+        <div className={styles.repeat}>
+          <p className="t-small">Last week’s cooks are planned. Use them again?</p>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => {
+              const n = repeatWeek(prevKey, key);
+              setCopied(n ? `Copied ${n === 1 ? "1 cook" : `${n} cooks`} from last week. Change anything you like.` : "");
+            }}
+          >
+            Repeat last week
+          </Button>
+        </div>
+      )}
+      {copied && (
+        <p className="t-small" role="status">
+          {copied}
         </p>
       )}
 

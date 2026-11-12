@@ -9,7 +9,7 @@ import { recipesFor, slug } from "@/domain/plan/week";
 import { groupOf, guessGroup, pantryItems, pantryMatch, SHOP_ORDER, stockOf, type Stock } from "@/domain/shop/pantry";
 import { amountNeed, amountText, shopLines, tickKey, type ShopLine } from "@/domain/shop/list";
 import { track } from "@/lib/analytics";
-import { addExtra, removeExtra, setBought, setExtraDone, setStock } from "@/state/store";
+import { addExtra, newExtraId, removeExtra, setBought, setExtraDone, setStock } from "@/state/store";
 import styles from "./Shop.module.css";
 
 type Props = { weekKey: string; week: Week; round: Round; statuses: Record<string, Stock>; empty?: ReactNode };
@@ -61,8 +61,7 @@ export function ToBuy({ weekKey, week, round: R, statuses, empty }: Props) {
     const match = pantryMatch(query.trim());
     const name = match?.name ?? tidy(query);
     const group = groupOf(match?.group ?? guessGroup(name));
-    const id = `x${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
-    if (!addExtra(weekKey, R.id, { id, name, group })) return;
+    if (!addExtra(weekKey, R.id, { id: newExtraId(), name, group })) return;
     track("list_item_added", { known: !!match });
     setQuery("");
     setNote(`Added ${name} under ${group}.`);

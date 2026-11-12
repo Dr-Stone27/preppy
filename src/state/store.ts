@@ -2,10 +2,10 @@
 
 import { useSyncExternalStore } from "react";
 import { weekStartFromKey } from "@/domain/plan/dates";
-import { DEFAULT_PREFS, defaultWeek } from "@/domain/plan/week";
+import { cellKey, DEFAULT_PREFS, defaultWeek, fillCells, SLOTS } from "@/domain/plan/week";
 import type { Extra, Prefs, Week } from "@/domain/plan/types";
 import type { Stock } from "@/domain/shop/pantry";
-import { registerSavedRecipes } from "@/domain/recipes/library";
+import { recipeById, registerSavedRecipes } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
 
 /**
@@ -104,7 +104,36 @@ export function updatePrefs(fn: (p: Prefs) => Prefs) {
   write({ ...d, prefs: fn({ ...d.prefs }) });
 }
 
+/**
+ * Copies last week's planned cooks into a week that has none planned, cook for cook in order, and fills the timetable.
+ * Shopping ticks, cook orders and hand-made changes aren't copied. Returns how many cooks were copied.
+ */
+export function repeatWeek(fromKey: string, toKey: string): number {
+  const d = snapshot();
+  const from = d.weeks[fromKey];
+  if (!from) return 0;
+  let n = 0;
+  updateWeek(toKey, (w) => {
+    w.rounds.forEach((r, i) => {
+      const src = from.rounds[i];
+      if (!src?.confirmed || r.confirmed) return;
+      r.mains = src.mains.filter((id) => recipeById(id));
+      r.sweets = src.sweets.filter((id) => recipeById(id));
+      if (!r.mains.length) return;
+      r.confirmed = true;
+      for (const day of r.days) for (const s of SLOTS) delete w.cells[cellKey(day, s.id)];
+      Object.assign(w.cells, fillCells(r, r.mains, r.sweets, d.prefs.bases));
+      n++;
+    });
+    return w;
+  });
+  return n;
+}
+
 const MAX_EXTRAS = 100;
+
+/** A fresh id for something added to a list by hand. */
+export const newExtraId = () => `x${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
 
 /** Adds your own item to a round's shopping list. Returns false if it's a duplicate or the list is full. */
 export function addExtra(weekKey: string, roundId: string, extra: Extra): boolean {

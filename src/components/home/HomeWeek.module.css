@@ -145,3 +145,11 @@
   text-decoration: line-through;
   color: var(--color-muted);
 }
+
+.tonight {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-card);
+  background: var(--color-action-soft);
+}

@@ -54,6 +54,9 @@ export function planFromAi(d: unknown): CookPlan {
   };
 }
 
+/** Meals within two days of cooking keep in the fridge; later ones go in the freezer. */
+export const goesInFreezer = (R: Round, day: number) => day - R.cook > 2;
+
 /** Meals within two days of cooking go in the fridge; later ones go in the freezer. */
 export function storePlan(R: Round, cells: Record<string, Cell>, weekStart: Date) {
   return cookDishes(R, cells).map(({ recipe }) => {
@@ -62,7 +65,7 @@ export function storePlan(R: Round, cells: Record<string, Cell>, weekStart: Date
     for (const d of R.days)
       for (const s of SLOTS) {
         if (cells[cellKey(d, s.id)]?.r !== recipe.id) continue;
-        (d - R.cook <= 2 ? fridge : freezer).push(`${dayName(weekStart, d)} ${s.label.toLowerCase()}`);
+        (goesInFreezer(R, d) ? freezer : fridge).push(`${dayName(weekStart, d)} ${s.label.toLowerCase()}`);
       }
     return { recipe, fridge, freezer };
   });

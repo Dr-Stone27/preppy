@@ -22,6 +22,8 @@ export type Event =
   | "recipe_saved"
   | "cook_day_opened"
   | "list_item_added"
+  | "what_can_i_make_opened"
+  | "fridge_photo_read"
   | "account_deleted";
 
 let client: PostHog | null = null;

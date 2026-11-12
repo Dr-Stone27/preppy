@@ -23,6 +23,16 @@ export default function Home() {
       />
       <GettingStarted />
       <HomeWeek />
+      <Link href="/what-can-i-make" className={styles.library}>
+        <span className={styles.haveIcon} aria-hidden>
+          <Icon name="search" size={22} />
+        </span>
+        <span className={styles.libraryText}>
+          <span className={styles.libraryTitle}>What can I make?</span>
+          <span className="t-label t-muted">Start from what’s in your fridge</span>
+        </span>
+        <Icon name="chevron" size={18} />
+      </Link>
       <Link href="/library" className={styles.library}>
         <BowlCollage recipes={featured} size={44} />
         <span className={styles.libraryText}>

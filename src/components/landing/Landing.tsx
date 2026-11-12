@@ -204,7 +204,7 @@ export function Landing() {
           </ul>
         </Feature>
 
-        <Feature n={3} title="Cook day, sorted" body="All your dishes in one order, then what goes in the fridge and what goes in the freezer.">
+        <Feature n={3} title="Cook day, sorted" body="With a free account, Preppy puts all your dishes in one order. Then it shows what goes in the fridge, and what to freeze for later in the week.">
           <ol className={styles.steps}>
             {STEPS.map((s, i) => (
               <li key={s.title} style={{ "--t": i } as React.CSSProperties}>

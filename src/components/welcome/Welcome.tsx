@@ -20,7 +20,7 @@ const COOK = 1, NEVER = 2, SIDES = 3, KITCHEN = 4, SIGN_IN = 5, DONE = 6;
 const HOW = [
   { title: "Cook a few times, eat all week", body: "Pick the days you cook. Each cook covers the days until the next one." },
   { title: "Keep it interesting", body: "Pick two or three mains per round. Preppy tells you when two taste the same." },
-  { title: "One cooking session", body: "Cook day puts every dish in one order, then tells you what goes in the fridge and what goes in the freezer." },
+  { title: "One cooking session", body: "With a free account, cook day puts every dish in one order. Then it tells you what goes in the fridge and what to freeze for later in the week." },
 ];
 
 export function Welcome() {

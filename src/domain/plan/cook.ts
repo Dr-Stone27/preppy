@@ -12,10 +12,19 @@ export function cookDishes(R: Round, cells: Record<string, Cell>): { recipe: Rec
 }
 
 /** Without the AI ordering: each recipe's own steps, one dish after another. */
+/** A short heading for a recipe step: its first clause ("Heat the oil in a large pot"), or the fallback when there isn't one. */
+export function stepTitle(step: string, fallback: string) {
+  const first = step.trim().split(/(?<=[.!?;:])\s|,\s(?:then|and then|until)\s/i)[0].replace(/[.!?;:,]+$/, "").trim();
+  if (!first) return fallback;
+  if (first.length <= 60) return first;
+  const cut = first.slice(0, 57);
+  return `${cut.slice(0, cut.lastIndexOf(" ") > 30 ? cut.lastIndexOf(" ") : 57)}…`;
+}
+
 export function fallbackPlan(R: Round, cells: Record<string, Cell>): CookPlan {
   const steps = cookDishes(R, cells).flatMap(({ recipe: r }) =>
     r.steps.map((detail, i) => ({
-      title: i === 0 ? `Start the ${r.title}` : `${r.title}: step ${i + 1}`,
+      title: stepTitle(detail, i === 0 ? `Start the ${r.title}` : `Step ${i + 1}`),
       detail,
       appliance: "",
       recipe: r.title,

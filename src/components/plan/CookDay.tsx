@@ -3,7 +3,9 @@
 import { count } from "@/lib/words";
 import { track } from "@/lib/analytics";
 import { useRouter, useSearchParams } from "next/navigation";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+import { AccountPanel } from "@/components/account/AccountPanel";
+import { useSync } from "@/state/sync";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink, IconButton } from "@/components/ui/Button";
@@ -30,6 +32,9 @@ export function CookDay() {
   const [i, setI] = useState(-1);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
+  // The combined order needs an account. Signed-out cooks sign in here, or choose each recipe in turn.
+  const [signInNeeded, setSignInNeeded] = useState(false);
+  const sync = useSync();
   const [timer, setTimer] = useState<Timer | null>(null);
   const [now, setNow] = useState(0);
 
@@ -83,21 +88,32 @@ export function CookDay() {
           })),
         }),
       });
+      if (res.status === 401) {
+        setSignInNeeded(true);
+        return;
+      }
       if (!res.ok) throw new Error(String(res.status));
       savePlan(planFromAi((await res.json()).plan));
+      setSignInNeeded(false);
+      setI(0);
     } catch (e) {
       savePlan(fallbackPlan(R, week.cells));
       setNotice(
         (e as Error).message === "503"
           ? "Working out a combined order isn’t switched on yet, so here’s each recipe in turn."
-          : (e as Error).message === "401"
-            ? "Sign in to get one combined cooking order. For now, here’s each recipe in turn."
-            : "Couldn’t work out a combined order just now, so here’s each recipe in turn.",
+          : "Couldn’t work out a combined order just now, so here’s each recipe in turn.",
       );
+      setI(0);
     } finally {
       setBusy(false);
-      setI(0);
     }
+  };
+
+  const eachInTurn = () => {
+    savePlan(fallbackPlan(R, week.cells));
+    setSignInNeeded(false);
+    setNotice("");
+    setI(0);
   };
 
   const done = () => {
@@ -157,6 +173,17 @@ export function CookDay() {
           </section>
         )}
         <p className="t-small t-muted">Breakfasts and sweets aren’t part of the batch. Make them fresh each day.</p>
+        {signInNeeded && <WhenSignedIn run={workOut} />}
+        {signInNeeded && !sync.email && (
+          <section className={styles.card} aria-label="Sign in for one combined order">
+            <h2 className="t-h3">One order for everything needs a free account</h2>
+            <p className="t-small t-muted">Sign in with the code we email you and Preppy works out the order straight away. Or cook each recipe in turn without signing in.</p>
+            <AccountPanel />
+            <Button variant="secondary" block onClick={eachInTurn}>
+              Cook each recipe in turn instead
+            </Button>
+          </section>
+        )}
       </>
     );
     foot = plan ? (
@@ -298,4 +325,16 @@ export function CookDay() {
       {foot && <div className={builder.foot}>{foot}</div>}
     </div>
   );
+}
+
+/** Signed in from the box on cook day: work the order out without another tap, once. */
+function WhenSignedIn({ run }: { run: () => void }) {
+  const sync = useSync();
+  const ran = useRef(false);
+  useEffect(() => {
+    if (ran.current || !sync.email || sync.status === "loading") return;
+    ran.current = true;
+    setTimeout(run, 0);
+  });
+  return null;
 }

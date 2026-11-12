@@ -8,6 +8,8 @@ export const CUISINE_LABEL: Record<CuisineFamily, string> = {
   korean: "Korean",
   chinese: "Chinese",
   japanese: "Japanese",
+  vietnamese: "Vietnamese",
+  ghanaian: "Ghanaian",
   indian: "Indian",
   tex_mex: "Tex-Mex",
   bbq: "BBQ",

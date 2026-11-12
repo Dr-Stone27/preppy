@@ -1,14 +1,16 @@
 "use client";
 
-import { count } from "@/lib/words";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Chip";
 import { addDays, dayName, weekKey } from "@/domain/plan/dates";
 import type { Round, SlotId, Week } from "@/domain/plan/types";
-import { cellKey, eggCount, forPeople, recipesFor, roundAverage, roundLabel, roundMains, roundRange, roundStatus, SLOTS } from "@/domain/plan/week";
+import { cellKey, forPeople, recipesFor, roundAverage, roundLabel, roundMains, roundRange, roundStatus, SLOTS } from "@/domain/plan/week";
+import { startTheDayBefore } from "@/domain/plan/cook";
 import { recipeById } from "@/domain/recipes/library";
+import { ruleWarnings, warningSentence } from "@/domain/recipes/rules";
+import { useData } from "@/state/store";
 import styles from "./Plan.module.css";
 
 type Props = {
@@ -23,8 +25,13 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
   const status = roundStatus(R);
   const mains = recipesFor(roundMains(R, week.cells));
   const avg = roundAverage(R, week.cells);
-  const eggs = eggCount(R, week.cells);
   const empty = !R.confirmed && !R.mains.length;
+  const never = useData()?.prefs.never ?? [];
+  // Food rules can change after a cook is planned, so planned dishes are checked again here.
+  const clashes = recipesFor([...new Set([...roundMains(R, week.cells), ...R.sweets])])
+    .map((r) => ({ r, items: ruleWarnings(r, never).items }))
+    .filter((x) => x.items.length);
+  const dayBefore = R.cooked ? [] : startTheDayBefore(mains);
 
   return (
     <section className={styles.round} aria-label={roundLabel(R, weekStart)}>
@@ -56,14 +63,22 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
             </ul>
           </div>
 
-          {(avg || eggs > 0) && (
+          {clashes.map(({ r, items }) => (
+            <p key={r.id} className={styles.warn} role="note">
+              <b>{r.title}.</b> {warningSentence(items)}
+            </p>
+          ))}
+          {dayBefore.length > 0 && (
+            <p className="t-small t-muted">Start the day before: {dayBefore.join(" and ")} marinates best overnight.</p>
+          )}
+
+          {avg && (
             <div className={styles.chips}>
               {avg && (
                 <Tag tone="warning">
                   About {avg.kcal.toLocaleString()} kcal · {avg.protein} g protein a day{avg.partial ? " +" : ""}
                 </Tag>
               )}
-              {eggs > 0 && <Tag>{count(eggs, "egg")}</Tag>}
             </div>
           )}
 

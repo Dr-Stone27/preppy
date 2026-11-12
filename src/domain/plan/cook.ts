@@ -1,5 +1,6 @@
 import { baseById, baseOf, type Base } from "@/domain/recipes/bases";
 import { recipeById } from "@/domain/recipes/library";
+import { scaleIngredients } from "@/domain/recipes/scale";
 import type { Recipe } from "@/domain/recipes/types";
 import { dayName } from "./dates";
 import type { Cell, CookPlan, Round } from "./types";
@@ -22,17 +23,32 @@ export function stepTitle(step: string, fallback: string) {
   return `${cut.slice(0, cut.lastIndexOf(" ") > 30 ? cut.lastIndexOf(" ") : 57)}…`;
 }
 
+/** The rest of a step after its title, so the heading and the text underneath don't say the same thing. */
+function afterTitle(step: string, title: string) {
+  if (title.endsWith("…")) return step;
+  const rest = step.trim().slice(title.length).replace(/^[\s.!?;:,]+/, "").replace(/^(then|and then)\s+/i, "").trim();
+  return rest ? rest.charAt(0).toUpperCase() + rest.slice(1) : "";
+}
+
 export function fallbackPlan(R: Round, cells: Record<string, Cell>): CookPlan {
-  const steps = cookDishes(R, cells).flatMap(({ recipe: r }) =>
-    r.steps.map((detail, i) => ({
-      title: stepTitle(detail, i === 0 ? `Start the ${r.title}` : `Step ${i + 1}`),
-      detail,
-      appliance: "",
+  const steps = cookDishes(R, cells).flatMap(({ recipe: r, portions }) => [
+    {
+      title: `Get out what ${r.title} needs`,
+      detail: scaleIngredients(r.ingredients, r.servings, portions)
+        .map((x) => (x.amount ? `${x.amount} ${x.name}` : x.name))
+        .join(" · "),
+      appliance: "Prep",
       recipe: r.title,
       minutes: null,
       meanwhile: null,
-    })),
-  );
+    },
+    ...r.steps.map((step, i) => {
+      const title = stepTitle(step, i === 0 ? `Start the ${r.title}` : `Step ${i + 1}`);
+      // A long first clause would be cut off and then repeated in full, so such a step has no heading.
+      const cut = title.endsWith("…");
+      return { title: cut ? "" : title, detail: afterTitle(step, title), appliance: "", recipe: r.title, minutes: null, meanwhile: null };
+    }),
+  ]);
   return { minutes: null, steps, storeTips: [], ordered: false };
 }
 
@@ -91,4 +107,9 @@ export function keepApart(r: Recipe): string | null {
   if (crisp) return "Store it apart from any sauce or rice, and reheat it in the oven or air fryer, not the microwave, so it stays crisp.";
   if (fresh) return "Keep the cucumber and other raw bits in their own container. They go watery if packed with hot food.";
   return null;
+}
+
+/** Dishes whose method needs starting the day before (an overnight marinade or soak). */
+export function startTheDayBefore(recipes: Recipe[]): string[] {
+  return recipes.filter((r) => r.steps.some((s) => /overnight|the night before|the day before/i.test(s))).map((r) => r.title);
 }

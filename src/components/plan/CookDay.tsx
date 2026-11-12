@@ -12,7 +12,7 @@ import { Button, ButtonLink, IconButton } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import { EmptyState } from "@/components/ui/Layout";
-import { cookDishes, fallbackPlan, keepApart, planFromAi, sharedBases, storePlan } from "@/domain/plan/cook";
+import { cookDishes, fallbackPlan, keepApart, planFromAi, sharedBases, startTheDayBefore, storePlan } from "@/domain/plan/cook";
 import { baseById, baseOf } from "@/domain/recipes/bases";
 import { today0, weekKey, weekStartFromKey } from "@/domain/plan/dates";
 import type { RoundId } from "@/domain/plan/types";
@@ -30,7 +30,14 @@ export function CookDay() {
   const data = useData();
   const params = useSearchParams();
   const router = useRouter();
-  const [i, setI] = useState(-1);
+  // The step lives in the address, so a reload or the phone's back button keeps your place.
+  const stepParam = Number(params.get("step") ?? -1);
+  const setI = (n: number) => {
+    const q = new URLSearchParams(params.toString());
+    if (n < 0) q.delete("step");
+    else q.set("step", String(n));
+    router.replace(`/plan/cook?${q}`, { scroll: false });
+  };
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
   // The combined order needs an account. Signed-out cooks sign in here, or choose each recipe in turn.
@@ -52,7 +59,7 @@ export function CookDay() {
 
   useEffect(() => {
     document.getElementById("cook-scroll")?.scrollTo(0, 0);
-  }, [i]);
+  }, [stepParam]);
 
   useEffect(() => track("cook_day_opened"), []);
 
@@ -132,6 +139,7 @@ export function CookDay() {
   let body: ReactNode;
   let foot: ReactNode = null;
   const steps = plan?.steps ?? [];
+  const i = plan && Number.isInteger(stepParam) && stepParam >= 0 ? Math.min(stepParam, steps.length) : -1;
 
   if (!dishes.length) {
     body = (
@@ -175,6 +183,14 @@ export function CookDay() {
               ))}
             </div>
             {fresh.some((l) => !l.done) && <p className="t-label t-muted">The orange ones aren’t ticked off your shopping list yet.</p>}
+          </section>
+        )}
+        {startTheDayBefore(dishes.map((d) => d.recipe)).length > 0 && (
+          <section className={styles.card}>
+            <h2 className="t-h3">Needs starting the day before</h2>
+            <p className="t-small">
+              {startTheDayBefore(dishes.map((d) => d.recipe)).join(" and ")} marinates best overnight. If you haven’t started it, marinate it first and give it as long as you can.
+            </p>
           </section>
         )}
         {sharedBases(dishes.map((d) => d.recipe)).map(({ base, dishes: titles }) => (
@@ -235,7 +251,7 @@ export function CookDay() {
             <span className="t-small t-muted">{r?.title ?? s.recipe}</span>
           </div>
         )}
-        <h1 className="t-h1">{s.title}</h1>
+        {s.title ? <h1 className="t-h1">{s.title}</h1> : <h1 className="visually-hidden">Step {i + 1}</h1>}
         <p className={styles.detail}>{s.detail}</p>
         {s.meanwhile && (
           <p className={styles.meanwhile}>

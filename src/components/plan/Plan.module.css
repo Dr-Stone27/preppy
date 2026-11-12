@@ -317,3 +317,8 @@
 .r4 {
   background: var(--color-success-soft, var(--color-accent-soft));
 }
+
+.warn {
+  font-size: var(--text-small, 0.875rem);
+  color: var(--color-danger);
+}

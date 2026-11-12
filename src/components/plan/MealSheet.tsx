@@ -1,6 +1,7 @@
 "use client";
 
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
+import { cardLabel } from "@/domain/recipes/search";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Button } from "@/components/ui/Button";
 import { FilterChip } from "@/components/ui/Chip";
@@ -24,7 +25,7 @@ type Props = {
 
 function macroLine(r: Recipe) {
   const m = r.macros;
-  return [r.flavour, m?.kcal ? `${m.kcal.toLocaleString()} kcal` : "", m?.protein ? `${m.protein} g protein` : ""].filter(Boolean).join(" · ");
+  return [cardLabel(r), m?.kcal ? `${m.kcal.toLocaleString()} kcal` : "", m?.protein ? `${m.protein} g protein` : ""].filter(Boolean).join(" · ");
 }
 
 /** Change, clear or add a side to one meal in the timetable. */

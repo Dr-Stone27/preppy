@@ -4,6 +4,8 @@ export type CuisineFamily =
   | "korean"
   | "chinese"
   | "japanese"
+  | "vietnamese"
+  | "ghanaian"
   | "indian"
   | "tex_mex"
   | "bbq"

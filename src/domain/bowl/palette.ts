@@ -10,6 +10,8 @@ export const CUISINE_BASE: Record<CuisineFamily, string> = {
   korean: "#C8553D",
   chinese: "#D9A441",
   japanese: "#D98F7E",
+  vietnamese: "#B5895A",
+  ghanaian: "#C9603F",
   indian: "#E0A526",
   tex_mex: "#C9A227",
   bbq: "#9A5B3A",

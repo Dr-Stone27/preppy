@@ -3,15 +3,17 @@ import type { BaseType, BowlSpec, BowlTopping, CuisineFamily, ToppingType } from
 
 /** Flavour label → cuisine family. First match wins; order matters. */
 const FAMILY_RULES: [RegExp, CuisineFamily][] = [
-  [/nigerian|suya|pepper(ed)?|ghanaian|west african|jollof/, "nigerian"],
+  [/ghanaian|red red/, "ghanaian"],
+  [/nigerian|suya|pepper(ed)?|west african|jollof/, "nigerian"],
+  [/caribbean|jamaican/, "caribbean"],
+  [/vietnamese/, "vietnamese"],
   [/korean|gochujang/, "korean"],
-  [/chinese|sweet chili|spicy garlic|kung pao|sesame/, "chinese"],
-  [/japanese|vietnamese|teriyaki/, "japanese"],
+  [/chinese|sweet chili|kung pao|sesame/, "chinese"],
+  [/japanese|teriyaki/, "japanese"],
   [/indian|curry|masala|tikka/, "indian"],
   [/tex-?mex|mexican|fajita/, "tex_mex"],
   [/bbq|american|cheesesteak/, "bbq"],
   [/shawarma|middle eastern|lebanese/, "middle_eastern"],
-  [/caribbean|jamaican|jerk/, "caribbean"],
 ];
 
 const SWEET_FLAVOURS = /chocolate|vanilla|banana|cinnamon|peanut butter|nutmeg|caramel|honey/;
@@ -20,7 +22,7 @@ export function cuisineOf(recipe: Pick<Recipe, "flavour" | "kind" | "title">): C
   const f = `${recipe.flavour ?? ""} ${recipe.title}`.toLowerCase();
   if (recipe.kind === "sweet") {
     // Savoury breakfasts (moi moi, akara) keep their cuisine colour.
-    if (!SWEET_FLAVOURS.test(f) && /nigerian|ghanaian/.test(f)) return "nigerian";
+    if (!SWEET_FLAVOURS.test(f) && /nigerian/.test(f)) return "nigerian";
     return "dessert";
   }
   for (const [re, fam] of FAMILY_RULES) if (re.test(f)) return fam;

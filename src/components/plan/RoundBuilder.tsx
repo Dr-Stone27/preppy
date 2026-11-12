@@ -16,7 +16,8 @@ import { Icon } from "@/components/ui/Icon";
 import { EmptyState } from "@/components/ui/Layout";
 import { dayName } from "@/domain/plan/dates";
 import type { Prefs, Round } from "@/domain/plan/types";
-import { dayMacros, eggCount, fillCells, recipesFor, repeatedFlavours, roundLabel, roundRange, SLOTS } from "@/domain/plan/week";
+import { dayMacros, fillCells, recipesFor, roundLabel, roundRange, SLOTS } from "@/domain/plan/week";
+import { sharedBases } from "@/domain/plan/cook";
 import { libraryRecipes, recipeById } from "@/domain/recipes/library";
 import { ruleWarnings } from "@/domain/recipes/rules";
 import type { Recipe } from "@/domain/recipes/types";
@@ -97,9 +98,8 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
     const all = libraryRecipes().filter((r) => r.kind === kind);
     const list = filterRecipes(all, { query, kind: "all", cuisine: step === 1 ? cuisine : "all" });
     const cuisines = step === 1 ? cuisinesIn(all) : [];
-    const useUp = step === 1 && leftovers && !query && cuisine === "all" ? dishesUsingLeftovers(all, leftovers) : [];
-    const variety = repeatedFlavours(mains);
-    const eggs = eggCount(R, cells);
+    const useUp = step === 1 && leftovers && !query && cuisine === "all" ? dishesUsingLeftovers(all.filter((r) => !ruleWarnings(r, prefs.never).items.length), leftovers) : [];
+    const shared = sharedBases(recipesFor(mains));
 
     body = (
       <>
@@ -113,15 +113,10 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
         </div>
 
         {step === 1 && mains.length > 0 && (
-          <div className={variety.repeats.length ? styles.warn : styles.ok} role="status">
-            {variety.repeats.length
-              ? `More than one main is ${variety.repeats.join(" and ")}. Swap one for variety.`
-              : `${mains.length} ${mains.length > 1 ? "mains" : "main"}, ${variety.flavours} ${variety.flavours > 1 ? "flavours" : "flavour"}. No repeats.`}
-          </div>
-        )}
-        {step === 2 && sweets.length > 0 && (
           <div className={styles.ok} role="status">
-            {eggs ? `${count(eggs, "egg")} this cook, all inside these.` : "No eggs in these."}
+            {shared.length
+              ? `${shared[0].dishes.join(" and ")} share the ${shared[0].base.name.toLowerCase()}, so you make it once.`
+              : `${count(mains.length, "main")} picked.`}
           </div>
         )}
 
@@ -229,10 +224,6 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
               <dd>{protein}</dd>
             </div>
           )}
-          <div>
-            <dt>eggs</dt>
-            <dd>{eggCount(R, cells)}</dd>
-          </div>
           <div>
             <dt>meals</dt>
             <dd>{Object.keys(cells).length}</dd>

@@ -48,7 +48,7 @@ export function Preferences() {
       <section className={styles.section}>
         <div>
           <h2 className="t-h3">Never in my food</h2>
-          <p className="t-small t-muted">Recipes with these get a warning.</p>
+          <p className="t-small t-muted">Dishes with these are flagged wherever you pick or plan them, including cooks already planned.</p>
         </div>
         <NeverEditor never={data.prefs.never} onChange={(never) => updatePrefs((p) => ({ ...p, never }))} />
       </section>

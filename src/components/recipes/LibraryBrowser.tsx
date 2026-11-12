@@ -6,6 +6,7 @@ import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Layout";
 import type { CuisineFamily } from "@/domain/bowl/types";
+import { baseById, basesIn } from "@/domain/recipes/bases";
 import { CUISINE_LABEL, cuisinesIn, filterRecipes, type LibraryFilter } from "@/domain/recipes/search";
 import { libraryRecipes } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
@@ -20,7 +21,7 @@ const KINDS: { value: LibraryFilter["kind"]; label: string }[] = [
   { value: "sweet", label: "Breakfast & sweets" },
 ];
 
-const EMPTY: LibraryFilter = { query: "", kind: "all", cuisine: "all" };
+const EMPTY: LibraryFilter = { query: "", kind: "all", cuisine: "all", base: "all" };
 
 export function LibraryBrowser({ recipes: exported }: { recipes: Recipe[] }) {
   const data = useData();
@@ -29,8 +30,9 @@ export function LibraryBrowser({ recipes: exported }: { recipes: Recipe[] }) {
   const [filter, setFilter] = useState<LibraryFilter>(EMPTY);
   const query = useDeferredValue(filter.query);
   const cuisines = useMemo(() => cuisinesIn(recipes), [recipes]);
+  const bases = useMemo(() => basesIn(recipes), [recipes]);
   const shown = useMemo(() => filterRecipes(recipes, { ...filter, query }), [recipes, filter, query]);
-  const filtered = filter.query !== "" || filter.kind !== "all" || filter.cuisine !== "all";
+  const filtered = filter.query !== "" || filter.kind !== "all" || filter.cuisine !== "all" || filter.base !== "all";
 
   const set = (patch: Partial<LibraryFilter>) => setFilter((f) => ({ ...f, ...patch }));
 
@@ -57,19 +59,36 @@ export function LibraryBrowser({ recipes: exported }: { recipes: Recipe[] }) {
 
         <div className={styles.chips} role="group" aria-label="Type">
           {[...KINDS, ...(recipes.some((r) => r.origin === "you") ? [{ value: "you" as const, label: "Saved by you" }] : [])].map((k) => (
-            <FilterChip key={k.value} selected={filter.kind === k.value} onClick={() => set({ kind: k.value, cuisine: k.value === "sweet" ? "all" : filter.cuisine })}>
+            <FilterChip key={k.value} selected={filter.kind === k.value} onClick={() => set({ kind: k.value, ...(k.value === "sweet" ? { cuisine: "all", base: "all" } : {}) })}>
               {k.label}
             </FilterChip>
           ))}
         </div>
 
         {filter.kind !== "sweet" && cuisines.length > 1 && (
-          <div className={styles.chips} role="group" aria-label="Cuisine">
-            {cuisines.map((c: CuisineFamily) => (
-              <FilterChip key={c} selected={filter.cuisine === c} onClick={() => set({ cuisine: filter.cuisine === c ? "all" : c })}>
-                {CUISINE_LABEL[c]}
-              </FilterChip>
-            ))}
+          <div className={styles.filterRow}>
+            <span className="t-label t-muted">By cuisine</span>
+            <div className={styles.chips} role="group" aria-label="Cuisine">
+              {cuisines.map((c: CuisineFamily) => (
+                <FilterChip key={c} selected={filter.cuisine === c} onClick={() => set({ cuisine: filter.cuisine === c ? "all" : c })}>
+                  {CUISINE_LABEL[c]}
+                </FilterChip>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {filter.kind !== "sweet" && bases.length > 1 && (
+          <div className={styles.filterRow}>
+            <span className="t-label t-muted">By flavour</span>
+            <div className={styles.chips} role="group" aria-label="Flavour">
+              {bases.map((b) => (
+                <FilterChip key={b.id} selected={filter.base === b.id} onClick={() => set({ base: filter.base === b.id ? "all" : b.id })}>
+                  {b.name}
+                </FilterChip>
+              ))}
+            </div>
+            {filter.base && filter.base !== "all" && <p className="t-small t-muted">{baseById(filter.base).about}</p>}
           </div>
         )}
       </div>

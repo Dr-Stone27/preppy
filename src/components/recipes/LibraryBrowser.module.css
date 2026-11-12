@@ -75,3 +75,8 @@
     padding: 2px 0;
   }
 }
+
+.filterRow {
+  display: grid;
+  gap: var(--space-2);
+}

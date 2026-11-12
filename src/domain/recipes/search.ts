@@ -1,5 +1,6 @@
 import { cuisineOf } from "@/domain/bowl/fromRecipe";
 import type { CuisineFamily } from "@/domain/bowl/types";
+import { baseById, baseOf, type BaseId } from "./bases";
 import type { Recipe, RecipeKind } from "./types";
 
 export const CUISINE_LABEL: Record<CuisineFamily, string> = {
@@ -16,7 +17,7 @@ export const CUISINE_LABEL: Record<CuisineFamily, string> = {
   other: "Other",
 };
 
-export type LibraryFilter = { query: string; kind: RecipeKind | "all" | "you"; cuisine: CuisineFamily | "all" };
+export type LibraryFilter = { query: string; kind: RecipeKind | "all" | "you"; cuisine: CuisineFamily | "all"; base?: BaseId | "all" };
 
 /** Cuisines present in the library, most common first, for the filter chips. */
 export function cuisinesIn(recipes: Recipe[]): CuisineFamily[] {
@@ -34,8 +35,10 @@ export function filterRecipes(recipes: Recipe[], f: LibraryFilter): Recipe[] {
   return recipes.filter((r) => {
     if (f.kind === "you" ? r.origin !== "you" : f.kind !== "all" && r.kind !== f.kind) return false;
     if (f.cuisine !== "all" && cuisineOf(r) !== f.cuisine) return false;
+    const base = baseOf(r);
+    if (f.base && f.base !== "all" && base !== f.base) return false;
     if (!q) return true;
-    const hay = [r.title, r.protein, r.flavour, ...r.ingredients.map((i) => i.name)].join(" ").toLowerCase();
+    const hay = [r.title, r.protein, r.flavour, base ? baseById(base).name : "", ...r.ingredients.map((i) => i.name)].join(" ").toLowerCase();
     return q.split(/\s+/).every((word) => hay.includes(word));
   });
 }

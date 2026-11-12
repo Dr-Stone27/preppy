@@ -23,8 +23,11 @@ function message(e: unknown): string {
     return "Too many emails asked for. Wait a minute, then try again.";
   if (err.code === "otp_expired" || err.code === "invalid_credentials" || /token|otp/i.test(err.message ?? ""))
     return "That code didn’t work. Check it, or send a new one.";
-  if (err.code === "email_address_invalid" || /email/i.test(err.message ?? "")) return "Check the email address.";
-  return "Something went wrong. Try again.";
+  if (err.code === "email_address_invalid" || /invalid.*email|email.*invalid/i.test(err.message ?? "")) return "Check the email address.";
+  // Supabase couldn't hand the email to the mail server (for example the Gmail connection was refused).
+  if (/sending|smtp|mail server/i.test(err.message ?? "") || (err.status ?? 0) >= 500)
+    return `We couldn’t send the email just now. Try again in a few minutes.${err.code ? ` (${err.code})` : ""}`;
+  return `Something went wrong. Try again.${err.code ? ` (${err.code})` : ""}`;
 }
 
 /** Sign in with an emailed code (or the link in the same email), and show sync status once signed in. */
@@ -65,6 +68,7 @@ export function AccountPanel() {
     try {
       await fn();
     } catch (err) {
+      console.error("[sign-in]", err);
       setError(message(err));
     } finally {
       setBusy(false);

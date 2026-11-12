@@ -49,9 +49,74 @@
   gap: var(--space-3);
 }
 
+/* The step itself: big enough to read from the stove. */
 .detail {
-  font-size: 1.125rem;
-  line-height: 1.6;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+/* Times, heat and amounts inside a step. */
+.key {
+  padding: 0 3px;
+  border-radius: 6px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-ink);
+  font-weight: 600;
+}
+
+/* Every running timer, kept at the top whichever step you're on. Tap one to go back to its step. */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  min-height: 36px;
+  padding: 0 var(--space-3) 0 6px;
+  border-radius: var(--radius-pill);
+  background: var(--color-action);
+  color: var(--color-on-action);
+  font-size: var(--text-small);
+  font-weight: 700;
+}
+
+.pillName {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 17ch;
+}
+
+.pillTime {
+  font-variant-numeric: tabular-nums;
+}
+
+.pillHere {
+  box-shadow: 0 0 0 2px var(--color-canvas), 0 0 0 4px var(--color-action);
+}
+
+.pillDone {
+  background: var(--color-accent);
+  color: var(--color-ink);
+  animation: pulse 1.2s var(--ease) infinite;
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pillDone {
+    animation: none;
+  }
 }
 
 .meanwhile {
@@ -86,4 +151,17 @@
   display: grid;
   grid-template-columns: auto 1fr;
   gap: var(--space-2);
+}
+
+/* "Get out what you need": one ingredient per line. */
+.gather {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1.0625rem;
+}
+
+.gather li {
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border);
 }

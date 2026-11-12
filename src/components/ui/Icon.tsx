@@ -66,6 +66,34 @@ const paths = {
     </>
   ),
   jarEmpty: <path d="M8 3.5h8M5 7h14v11.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 5 18.5z" />,
+  /* Pantry items, by how they're kept. */
+  bag: (
+    <>
+      <path d="M7 6l1.5-3h7L17 6" />
+      <path d="M6 6h12l1 13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z" />
+      <path d="M9.5 11.5h5" />
+    </>
+  ),
+  tin: (
+    <>
+      <ellipse cx="12" cy="6" rx="6" ry="2.2" />
+      <path d="M6 6v12c0 1.2 2.7 2.2 6 2.2s6-1 6-2.2V6" />
+      <path d="M6 10.5c0 1.2 2.7 2.2 6 2.2s6-1 6-2.2" />
+    </>
+  ),
+  cube: (
+    <>
+      <path d="M12 3.5l7.5 4v9L12 20.5l-7.5-4v-9z" />
+      <path d="M4.5 7.5L12 11.5l7.5-4M12 11.5v9" />
+    </>
+  ),
+  pot: (
+    <>
+      <path d="M7 4h10v3H7z" />
+      <path d="M6 7h12v11a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z" />
+      <path d="M9 12h6" />
+    </>
+  ),
   /* Shopping groups. */
   produce: (
     <>

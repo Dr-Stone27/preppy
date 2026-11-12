@@ -75,6 +75,16 @@ export const CERAMIC = {
   shadow: "#3B2A1E",
 };
 
+/** The inked look: an espresso line on every piece, a hand-dipped earth rim, a glaze a shade darker than the page. */
+export const INKED = {
+  ink: "#2B211A",
+  vessel: "#8A6446",
+  rim: "#6E4E37",
+  rimLight: "#B08B6A",
+  band: "#EFE4D2",
+  shadow: "#3B2A1E",
+};
+
 /** Piece and garnish colours. `hi` is the lit side, `lo` the seared or shadowed side. */
 export const FOOD = {
   chicken: { fill: "#C98140", hi: "#E7AE68", lo: "#7E4420" },

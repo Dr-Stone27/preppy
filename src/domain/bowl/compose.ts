@@ -280,7 +280,7 @@ function piece(type: PieceType, p: Pt, rand: Rand, spec: BowlSpec, detail: Detai
         // Teardrop: a round end tapering into the bone.
         { kind: "ellipse", cx: neck.x, cy: neck.y, rx: 9, ry: 7, rot: r, fill: c.fill, stroke: c.lo, sw: 1.2 },
         { kind: "ellipse", cx: p.x, cy: p.y, rx: 16, ry: 13, rot: r, fill: c.fill, stroke: c.lo, sw: 1.2 },
-        { kind: "ellipse", cx: neck.x, cy: neck.y, rx: 8, ry: 6, rot: r, fill: c.fill },
+        { kind: "ellipse", cx: neck.x, cy: neck.y, rx: 8, ry: 6, rot: r, fill: c.fill, bare: true },
         { kind: "ellipse", cx: at(p, -3, -5, r).x, cy: at(p, -3, -5, r).y, rx: 9, ry: 4.5, rot: r, fill: c.hi, opacity: 0.8 },
         ...(fine ? ([{ kind: "ellipse", cx: at(p, 2, 5, r).x, cy: at(p, 2, 5, r).y, rx: 7, ry: 3, rot: r, fill: c.lo, opacity: 0.35 }] as Shape[]) : []),
       ];
@@ -481,7 +481,7 @@ export function composeBowl(spec: BowlSpec, detail: Detail): { base: string; sha
       break;
     case "porridge":
       sauce(s, rand, spec.color, all, detail, spec.oil);
-      for (const p of scatter(rand, pick(detail, [9, 7, 4]), 19, placed, inBowl())) s.push(...piece("yam", p, rand, spec, detail));
+      for (const p of scatter(rand, pick(detail, [9, 7, 4]), 19, placed, inBowl())) s.push(...piece("yam", p, rand, spec, detail).map((sh) => ({ ...sh, lift: true })));
       break;
     case "beans":
       beans(s, rand, spec.color, detail);
@@ -497,7 +497,7 @@ export function composeBowl(spec: BowlSpec, detail: Detail): { base: string; sha
   const order = [...spec.pieces].sort((a, b) => PIECE[b].size - PIECE[a].size);
   for (const t of order) {
     const n = Math.max(1, Math.round(pick(detail, PIECE[t].n) * scale));
-    for (const p of scatter(rand, n, PIECE[t].size, placed, pieceRegion)) s.push(...piece(t, p, rand, spec, detail));
+    for (const p of scatter(rand, n, PIECE[t].size, placed, pieceRegion)) s.push(...piece(t, p, rand, spec, detail).map((sh) => ({ ...sh, lift: true })));
   }
 
   for (const t of spec.extras) {
@@ -510,7 +510,8 @@ export function composeBowl(spec: BowlSpec, detail: Detail): { base: string; sha
     const n = pick(detail, EXTRA[t].n);
     if (!n) continue;
     const pts = scatter(rand, n, EXTRA[t].size, placed, inBowl(0.9), EXTRA[t].size < 7 ? 0.35 : 0.55);
-    pts.forEach((p, i) => s.push(...extra(t, p, rand, i)));
+    // Big extras (cucumber, lime) sit on top like pieces; seeds and peas stay flat.
+    pts.forEach((p, i) => s.push(...extra(t, p, rand, i).map((sh) => (EXTRA[t].size >= 11 ? { ...sh, lift: true } : sh))));
   }
 
   // Server and browser maths can differ in the last digit, which breaks hydration. Two places is plenty at 200×200.

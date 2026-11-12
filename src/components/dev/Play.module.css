@@ -1,0 +1,273 @@
+.page {
+  display: grid;
+  gap: var(--space-10);
+  padding-bottom: var(--space-12);
+}
+
+.section {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* Bowls */
+.bowlHead,
+.bowlRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.bowlHead span {
+  text-align: center;
+}
+
+.bowlRow {
+  padding: var(--space-3) 0;
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.bowlPair {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.bowlName {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+/* Pantry tiles */
+.modes {
+  display: inline-flex;
+  justify-self: start;
+  padding: 2px;
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+}
+
+.modes button {
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-label);
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.modes button[aria-checked="true"] {
+  background: var(--color-action);
+  color: var(--color-on-action);
+}
+
+.tileGroup {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.tile {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 6px;
+  aspect-ratio: 1;
+  padding: var(--space-3) var(--space-1) var(--space-2);
+  border-radius: var(--radius-card);
+  text-align: center;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.tile:active {
+  transform: scale(0.96);
+}
+
+.tileName {
+  font-size: var(--text-label);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tileState {
+  margin-top: auto;
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.have {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.low {
+  background: var(--color-warning-soft);
+  color: var(--color-warning-ink);
+}
+
+.out {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.sheetBack {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  align-items: end;
+  background: rgba(30, 27, 24, 0.35);
+}
+
+.sheet {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--gutter) calc(var(--space-8) + env(safe-area-inset-bottom));
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-floating);
+}
+
+.sheetLevels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.sheetLevel {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  padding: var(--space-4) 0;
+  border-radius: var(--radius-card);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+  color: var(--color-muted);
+}
+
+.sheetLevel.have,
+.sheetLevel.low,
+.sheetLevel.out {
+  box-shadow: none;
+}
+
+/* Cook step */
+.cook {
+  position: relative;
+  display: grid;
+  gap: var(--space-4);
+  min-height: 520px;
+  padding: var(--space-5);
+  border-radius: var(--radius-feature);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 var(--space-3) 0 4px;
+  border-radius: var(--radius-pill);
+  background: var(--color-action);
+  color: var(--color-on-action);
+  font-size: var(--text-small);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pillSoon {
+  background: var(--color-accent);
+  color: var(--color-ink);
+}
+
+.cookTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cookDish {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: var(--text-small);
+}
+
+.progress {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-subtle);
+  overflow: hidden;
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--color-action);
+  transition: width 0.3s ease;
+}
+
+.stepText {
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  line-height: 1.35;
+}
+
+.key {
+  padding: 0 3px;
+  border-radius: 6px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-ink);
+  font-weight: 600;
+}
+
+.cookNav {
+  align-self: end;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.back {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+}
+
+.back:disabled {
+  opacity: 0.4;
+}
+
+.next {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--color-action);
+  color: var(--color-on-action);
+}

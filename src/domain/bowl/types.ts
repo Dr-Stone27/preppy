@@ -84,8 +84,9 @@ export type BowlSpec = {
 /** Below ~56px detail is dropped so the bowl stays legible. */
 export type Detail = "low" | "mid" | "high";
 
-/** A drawable primitive in the 200×200 bowl coordinate space. */
-export type Shape =
+/** A drawable primitive in the 200×200 bowl coordinate space. `lift` marks food pieces that sit on top of the base. */
+export type Shape = ShapeBase & { lift?: boolean; /** Joins two parts of one piece, so it never gets an outline of its own. */ bare?: boolean };
+type ShapeBase =
   | { kind: "circle"; cx: number; cy: number; r: number; fill: string; opacity?: number; stroke?: string; sw?: number }
   | { kind: "ellipse"; cx: number; cy: number; rx: number; ry: number; rot: number; fill: string; opacity?: number; stroke?: string; sw?: number }
   | { kind: "rect"; x: number; y: number; w: number; h: number; r: number; rot: number; fill: string; opacity?: number; stroke?: string; sw?: number }

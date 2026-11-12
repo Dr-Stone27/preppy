@@ -66,7 +66,7 @@ export function WhatCanIMake() {
 
   const next = nextOpenCook(data.weeks, data.prefs, today0(), (k) => getWeek(data, k));
   const cookName = `${dayName(next.weekStart, next.round.cook, true)}’s`;
-  const matches = has.size ? cookFromWhatYouHave(allRecipes(), has, data.pantry) : [];
+  const matches = has.size ? cookFromWhatYouHave(allRecipes(), has, data.pantry, picked.custom) : [];
   const shown = more ? matches : matches.slice(0, 12);
 
   const addMissing = (m: Match) => {
@@ -158,9 +158,22 @@ export function WhatCanIMake() {
                         <span className="t-label t-muted">{cardLabel(m.recipe)}</span>
                       </span>
                     </Link>
-                    <p className="t-small">
-                      <b>{missing ? "You have" : "Nothing to buy."}</b> {missing ? list(m.have) : `You have ${list(m.have)}.`}
-                    </p>
+                    {(m.have.length > 0 || !missing) && (
+                      <p className="t-small">
+                        <b>{missing ? "You have" : "Nothing to buy."}</b> {missing ? list(m.have) : m.have.length ? `You have ${list(m.have)}.` : ""}
+                      </p>
+                    )}
+                    {m.swaps.length > 0 && (
+                      <p className="t-small">
+                        <b>Use</b>{" "}
+                        {m.swaps.map((s, i) => (
+                          <span key={s.for}>
+                            {i > 0 && "; "}
+                            {s.use} instead of {s.for} <span className="t-muted">({s.close ? "close" : "changes the taste"})</span>
+                          </span>
+                        ))}
+                      </p>
+                    )}
                     {m.needFresh.length > 0 && (
                       <p className="t-small">
                         <b>Need</b> {list(m.needFresh.map((x) => x.name))}

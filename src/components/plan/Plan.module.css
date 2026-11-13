@@ -205,6 +205,18 @@
   border: 1.5px dashed var(--color-border-strong);
 }
 
+.cellSide {
+  width: 100%;
+  font-size: 0.625rem;
+  line-height: 1.2;
+  text-align: center;
+  font-weight: 600;
+  color: var(--color-accent);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .cellName {
   width: 100%;
   font-size: 0.6875rem;

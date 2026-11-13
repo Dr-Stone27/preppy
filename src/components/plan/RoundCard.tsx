@@ -108,10 +108,11 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
                       className={styles.cell}
                       data-empty={!r || undefined}
                       onClick={() => onMeal(d, s.id)}
-                      aria-label={`${dayName(weekStart, d, true)} ${s.label.toLowerCase()}: ${r ? r.title : "nothing planned"}`}
+                      aria-label={`${dayName(weekStart, d, true)} ${s.label.toLowerCase()}: ${r ? r.title : "nothing planned"}${r && c.base ? `, with ${c.base.toLowerCase()}` : ""}`}
                     >
                       {r ? <BowlIllustration recipe={r} size={34} decorative /> : <span className={styles.cellEmpty} />}
                       <span className={styles.cellName}>{r ? r.title : ""}</span>
+                      {r && c.base && <span className={styles.cellSide}>+ {c.base.toLowerCase()}</span>}
                     </button>
                   );
                 })}

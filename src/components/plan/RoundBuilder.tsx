@@ -1,6 +1,6 @@
 "use client";
 
-import { count } from "@/lib/words";
+import { count, listWords } from "@/lib/words";
 import { track } from "@/lib/analytics";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -202,6 +202,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
     const partial = enough && unknown > 0;
     const dishes = recipesFor([...mains, ...sweets]);
     const meals = (id: string) => Object.values(cells).filter((c) => c.r === id).length;
+    const sideNames = [...new Set(Object.values(cells).flatMap((c) => (c.base ? [c.base.toLowerCase()] : [])))];
 
     body = (
       <>
@@ -245,6 +246,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
             </li>
           ))}
         </ul>
+        {sideNames.length > 0 && <p className="t-small">Served with {listWords(sideNames)}, as needed on your list.</p>}
         {R.confirmed && <p className="t-small t-muted">Saving replaces this cook’s plan, including any meals you changed by hand.</p>}
       </>
     );

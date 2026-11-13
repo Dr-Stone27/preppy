@@ -79,12 +79,15 @@ export function storePlan(R: Round, cells: Record<string, Cell>, weekStart: Date
   return cookDishes(R, cells).map(({ recipe }) => {
     const fridge: string[] = [];
     const freezer: string[] = [];
+    const sides = new Set<string>();
     for (const d of R.days)
       for (const s of SLOTS) {
-        if (cells[cellKey(d, s.id)]?.r !== recipe.id) continue;
+        const c = cells[cellKey(d, s.id)];
+        if (c?.r !== recipe.id) continue;
+        if (c.base) sides.add(c.base.toLowerCase());
         (goesInFreezer(R, d) ? freezer : fridge).push(`${dayName(weekStart, d)} ${s.label.toLowerCase()}`);
       }
-    return { recipe, fridge, freezer };
+    return { recipe, fridge, freezer, sides: [...sides] };
   });
 }
 

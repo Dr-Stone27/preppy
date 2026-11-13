@@ -1,5 +1,6 @@
 "use client";
 
+import { listWords } from "@/lib/words";
 import { track } from "@/lib/analytics";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useRef, useState } from "react";
@@ -15,7 +16,7 @@ import { cookDishes, fallbackPlan, keepApart, planFromAi, sharedBases, startTheD
 import { baseById, baseOf } from "@/domain/recipes/bases";
 import { today0, weekKey, weekStartFromKey } from "@/domain/plan/dates";
 import type { RoundId } from "@/domain/plan/types";
-import { householdSize, mealsAndPortions, roundLabel, weekStartFor } from "@/domain/plan/week";
+import { householdSize, mealsAndPortions, roundLabel, roundSides, weekStartFor } from "@/domain/plan/week";
 import { allRecipes } from "@/domain/recipes/library";
 import { authHeader } from "@/lib/supabase";
 import { shopLines } from "@/domain/shop/list";
@@ -134,6 +135,7 @@ export function CookDay() {
   const week = getWeek(data, key);
   const R = week.rounds.find((x) => x.id === (params.get("round") as RoundId)) ?? week.rounds[0];
   const dishes = cookDishes(R, week.cells);
+  const sides = roundSides(R, week.cells);
   const plan = R.cookPlan;
   const close = () => router.push("/plan");
 
@@ -266,6 +268,14 @@ export function CookDay() {
             </p>
           </section>
         ))}
+        {sides.length > 0 && (
+          <section className={styles.card}>
+            <h2 className="t-h3">Sides</h2>
+            <p className="t-small">
+              {listWords(sides.map((s, k) => `${k ? s.name.toLowerCase() : s.name} for ${s.meals === 1 ? "1 meal" : `${s.meals} meals`}`))}, to go with the mains.
+            </p>
+          </section>
+        )}
         <p className="t-small t-muted">Breakfast & sweets aren’t part of the batch. Make them fresh each day.</p>
         {signInNeeded && <WhenSignedIn run={workOut} />}
         {signInNeeded && !sync.email && (
@@ -393,7 +403,7 @@ export function CookDay() {
         <span className="t-eyebrow">Last step</span>
         <h1 className="t-h1">Portion and store</h1>
         <p className="t-muted">Let everything cool, then split it into containers. Eat the fridge ones first.</p>
-        {storePlan(R, week.cells, weekStart).map(({ recipe: r, fridge, freezer }) => (
+        {storePlan(R, week.cells, weekStart).map(({ recipe: r, fridge, freezer, sides: withSides }) => (
           <section key={r.id} className={styles.card}>
             <div className={styles.dish}>
               <BowlIllustration recipe={r} size={44} decorative />
@@ -407,6 +417,7 @@ export function CookDay() {
                 <b>Freezer{eachHolds}:</b> {freezer.join(", ")}. Move each to the fridge the night before.
               </p>
             )}
+            {withSides.length > 0 && <p className="t-small">Serve with {listWords(withSides)}.</p>}
             {keepApart(r) && <p className="t-small t-muted">{keepApart(r)}</p>}
           </section>
         ))}

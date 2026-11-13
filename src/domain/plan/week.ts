@@ -185,6 +185,11 @@ export function usesOf(R: Round, cells: Record<string, Cell>) {
   return { rec, bases };
 }
 
+/** The sides served with this cook's mains and how many meals each, most used first. "Yam" → 3 */
+export function roundSides(R: Round, cells: Record<string, Cell>) {
+  return [...usesOf(R, cells).bases].sort((a, b) => b[1] - a[1]).map(([name, meals]) => ({ name, meals }));
+}
+
 export type NeedLine = { key: string; name: string; amounts: Map<string, number>; loose: boolean; from: Set<string> };
 
 export const slug = (s: string) =>

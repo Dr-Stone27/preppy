@@ -19,6 +19,10 @@ The cook never eats: ${never.join(", ") || "nothing listed"}. Seafood includes o
 Reply with only one JSON object in this shape:
 {"title": string, "kind": "main" | "sweet", "protein": string, "flavour": string, "servings": number, "withCarb": boolean, "ingredients": [{"name": string, "qty": number | null, "unit": string, "group": one of ${JSON.stringify(GROUPS)}}], "steps": [string], "flags": [string], "inferred": boolean, "macros": {"kcal": number | null, "protein": number | null, "carbs": number | null, "fat": number | null} | null}
 
+"steps": keep every step the post gives, in the post's order, one step per instruction. Do not merge, shorten or drop steps. Keep every timing, temperature, ratio and doneness check exactly as written (like "check at the 15-minute mark" or "done when it reads 74°C"). When the post gives two ways to do the same thing (rice cooker or stovetop), keep both as written. Only when the post has no method at all do you write one, and then set "inferred" to true.
+
+When part of the recipe is optional or an alternative (a homemade sauce instead of a bought one, an optional garnish), list only the main version in "ingredients" so the shopping list stays right, and add the optional part as the last step, starting "Optional:", with its amounts, like "Optional: make your own grill sauce by mixing 3 tbsp ketchup, 2 tbsp worcestershire sauce, …".
+
 "kind" is "main" for lunch or dinner dishes and "sweet" for breakfasts, desserts and snacks. "flavour" is a short cuisine or sauce label such as Korean, BBQ, Curry, Suya, Chinese, Nigerian. "withCarb" is true when the dish already includes its own rice, pasta, noodles, bread or other carb, so it needs no side. When a post gives both imperial and metric amounts, use the metric one; otherwise keep the units as written. qty is null when no amount is given. Ignore promotions, discount codes, hashtags and calls to comment. "macros" are per serving and only when the post states them (approximate figures like "~310" count); otherwise null. Use null for any single figure the post doesn't give, never 0 as a placeholder. Do not estimate macros.
 
 Link: ${link || "none"}

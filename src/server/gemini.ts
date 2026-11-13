@@ -21,7 +21,8 @@ async function call(model: string, key: string, prompt: string, thinking: boolea
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       generationConfig: {
         responseMimeType: "application/json",
-        temperature: 0.2,
+        // 0, so the same post reads the same way every time.
+        temperature: 0,
         // Reading a caption needs little reasoning; Gemini 3 thinks at "high" by default, which is slow.
         ...(thinking ? { thinkingConfig: { thinkingLevel: "low" } } : {}),
       },

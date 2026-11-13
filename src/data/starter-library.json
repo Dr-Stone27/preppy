@@ -3242,7 +3242,7 @@
    "withCarb": false,
    "ingredients": [
     {
-     "name": "Peeled beans (for moi moi)",
+     "name": "Peeled beans",
      "qty": 500,
      "unit": "g"
     },
@@ -3306,7 +3306,7 @@
    "withCarb": false,
    "ingredients": [
     {
-     "name": "Peeled beans (for moi moi)",
+     "name": "Peeled beans",
      "qty": 300,
      "unit": "g"
     },
@@ -4040,7 +4040,7 @@
   },
   {
    "id": "peeled-beans-for-moi-moi",
-   "name": "Peeled beans (for moi moi)",
+   "name": "Peeled beans",
    "group": "Protein",
    "where": "market",
    "fresh": false

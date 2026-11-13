@@ -6,10 +6,10 @@ import { addDays, dateLabel, dayName, daysBetween, weekKey, weekStartFromKey, we
 import type { Cell, Prefs, Round, RoundId, SlotId, Week } from "./types";
 
 export const SLOTS: { id: SlotId; label: string; short: string; kind: "main" | "sweet" }[] = [
-  { id: "breakfast", label: "Breakfast", short: "Bfast", kind: "sweet" },
+  { id: "breakfast", label: "Breakfast", short: "Breakfast", kind: "sweet" },
   { id: "lunch", label: "Lunch", short: "Lunch", kind: "main" },
   { id: "dinner", label: "Dinner", short: "Dinner", kind: "main" },
-  { id: "dessert", label: "Dessert", short: "Sweet", kind: "sweet" },
+  { id: "dessert", label: "Dessert", short: "Dessert", kind: "sweet" },
 ];
 
 export const DEFAULT_PREFS: Prefs = {
@@ -34,6 +34,12 @@ export const householdSize = () => household;
 /** "for 1 person", "for 3 people" */
 export const forPeople = (n = household) => `for ${n} ${n === 1 ? "person" : "people"}`;
 export const MAX_COOK_DAYS = 3;
+
+/** One word for each count: a meal is one slot on the plan, a portion is one person's share of it. "3 meals · 6 portions" */
+export function mealsAndPortions(meals: number, n = household) {
+  const m = `${meals} ${meals === 1 ? "meal" : "meals"}`;
+  return n === 1 ? m : `${m} · ${meals * n} portions`;
+}
 
 /** This person's cook days, sorted, 1 to 3 of them. */
 export function cookDaysOf(prefs: Prefs): number[] {
@@ -278,13 +284,21 @@ export function openWeekStart(weeks: Record<string, Week>, prefs: Prefs, today: 
   return { start: stepWeek(weeks, prefs, start, 1), moved: true };
 }
 
-/** The next cook that can still be planned or shopped for: in the week Plan opens on, the first whose cook day hasn't passed. */
+/**
+ * The next cook still to do: the first uncooked one from today on, this week or next. Never a cook that has passed.
+ * `ahead` is how many weeks after this one it sits, for screens that step between weeks.
+ */
 export function nextOpenCook(weeks: Record<string, Week>, prefs: Prefs, today: Date, getWeek: (key: string) => Week) {
-  const { start } = openWeekStart(weeks, prefs, today, getWeek);
+  let start = weekStartFor(weeks, prefs, today);
+  for (let ahead = 0; ahead < 2; ahead++) {
+    const key = weekKey(start);
+    const round = nextRound(getWeek(key), start, today);
+    if (round) return { weekKey: key, weekStart: start, round, ahead };
+    start = stepWeek(weeks, prefs, start, 1);
+  }
+  // Every week has a cook day, so next week always has one; this is only a guard.
   const key = weekKey(start);
-  const week = getWeek(key);
-  const round = week.rounds.find((R) => !R.cooked && roundDates(start, R).cook >= today) ?? week.rounds[0];
-  return { weekKey: key, weekStart: start, round };
+  return { weekKey: key, weekStart: start, round: getWeek(key).rounds[0], ahead: 2 };
 }
 
 /** The next round that hasn't been cooked and whose cook day is today or later. */

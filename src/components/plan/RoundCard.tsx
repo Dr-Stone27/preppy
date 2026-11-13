@@ -125,7 +125,7 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
             </Button>
             {R.confirmed && (
               <ButtonLink href={`/plan/cook?week=${weekKey(weekStart)}&round=${R.id}`} size="sm" variant={R.cooked ? "secondary" : "primary"}>
-                {R.cooked ? "Cooked · open again" : "Cook day"}
+                {R.cooked ? "View cook day" : "Cook day"}
               </ButtonLink>
             )}
           </div>

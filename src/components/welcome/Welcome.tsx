@@ -109,7 +109,7 @@ export function Welcome() {
     body = (
       <>
         <div className={builder.intro}>
-          <h1 className="t-h1">Anything you don’t eat?</h1>
+          <h1 className="t-h1">Foods you avoid</h1>
           <p className="t-muted">Pick any you avoid. Recipes with them get a warning, so you can skip or swap them. Nothing to avoid? Tap Next.</p>
         </div>
         <NeverEditor never={data.prefs.never} onChange={(never) => updatePrefs((p) => ({ ...p, never }))} />

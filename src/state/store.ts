@@ -107,7 +107,8 @@ export function updatePrefs(fn: (p: Prefs) => Prefs) {
 }
 
 /**
- * Copies last week's planned cooks into a week that has none planned, cook for cook in order, and fills the timetable.
+ * Copies last week's planned cooks into this week's cooks that aren't planned, in order, and fills the plan.
+ * Last week's unplanned cooks are skipped, so a week with a single cook-today still copies onto the first cook here.
  * Shopping ticks, cook orders and hand-made changes aren't copied. Returns how many cooks were copied.
  */
 export function repeatWeek(fromKey: string, toKey: string): number {
@@ -115,10 +116,11 @@ export function repeatWeek(fromKey: string, toKey: string): number {
   const from = d.weeks[fromKey];
   if (!from) return 0;
   let n = 0;
+  const planned = from.rounds.filter((r) => r.confirmed);
   updateWeek(toKey, (w) => {
-    w.rounds.forEach((r, i) => {
-      const src = from.rounds[i];
-      if (!src?.confirmed || r.confirmed) return;
+    w.rounds.filter((r) => !r.confirmed).forEach((r, i) => {
+      const src = planned[i];
+      if (!src) return;
       r.mains = src.mains.filter((id) => recipeById(id));
       r.sweets = src.sweets.filter((id) => recipeById(id));
       if (!r.mains.length) return;

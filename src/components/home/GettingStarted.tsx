@@ -29,7 +29,7 @@ export function GettingStarted() {
   if (!data || !ready || goTo || data.prefs.checklistHidden) return null;
 
   const items = [
-    ...(data.prefs.onboarded ? [] : [{ label: "Set what you don’t eat", done: false, href: "/settings" }]),
+    ...(data.prefs.onboarded ? [] : [{ label: "Set the foods you avoid", done: false, href: "/settings" }]),
     { label: "Save a recipe", done: data.recipes.length > 0, href: "/add" },
     { label: "Plan a cook", done: Object.values(data.weeks).some((w) => w.rounds.some((r) => r.confirmed)), href: "/plan" },
     // Done once a handful of things are marked, not after a single tap.

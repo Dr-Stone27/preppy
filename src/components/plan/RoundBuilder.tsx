@@ -17,7 +17,7 @@ import { Icon } from "@/components/ui/Icon";
 import { EmptyState } from "@/components/ui/Layout";
 import { dayName } from "@/domain/plan/dates";
 import type { Prefs, Round } from "@/domain/plan/types";
-import { dayMacros, fillCells, recipesFor, roundLabel, roundRange, SLOTS } from "@/domain/plan/week";
+import { dayMacros, fillCells, forPeople, mealsAndPortions, recipesFor, roundLabel, roundRange, SLOTS } from "@/domain/plan/week";
 import { sharedBases } from "@/domain/plan/cook";
 import { libraryRecipes, recipeById, recipeHref } from "@/domain/recipes/library";
 import { ruleWarnings } from "@/domain/recipes/rules";
@@ -105,7 +105,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
     body = (
       <>
         <div className={styles.intro}>
-          <h1 className="t-h1">{step === 1 ? "Choose your mains" : "Breakfast and sweets"}</h1>
+          <h1 className="t-h1">{step === 1 ? "Choose your mains" : "Breakfast & sweets"}</h1>
           <p className="t-muted">
             {step === 1
               ? `Pick what to cook on ${dayName(weekStart, R.cook, true)}. Two or three is easiest to cook in one go, and different flavours keep the week interesting.`
@@ -185,7 +185,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
         </Button>
       ) : (
         <Button block onClick={() => setStep(3)}>
-          {sweets.length ? "Next" : "Skip, no sweets this cook"}
+          {sweets.length ? "Next" : "Skip breakfast & sweets"}
         </Button>
       );
   }
@@ -226,7 +226,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
             </div>
           )}
           <div>
-            <dt>meals</dt>
+            <dt>meals {forPeople()}</dt>
             <dd>{Object.keys(cells).length}</dd>
           </div>
         </dl>
@@ -239,13 +239,13 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
               <span>
                 <span className={styles.reviewTitle}>{r.title}</span>
                 <span className="t-label t-muted">
-                  {r.kind === "sweet" ? "Made fresh" : `Cooked ${dayName(weekStart, R.cook, true)}`} · {count(meals(r.id), "meal")}
+                  {r.kind === "sweet" ? "Made fresh" : `Cooked ${dayName(weekStart, R.cook, true)}`} · {mealsAndPortions(meals(r.id))}
                 </span>
               </span>
             </li>
           ))}
         </ul>
-        {R.confirmed && <p className="t-small t-muted">Saving replaces this cook’s timetable, including any meals you changed by hand.</p>}
+        {R.confirmed && <p className="t-small t-muted">Saving replaces this cook’s plan, including any meals you changed by hand.</p>}
       </>
     );
     foot = (
@@ -263,7 +263,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
         </div>
         <h1 className="t-h1">Cook planned</h1>
         <p className="t-muted">
-          {count(Object.keys(cells).length, "meal")} from {dayName(weekStart, R.days[0], true)} to {dayName(weekStart, R.days.at(-1)!, true)}.
+          {count(Object.keys(cells).length, "meal")} {forPeople()}, from {dayName(weekStart, R.days[0], true)} to {dayName(weekStart, R.days.at(-1)!, true)}.
         </p>
       </div>
     );
@@ -273,7 +273,7 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
           See shopping list
         </ButtonLink>
         <Button variant="secondary" block onClick={onClose}>
-          See the timetable
+          See the plan
         </Button>
       </>
     );

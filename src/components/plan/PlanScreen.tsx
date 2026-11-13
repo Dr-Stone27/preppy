@@ -27,7 +27,12 @@ export function PlanScreen() {
 
   const today = today0();
   const open = openWeekStart(data.weeks, data.prefs, today, (k) => getWeek(data, k));
-  const offset = picked ?? (open.moved ? 1 : 0);
+  // Someone starting partway through a week whose cook has passed unplanned can cook today for the days left.
+  const nowStart = weekStartFor(data.weeks, data.prefs, today);
+  const nowKey = weekKey(nowStart);
+  const missed = missedCook(getWeek(data, nowKey), nowStart, today);
+  // A cook that can still happen today keeps the screen on this week.
+  const offset = picked ?? (open.moved && !missed ? 1 : 0);
   const setOffset = (fn: (o: number) => number) => setPicked(fn(offset));
   let weekStart = weekStartFor(data.weeks, data.prefs, today);
   for (let n = 0; n < Math.abs(offset); n++) weekStart = stepWeek(data.weeks, data.prefs, weekStart, offset > 0 ? 1 : -1);
@@ -40,10 +45,6 @@ export function PlanScreen() {
   // Offer last week's cooks when nothing here is planned yet.
   const prevKey = weekKey(stepWeek(data.weeks, data.prefs, weekStart, -1));
   const canRepeat = !week.rounds.some((R) => R.confirmed) && !!data.weeks[prevKey]?.rounds.some((R) => R.confirmed) && shown.length > 0;
-  // Someone starting partway through a week whose cook has passed unplanned can cook today for the days left.
-  const nowStart = weekStartFor(data.weeks, data.prefs, today);
-  const nowKey = weekKey(nowStart);
-  const missed = missedCook(getWeek(data, nowKey), nowStart, today);
   const startToday = () => {
     const id = cookToday(nowKey, daysBetween(nowStart, today));
     if (!id) return;
@@ -87,7 +88,7 @@ export function PlanScreen() {
 
       {picked === null && open.moved && !missed && <p className="t-small t-muted">This week’s cook days have passed, so here’s next week.</p>}
 
-      {missed && offset <= 1 && (
+      {missed && thisWeek && (
         <div className={styles.repeat}>
           <p className="t-small">
             {roundLabel(missed, nowStart)} has passed. Cook today to cover {dayName(nowStart, daysBetween(nowStart, today), true)}
@@ -119,7 +120,11 @@ export function PlanScreen() {
             size="sm"
             onClick={() => {
               const n = repeatWeek(prevKey, key);
-              setCopied(n ? `Copied ${n === 1 ? "1 cook" : `${n} cooks`} from last week. Change anything you like.` : "");
+              setCopied(
+                n
+                  ? `Copied ${n === 1 ? "1 cook" : `${n} cooks`} from last week. Change anything you like.`
+                  : "Nothing to copy: last week’s dishes aren’t in your recipes any more.",
+              );
             }}
           >
             Repeat last week

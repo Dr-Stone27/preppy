@@ -43,6 +43,7 @@ Find every screen and every control by exploring: every tab, button, link, chip,
 - **Working out one combined cooking order is switched off.** On cook day it will say so and fall back to each recipe in turn. Do not judge that message; do judge the fallback. Report the combined order under "Could not test".
 - **Reading a recipe from a post is switched off.** Errors from it are not findings. Do judge how the screen explains where to get what it wants, and everything else on that screen. Report the reading itself under "Could not test".
 - A small round developer badge at the bottom-left is a build tool. Ignore it. The first visit to each page can be slow because of the build; only mention slowness that keeps happening.
+- **Recipes shared by other cooks need accounts**, so the library's "New from other cooks" row does not appear here. Report it under "Could not test".
 - Usage tracking is off.
 
 ## Stay safe
@@ -68,6 +69,18 @@ Ask these as a user, and answer them as a product manager.
 - **Staying power.** Would I open this again tomorrow? Would I tell a friend, and what would I say? What would make me quit?
 - **What's missing.** Compare against what people expect from recipe, meal-plan and grocery apps (for example Mealime, Paprika, Plan to Eat, Samsung Food, Tasty). Name a gap only if a real person doing this job would feel its absence, and say who and when. Do not add features for the sake of completeness.
 
+## Words on screen: read every one
+
+This run pays special attention to the writing. Read every heading, button, label, hint, empty state, error, confirmation and note as a stranger would, and judge it.
+
+- Does it say what will happen, in words a busy cook uses? Would you know what to tap without the surrounding screen?
+- Is one thing called by one name everywhere (a "cook", a "round", a "base", "at home", "to buy")? Note every place two names are used for the same thing, or one name for two things.
+- Is anything longer than it needs to be, repeated on the same screen, vague ("something went wrong"), cute at the cost of clarity, or written for the maker rather than the user?
+- Do empty states and errors say what to do next?
+- Is the tone the same from screen to screen?
+
+For copy findings, quote the exact words, say where they are, say what a stranger would take them to mean, and suggest plain replacement wording. Put them in their own section of the report, "Words that got in my way", after "What got in my way", most costly first, and list copy that works well with the reason.
+
 ## Evidence rules
 
 - Every finding says: where (screen and address), what you did, what you expected, what happened, why it matters, and how much it matters in plain words: **stops a new user**, **slows or confuses them**, or **small polish**. Then one or two lines on a direction, not a redesign.
@@ -78,14 +91,15 @@ Ask these as a user, and answer them as a product manager.
 
 ## Notes and report
 
-- **Checkpoint as you go.** Append your notes every few screens to `/private/tmp/claude-501/-Users-adeniyiadebayo-Documents-PIL-repo-PIL-OS/c8b07d0f-e153-4165-bea7-d240bc373af0/scratchpad/review-notes-2.md`, so nothing is lost if you run out of room.
+- **Checkpoint as you go.** Append your notes every few screens to `/private/tmp/claude-501/-Users-adeniyiadebayo-Documents-PIL-repo-PIL-OS/c8b07d0f-e153-4165-bea7-d240bc373af0/scratchpad/review-notes-3.md`, so nothing is lost if you run out of room.
 - **Budget.** Be thorough rather than quick, but if you have used roughly 250 tool calls, stop exploring and write the report.
-- **Write the final report** to `/Users/adeniyiadebayo/Documents/Preppy/app/reviews/2026-11-12-first-time-user-2.md` (do not overwrite an earlier report), in this order:
+- **Write the final report** to `/Users/adeniyiadebayo/Documents/Preppy/app/reviews/2026-11-12-first-time-user-3.md` (do not overwrite an earlier report), in this order:
 
 1. **Verdict.** Five to seven sentences. Would you keep this on your phone? The one thing that matters most to fix. The strongest thing about it.
 2. **The journey as I lived it.** A short timeline from the first screen to the end, with taps and minutes to the first useful result.
 3. **What works, and why.** Specific.
 4. **What got in my way.** Most costly to a new user first. Use the evidence fields above.
+4b. **Words that got in my way.** As described under "Words on screen": quote, where, what it seems to mean, plain replacement. Then copy that works, and why.
 5. **What's missing.** Ranked, each with who feels it and when.
 6. **Feature by feature.** A table covering every screen and every group of controls you met. Columns: where, what I expected, what it did, clear? (yes / partly / no), worth having? (yes / unclear / no).
 7. **Questions a new user would still have.** The things you wanted answered and couldn't find.

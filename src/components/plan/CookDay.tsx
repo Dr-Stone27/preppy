@@ -1,6 +1,5 @@
 "use client";
 
-import { count } from "@/lib/words";
 import { track } from "@/lib/analytics";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useRef, useState } from "react";
@@ -16,7 +15,7 @@ import { cookDishes, fallbackPlan, keepApart, planFromAi, sharedBases, startTheD
 import { baseById, baseOf } from "@/domain/recipes/bases";
 import { today0, weekKey, weekStartFromKey } from "@/domain/plan/dates";
 import type { RoundId } from "@/domain/plan/types";
-import { roundLabel, weekStartFor } from "@/domain/plan/week";
+import { householdSize, mealsAndPortions, roundLabel, weekStartFor } from "@/domain/plan/week";
 import { allRecipes } from "@/domain/recipes/library";
 import { authHeader } from "@/lib/supabase";
 import { shopLines } from "@/domain/shop/list";
@@ -233,7 +232,7 @@ export function CookDay() {
               <BowlIllustration recipe={r} size={44} decorative />
               <span>
                 <span className={builder.reviewTitle}>{r.title}</span>
-                <span className="t-label t-muted">{count(portions, "portion")}</span>
+                <span className="t-label t-muted">{mealsAndPortions(portions / householdSize())}</span>
               </span>
             </li>
           ))}
@@ -267,7 +266,7 @@ export function CookDay() {
             </p>
           </section>
         ))}
-        <p className="t-small t-muted">Breakfasts and sweets aren’t part of the batch. Make them fresh each day.</p>
+        <p className="t-small t-muted">Breakfast & sweets aren’t part of the batch. Make them fresh each day.</p>
         {signInNeeded && <WhenSignedIn run={workOut} />}
         {signInNeeded && !sync.email && (
           <section className={styles.card} aria-label="Sign in for one combined order">
@@ -387,6 +386,8 @@ export function CookDay() {
       </div>
     );
   } else {
+    // Each meal listed is one container's worth for everyone, so say how many portions that is.
+    const eachHolds = householdSize() > 1 ? ` (${householdSize()} portions per meal)` : "";
     body = (
       <>
         <span className="t-eyebrow">Last step</span>
@@ -399,11 +400,11 @@ export function CookDay() {
               <h2 className="t-h3">{r.title}</h2>
             </div>
             <p className="t-small">
-              <b>Fridge ({fridge.length}):</b> {fridge.join(", ") || "none"}
+              <b>Fridge{eachHolds}:</b> {fridge.join(", ") || "none"}
             </p>
             {freezer.length > 0 && (
               <p className="t-small">
-                <b>Freezer ({freezer.length}):</b> {freezer.join(", ")}. Move each to the fridge the night before.
+                <b>Freezer{eachHolds}:</b> {freezer.join(", ")}. Move each to the fridge the night before.
               </p>
             )}
             {keepApart(r) && <p className="t-small t-muted">{keepApart(r)}</p>}

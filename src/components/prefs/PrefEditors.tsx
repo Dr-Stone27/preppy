@@ -109,7 +109,7 @@ export function CookDaysEditor({ days, onChange, required = false }: { days: num
         })}
       </div>
       <p className="t-small t-muted" aria-live="polite">
-        {days.length ? coverText(days) : "Pick up to three."}
+        {days.length ? coverText(days) : ""}
         {full && days.length ? " That’s the most." : ""}
       </p>
     </div>

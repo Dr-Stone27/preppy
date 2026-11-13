@@ -180,10 +180,10 @@ export function WhatCanIMake() {
                       </p>
                     )}
                     {m.needShelf.length > 0 && (
-                      <p className="t-small t-muted">From the cupboard: {list(m.needShelf.map((x) => x.name))}</p>
+                      <p className="t-small t-muted">Also needs from the cupboard: {list(m.needShelf.map((x) => x.name))}</p>
                     )}
                     <div className={styles.actions}>
-                      <ButtonLink href={`/plan?build=${next.round.id}&add=${m.recipe.id}`} size="sm">
+                      <ButtonLink href={`/plan?build=${next.round.id}&add=${m.recipe.id}${next.ahead ? "&week=next" : ""}`} size="sm">
                         Plan it for {cookName} cook
                       </ButtonLink>
                       {missing > 0 && (

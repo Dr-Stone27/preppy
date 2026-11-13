@@ -1,11 +1,11 @@
 "use client";
 
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { BowlCollage } from "@/components/bowl/BowlCollage";
 import { Icon } from "@/components/ui/Icon";
-import { dayName, weekStartFromKey } from "@/domain/plan/dates";
+import { dayName, daysBetween, today0, weekStartFromKey } from "@/domain/plan/dates";
 import type { Extra, Round, Week } from "@/domain/plan/types";
-import { forPeople, recipesFor, roundMains, slug } from "@/domain/plan/week";
+import { forPeople, recipesFor, roundDates, roundMains, slug } from "@/domain/plan/week";
 import { groupOf, guessGroup, pantryItems, pantryMatch, SHOP_ORDER, stockOf, type Stock } from "@/domain/shop/pantry";
 import { amountNeed, amountText, shopLines, tickKey, type ShopLine } from "@/domain/shop/list";
 import { track } from "@/lib/analytics";
@@ -28,10 +28,29 @@ type Row = { kind: "need"; line: ShopLine } | { kind: "extra"; extra: Extra };
 const rowName = (r: Row) => (r.kind === "need" ? nameOf(r.line) : r.extra.name);
 const rowDone = (r: Row) => (r.kind === "need" ? r.line.done : !!r.extra.done);
 
+/** "Shop by Sunday", "Shop today", or for a cook that has passed, just which cook it was. */
+function shopBy(weekStart: Date, R: Round) {
+  const day = dayName(weekStart, R.cook, true);
+  const left = daysBetween(today0(), roundDates(weekStart, R).cook);
+  return left > 0 ? `Shop by ${day}` : left === 0 ? "Shop today" : `${day}’s cook`;
+}
+
+const rowKey = (r: Row) => (r.kind === "need" ? r.line.key : r.extra.id);
+
 /** The round's shopping list, grouped by food type, with one box to find an item or add your own. */
 export function ToBuy({ weekKey, week, round: R, statuses, empty }: Props) {
   const [query, setQuery] = useState("");
   const [note, setNote] = useState("");
+  // A ticked row stays put until the taps stop, so a second quick tap lands on the row you meant.
+  const [held, setHeld] = useState<Record<string, boolean>>({});
+  const settle = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(settle.current), []);
+  const hold = (key: string, wasDone: boolean) => {
+    setHeld((h) => (key in h ? h : { ...h, [key]: wasDone }));
+    clearTimeout(settle.current);
+    settle.current = setTimeout(() => setHeld({}), 1200);
+  };
+  const sortDone = (r: Row) => held[rowKey(r)] ?? rowDone(r);
 
   const { buy, stocked } = shopLines(R, week, statuses);
   const extras = R.extras ?? [];
@@ -77,7 +96,7 @@ export function ToBuy({ weekKey, week, round: R, statuses, empty }: Props) {
         <div className={styles.summaryRow}>
           <div>
             <span className="t-eyebrow">
-              Shop before {dayName(weekStartFromKey(weekKey), R.cook, true)} · {forPeople()}
+              {shopBy(weekStartFromKey(weekKey), R)} · {forPeople()}
             </span>
             <p className={styles.big}>
               {got}
@@ -138,7 +157,7 @@ export function ToBuy({ weekKey, week, round: R, statuses, empty }: Props) {
       {SHOP_ORDER.map((g) => {
         const list = rows
           .filter((r) => (r.kind === "need" ? r.line.group : groupOf(r.extra.group)) === g)
-          .sort((a, b) => Number(rowDone(a)) - Number(rowDone(b)) || rowName(a).localeCompare(rowName(b)));
+          .sort((a, b) => Number(sortDone(a)) - Number(sortDone(b)) || rowName(a).localeCompare(rowName(b)));
         if (!list.length) return null;
         return (
           <section key={g} className={styles.group}>
@@ -151,9 +170,9 @@ export function ToBuy({ weekKey, week, round: R, statuses, empty }: Props) {
             <ul className={styles.lines}>
               {list.map((r) =>
                 r.kind === "need" ? (
-                  <Line key={r.line.key} line={r.line} weekKey={weekKey} round={R} />
+                  <Line key={r.line.key} line={r.line} weekKey={weekKey} round={R} onTick={() => hold(r.line.key, r.line.done)} />
                 ) : (
-                  <ExtraLine key={r.extra.id} extra={r.extra} weekKey={weekKey} round={R} />
+                  <ExtraLine key={r.extra.id} extra={r.extra} weekKey={weekKey} round={R} onTick={() => hold(r.extra.id, !!r.extra.done)} />
                 ),
               )}
             </ul>
@@ -202,7 +221,7 @@ export function ToBuy({ weekKey, week, round: R, statuses, empty }: Props) {
   );
 }
 
-function Line({ line: l, weekKey, round: R }: { line: ShopLine; weekKey: string; round: Round }) {
+function Line({ line: l, weekKey, round: R, onTick }: { line: ShopLine; weekKey: string; round: Round; onTick: () => void }) {
   const tick = tickKey(R, l.key);
   const need = amountNeed(l);
   const from = [need, [...l.from].join(", ")].filter(Boolean).join(" · ");
@@ -212,7 +231,10 @@ function Line({ line: l, weekKey, round: R }: { line: ShopLine; weekKey: string;
         type="button"
         className={styles.line}
         aria-pressed={l.done}
-        onClick={() => setBought(weekKey, tick, l.item && !l.item.fresh ? l.key : null, !l.done)}
+        onClick={() => {
+          onTick();
+          setBought(weekKey, tick, l.item && !l.item.fresh ? l.key : null, !l.done);
+        }}
       >
         <span className={styles.box} aria-hidden>
           {l.done && <Icon name="check" size={16} strokeWidth={2.4} />}
@@ -231,10 +253,14 @@ function Line({ line: l, weekKey, round: R }: { line: ShopLine; weekKey: string;
   );
 }
 
-function ExtraLine({ extra: e, weekKey, round: R }: { extra: Extra; weekKey: string; round: Round }) {
+function ExtraLine({ extra: e, weekKey, round: R, onTick }: { extra: Extra; weekKey: string; round: Round; onTick: () => void }) {
   return (
     <li data-done={e.done || undefined} className={styles.extraRow}>
-      <button type="button" className={styles.line} aria-pressed={!!e.done} onClick={() => setExtraDone(weekKey, R.id, e.id, !e.done)}>
+      <button type="button" className={styles.line} aria-pressed={!!e.done} onClick={() => {
+          onTick();
+          setExtraDone(weekKey, R.id, e.id, !e.done);
+        }}
+      >
         <span className={styles.box} aria-hidden>
           {e.done && <Icon name="check" size={16} strokeWidth={2.4} />}
         </span>

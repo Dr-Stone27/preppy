@@ -22,7 +22,7 @@ export function FromInstagram() {
 
   return (
     <details className={styles.howto}>
-      <summary>Save from Instagram or TikTok without copying</summary>
+      <summary>Save from Instagram or TikTok faster</summary>
       <div className={styles.howtoBody}>
         <div className={styles.segment} role="tablist" aria-label="Your phone">
           {(

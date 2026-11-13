@@ -222,7 +222,7 @@ function AddRecipeForm() {
         <span className="t-eyebrow">{state.s === "saved" ? "Saved" : "Already in your library"}</span>
         <h2 className="t-h2">{r.title}</h2>
         <p className="t-small t-muted">
-          {r.ingredients.length} ingredients · makes {r.servings}
+          {r.ingredients.length} ingredients · {r.servings} portions
           {r.flavour ? ` · ${r.flavour}` : ""}
         </p>
         {w.items.length > 0 && <p className={styles.warn}>{warningSentence(w.items)}</p>}

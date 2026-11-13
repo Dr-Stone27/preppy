@@ -44,8 +44,8 @@ export function ruleWarnings(r: Recipe, never: string[] = []): { items: string[]
   return { items, notes };
 }
 
-/** "oyster sauce" → "Contains oyster sauce, which you don't eat." */
+/** "oyster sauce" → "Contains oyster sauce, which you avoid." */
 export function warningSentence(hits: string[]): string {
   const list = hits.length > 1 ? `${hits.slice(0, -1).join(", ")} and ${hits.at(-1)}` : hits[0];
-  return `Contains ${list}, which you don't eat.`;
+  return `Contains ${list}, which you avoid.`;
 }

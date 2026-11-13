@@ -71,11 +71,11 @@ export function RecipeForm({ initial = {}, submitLabel, onSubmit, onCancel }: Pr
           <span>Type</span>
           <select value={kind} onChange={(e) => setKind(e.target.value as "main" | "sweet")}>
             <option value="main">Main</option>
-            <option value="sweet">Breakfast or sweet</option>
+            <option value="sweet">Breakfast & sweets</option>
           </select>
         </label>
         <label className={styles.field}>
-          <span>Makes</span>
+          <span>Portions</span>
           <input type="number" inputMode="numeric" min={1} value={servings} onChange={(e) => setServings(e.target.value)} />
         </label>
         <label className={styles.field}>

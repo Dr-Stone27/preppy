@@ -6,6 +6,7 @@ import { Button, ButtonLink } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Layout";
 import { recipeById } from "@/domain/recipes/library";
 import { deleteRecipe, useData } from "@/state/store";
+import { accountsOn } from "@/lib/supabase";
 import { unshareRecipe } from "@/state/share";
 import { RecipeView } from "./RecipeView";
 import { ShareRecipe } from "./ShareRecipe";
@@ -52,7 +53,9 @@ export function SavedRecipe() {
           <div className={styles.delete}>
             {confirming ? (
               <div ref={confirmRef} className={styles.confirm}>
-                <p className="t-small">Delete this recipe? It also comes out of any cook it’s planned in, and out of the library if you shared it. This can’t be undone.</p>
+                <p className="t-small">
+                  Delete this recipe? It also comes out of any cook it’s planned in{accountsOn && !r.copiedFrom ? ", and out of other cooks’ library if you shared it" : ""}. This can’t be undone.
+                </p>
                 <div className={styles.row}>
                   <Button variant="secondary" size="sm" onClick={() => setConfirming(false)}>
                     Keep it

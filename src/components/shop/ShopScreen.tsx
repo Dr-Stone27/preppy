@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Layout";
 import { dayName, today0, weekKey, weekStartFromKey } from "@/domain/plan/dates";
 import type { RoundId } from "@/domain/plan/types";
-import { nextRound, openWeekStart, roundDates, roundLabel } from "@/domain/plan/week";
+import { nextOpenCook, nextRound, roundDates, roundIsOpen, roundLabel } from "@/domain/plan/week";
 import { getWeek, useData } from "@/state/store";
 import { AtHome } from "./AtHome";
 import { ToBuy } from "./ToBuy";
@@ -29,12 +29,15 @@ export function ShopScreen() {
   const view: View = raw === "home" || raw === "stock" ? "home" : "buy";
   const today = today0();
   const wParam = params.get("week");
-  const weekStart =
-    wParam && /^w-\d{4}-\d{2}-\d{2}$/.test(wParam) ? weekStartFromKey(wParam) : openWeekStart(data.weeks, data.prefs, today, (k) => getWeek(data, k)).start;
+  // With no week in the link, open on the next cook still to do, which may be next week's.
+  const next = nextOpenCook(data.weeks, data.prefs, today, (k) => getWeek(data, k));
+  const weekStart = wParam && /^w-\d{4}-\d{2}-\d{2}$/.test(wParam) ? weekStartFromKey(wParam) : next.weekStart;
   const key = weekKey(weekStart);
   const week = getWeek(data, key);
   const rParam = params.get("round") as RoundId | null;
-  const R = week.rounds.find((x) => x.id === rParam) ?? nextRound(week, weekStart, today) ?? week.rounds[0];
+  const R = week.rounds.find((x) => x.id === rParam) ?? nextRound(week, weekStart, today) ?? (key === next.weekKey ? next.round : week.rounds[0]);
+  // A cook that has passed without a plan has nothing to shop for; keep only the ones that still matter.
+  const chips = week.rounds.filter((x) => x.id === R.id || x.confirmed || roundIsOpen(x, weekStart, today));
 
   const go = (patch: Record<string, string>) => {
     const next = new URLSearchParams(params);
@@ -62,7 +65,7 @@ export function ShopScreen() {
       {view === "buy" && (
         <>
           <div className={styles.rounds} role="group" aria-label="Which cook">
-            {week.rounds.map((x) => (
+            {chips.map((x) => (
               <button key={x.id} type="button" aria-pressed={x.id === R.id} onClick={() => go({ round: x.id })}>
                 {roundLabel(x, weekStart)} · {dayName(weekStart, x.cook)} {roundDates(weekStart, x).cook.getDate()}
               </button>

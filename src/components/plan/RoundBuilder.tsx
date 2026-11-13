@@ -49,7 +49,10 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
   const [mains, setMains] = useState<string[]>(() => withArriving(draft?.mains ?? R.mains, "main"));
   const [sweets, setSweets] = useState<string[]>(() => withArriving(draft?.sweets ?? R.sweets, "sweet"));
   useEffect(() => writeDraft(draftKey, { mains, sweets }), [draftKey, mains, sweets]);
-  const [query, setQuery] = useState("");
+  // A search belongs to the step it was typed on, so "stew" on mains doesn't empty the breakfast list (and Back clears it too).
+  const [search, setSearch] = useState<{ step: Step; text: string }>({ step: 1, text: "" });
+  const query = search.step === step ? search.text : "";
+  const setQuery = (text: string) => setSearch({ step, text });
   const [cuisine, setCuisine] = useState<CuisineFamily | "all">("all");
   const data = useData();
   const leftovers = useMemo(() => (data ? lastCookFresh(data.weeks, weekKey, R) : null), [data, weekKey, R]);

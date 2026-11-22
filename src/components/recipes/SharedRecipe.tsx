@@ -41,7 +41,7 @@ export function SharedRecipe() {
         title={shared === "error" ? "Couldn’t load this recipe" : "Recipe not found"}
         body={shared === "error" ? "Check your connection and try again." : "The cook who shared it may have stopped sharing it."}
         action={
-          <ButtonLink href="/library" variant="secondary" size="sm">
+          <ButtonLink href="/library" variant="secondary">
             Back to library
           </ButtonLink>
         }
@@ -84,7 +84,8 @@ export function SharedRecipe() {
                 Open your recipe
               </ButtonLink>
             ) : (
-              <Button block onClick={save}>
+              // Outside the hero card, so secondary: the screen's one loud thing is the dish itself.
+              <Button variant="secondary" block onClick={save}>
                 Save to my recipes
               </Button>
             )}
@@ -106,17 +107,17 @@ export function SharedRecipe() {
                     <span className="t-label">What’s wrong with it? (optional)</span>
                     <input value={reason} maxLength={300} onChange={(e) => setReason(e.target.value)} placeholder="Offensive, spam, not a recipe…" />
                   </label>
-                  <div style={{ display: "flex", gap: "var(--space-2)" }}>
-                    <Button variant="secondary" size="sm" onClick={() => setReporting(false)}>
+                  <div className={styles.row}>
+                    <Button variant="secondary" onClick={() => setReporting(false)}>
                       Cancel
                     </Button>
-                    <Button variant="danger" size="sm" onClick={report}>
+                    <Button variant="danger" onClick={report}>
                       Report
                     </Button>
                   </div>
                 </>
               ) : (
-                <Button variant="text" size="sm" onClick={() => setReporting(true)}>
+                <Button variant="text" className={styles.textButton} onClick={() => setReporting(true)}>
                   Report this recipe
                 </Button>
               )}

@@ -16,3 +16,13 @@
   gap: var(--space-3);
   scroll-margin-bottom: calc(var(--nav-height) + var(--safe-bottom) + var(--space-6));
 }
+
+.row > * {
+  flex: 1;
+}
+
+/* Text buttons still get a full 48px tap area. */
+.textButton {
+  min-height: var(--touch);
+  margin-left: calc(var(--space-2) * -1);
+}

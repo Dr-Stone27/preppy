@@ -8,9 +8,12 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  min-height: 40px;
-  font-weight: 700;
-  color: var(--color-action);
+  min-height: var(--touch);
+  margin-left: -6px;
+  padding-right: var(--space-2);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-ink);
   text-decoration: none;
 }
 
@@ -25,7 +28,7 @@
   align-items: center;
   gap: var(--space-2);
   min-height: var(--touch);
-  padding: 0 var(--space-2) 0 var(--space-4);
+  padding: 0 0 0 var(--space-4);
   background: var(--color-surface);
   border-radius: var(--radius-input);
   box-shadow: inset 0 0 0 1px var(--color-border-strong);
@@ -40,6 +43,7 @@
   flex: 1;
   min-width: 0;
   height: var(--touch);
+  padding: 0 var(--space-4) 0 0;
   border: 0;
   background: transparent;
   font: inherit;
@@ -59,8 +63,9 @@
 .clear {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  flex: none;
+  width: var(--touch);
+  height: var(--touch);
   border-radius: var(--radius-pill);
   color: var(--color-muted);
 }

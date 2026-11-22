@@ -82,7 +82,7 @@ export function ShopScreen() {
                 title="Nothing to buy yet"
                 body={`Plan ${dayName(weekStart, R.cook, true)}’s cook and its shopping list fills in. Or add items above.`}
                 action={
-                  <ButtonLink href={`/plan?build=${R.id}`} size="sm">
+                  <ButtonLink href={`/plan?build=${R.id}`}>
                     Plan this cook
                   </ButtonLink>
                 }

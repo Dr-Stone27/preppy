@@ -36,17 +36,19 @@ export function RecipeView({ recipe: r, never, footer }: { recipe: Recipe; never
         Library
       </Link>
 
-      <div className={styles.hero}>
-        <BowlIllustration recipe={r} size="hero" decorative />
-      </div>
-
-      <header className={styles.head}>
-        <span className="t-eyebrow">{r.kind === "sweet" ? "Breakfast & sweets" : "Main"}</span>
-        <h1 className="t-h1">{r.title}</h1>
-        <div className={styles.tags}>
-          {r.flavour && <Tag tone="accent">{r.flavour}</Tag>}
-          {r.protein && <Tag>{r.protein}</Tag>}
-          {r.kind === "main" && r.withCarb && <Tag>Carb included</Tag>}
+      {/* The screen's one loud thing: the bowl and the dish name, with the one accent tag. */}
+      <header className={styles.hero}>
+        <div className={styles.heroBowl}>
+          <BowlIllustration recipe={r} size="lg" decorative />
+        </div>
+        <div className={styles.head}>
+          <span className="t-eyebrow">{r.kind === "sweet" ? "Breakfast & sweets" : "Main"}</span>
+          <h1 className="t-h1">{r.title}</h1>
+          <div className={styles.tags}>
+            {r.flavour && <Tag tone="accent">{r.flavour}</Tag>}
+            {r.protein && <Tag>{r.protein}</Tag>}
+            {r.kind === "main" && r.withCarb && <Tag>Carb included</Tag>}
+          </div>
         </div>
       </header>
 

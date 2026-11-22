@@ -154,6 +154,7 @@ export function ToBuy({ weekKey, week, round: R, statuses, empty }: Props) {
 
       {q && !rows.length && !stockedShown.length && !lowShown.length && !canAdd && <p className="t-small t-muted">Nothing on the list matches “{query.trim()}”.</p>}
 
+      <div className={styles.groups}>
       {SHOP_ORDER.map((g) => {
         const list = rows
           .filter((r) => (r.kind === "need" ? r.line.group : groupOf(r.extra.group)) === g)
@@ -217,6 +218,7 @@ export function ToBuy({ weekKey, week, round: R, statuses, empty }: Props) {
           <p className="t-label t-muted">Mark something low or out under At home and it comes back onto the list.</p>
         </details>
       )}
+      </div>
     </>
   );
 }

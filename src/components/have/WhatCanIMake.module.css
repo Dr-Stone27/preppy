@@ -21,6 +21,22 @@
   gap: var(--space-2);
 }
 
+/* Ticked food is a selected state, so teal rather than orange (DESIGN.md: orange at most once, never small text). */
+.chips button {
+  min-height: var(--touch);
+  transition: transform var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.chips button[aria-pressed="true"] {
+  background: var(--color-action-soft);
+  color: var(--color-action);
+  box-shadow: inset 0 0 0 1.5px var(--color-action);
+}
+
+.chips button:active {
+  transform: scale(0.98);
+}
+
 .add {
   display: flex;
   gap: var(--space-2);
@@ -39,22 +55,34 @@
   font-size: 1rem;
 }
 
+.add input:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--color-action);
+}
+
+/* Adding a typed item is secondary: white with an outline. The one primary button sits on the hero result. */
 .add button {
   min-height: var(--touch);
-  padding: 0 var(--space-4);
-  border-radius: var(--radius-input);
-  background: var(--color-action);
-  color: var(--color-on-action);
-  font-weight: 700;
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-button);
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1.5px var(--color-border-strong);
+  color: var(--color-ink);
+  font-weight: 600;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.add button:active {
+  transform: scale(0.98);
 }
 
 .add button:disabled {
-  opacity: 0.4;
+  opacity: 0.45;
 }
 
 .clear {
   justify-self: start;
-  min-height: 40px;
+  min-height: var(--touch);
   font-size: var(--text-small);
   font-weight: 600;
   color: var(--color-muted);
@@ -63,16 +91,60 @@
 
 .results {
   display: grid;
-  gap: var(--space-3);
-  padding-top: var(--space-2);
+  gap: var(--space-4);
+  padding-top: var(--space-4);
 }
 
 .list {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-4);
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+/* Results rise in, 40ms apart, first 6 only. */
+.list > li:nth-child(-n + 6) {
+  animation: enter var(--dur-base) var(--ease) both;
+}
+.list > li:nth-child(2) { animation-delay: calc(var(--stagger) * 1); }
+.list > li:nth-child(3) { animation-delay: calc(var(--stagger) * 2); }
+.list > li:nth-child(4) { animation-delay: calc(var(--stagger) * 3); }
+.list > li:nth-child(5) { animation-delay: calc(var(--stagger) * 4); }
+.list > li:nth-child(6) { animation-delay: calc(var(--stagger) * 5); }
+
+/* The closest match: the hero card. */
+.hero {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  border-radius: var(--radius-feature);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.heroHead {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding-bottom: var(--space-1);
+  text-align: center;
+  color: var(--color-ink);
+}
+
+.heroHead > span {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.heroHead .title {
+  font-size: var(--text-h2);
+  line-height: 1.12;
+}
+
+.hero .actions {
+  display: grid;
+  margin-top: var(--space-2);
 }
 
 .card {
@@ -93,10 +165,27 @@
 
 .cardHead > span {
   display: grid;
+  gap: 2px;
 }
 
+.cardHead,
+.heroHead {
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.cardHead:active,
+.heroHead:active {
+  transform: scale(0.98);
+}
+
+/* Dish names are always Fraunces. */
 .title {
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  text-wrap: balance;
 }
 
 .actions {
@@ -104,4 +193,30 @@
   flex-wrap: wrap;
   gap: var(--space-2);
   margin-top: var(--space-1);
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list > li:nth-child(-n + 6) {
+    animation-name: fade;
+    animation-duration: var(--dur-fade);
+  }
+  .chips button:active,
+  .add button:active,
+  .cardHead:active,
+  .heroHead:active {
+    transform: none;
+  }
 }

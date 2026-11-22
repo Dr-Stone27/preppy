@@ -30,7 +30,7 @@ export function SavedRecipe() {
         title="Recipe not found"
         body="It may have been deleted, or it was saved on another device."
         action={
-          <ButtonLink href="/library" variant="secondary" size="sm">
+          <ButtonLink href="/library" variant="secondary">
             Back to library
           </ButtonLink>
         }
@@ -57,12 +57,11 @@ export function SavedRecipe() {
                   Delete this recipe? It also comes out of any cook it’s planned in{accountsOn && !r.copiedFrom ? ", and out of other cooks’ library if you shared it" : ""}. This can’t be undone.
                 </p>
                 <div className={styles.row}>
-                  <Button variant="secondary" size="sm" onClick={() => setConfirming(false)}>
+                  <Button variant="secondary" onClick={() => setConfirming(false)}>
                     Keep it
                   </Button>
                   <Button
                     variant="danger"
-                    size="sm"
                     onClick={() => {
                       // Deleting a shared recipe also takes it out of the library.
                       unshareRecipe(r.id).catch(() => {});
@@ -75,7 +74,7 @@ export function SavedRecipe() {
                 </div>
               </div>
             ) : (
-              <Button variant="text" size="sm" onClick={() => setConfirming(true)}>
+              <Button variant="text" className={styles.textButton} onClick={() => setConfirming(true)}>
                 Delete recipe
               </Button>
             )}

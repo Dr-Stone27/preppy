@@ -13,7 +13,22 @@
   gap: var(--space-1);
 }
 
-/* Flavour bases: a rail of stacked cards you swipe through. */
+/* Shelves rise in, 40ms apart; the hero shelf is first. */
+.wrap > :nth-child(-n + 6) {
+  animation: enter var(--dur-base) var(--ease) both;
+}
+.wrap > :nth-child(2) { animation-delay: calc(var(--stagger) * 1); }
+.wrap > :nth-child(3) { animation-delay: calc(var(--stagger) * 2); }
+.wrap > :nth-child(4) { animation-delay: calc(var(--stagger) * 3); }
+.wrap > :nth-child(5) { animation-delay: calc(var(--stagger) * 4); }
+.wrap > :nth-child(6) { animation-delay: calc(var(--stagger) * 5); }
+
+/* The screen's one loud thing: the flavour-base decks, large, first, with room around them. */
+.heroShelf {
+  gap: var(--space-4);
+}
+
+/* Rails you swipe: flavour bases and other cooks' recipes. */
 .rail {
   display: flex;
   gap: var(--space-4);
@@ -39,7 +54,7 @@
 }
 
 .deck:active .deckFront {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
 .deckBack,
@@ -50,25 +65,27 @@
   border-radius: var(--radius-feature);
 }
 
-/* The two cards behind peek out, so it reads as a collection rather than a single dish. */
+/* The two cards behind peek out in oat, so it reads as a collection rather than a single dish. */
 .deckBack {
-  background: var(--color-surface);
+  background: var(--color-surface-subtle);
   box-shadow: var(--shadow-card);
   transform: translate(10px, -8px) rotate(5deg);
 }
 
 .deckMid {
-  background: var(--color-surface);
+  background: var(--color-surface-subtle);
   box-shadow: var(--shadow-card);
   transform: translate(5px, -4px) rotate(2.5deg);
 }
 
+/* White front: the bowls carry the colour. */
 .deckFront {
   display: grid;
   align-content: end;
   gap: 2px;
   padding: var(--space-4);
-  box-shadow: var(--shadow-card), inset 0 0 0 1px rgba(30, 27, 24, 0.04);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
   transition: transform var(--dur-fast) var(--ease);
 }
 
@@ -78,8 +95,9 @@
 
 .deckTitle {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1.125rem;
+  letter-spacing: -0.02em;
   line-height: 1.2;
 }
 
@@ -93,11 +111,11 @@
   display: flex;
 }
 
-/* Cuisines: bowl tiles with a label pill sitting on the edge. */
+/* Cuisines: quiet bowl tiles with a label pill sitting on the edge (NYT Cooking's browse tiles). */
 .tiles {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-5) var(--space-2);
+  gap: var(--space-6) var(--space-2);
 }
 
 .tile {
@@ -108,34 +126,52 @@
   border-radius: var(--radius-card);
   background: var(--color-surface);
   box-shadow: var(--shadow-card);
+  transition: transform var(--dur-fast) var(--ease);
 }
 
 .tile:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
 .pill {
   position: absolute;
   bottom: -12px;
-  padding: 4px 10px;
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px 10px;
   border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-floating);
+  background: var(--color-surface-subtle);
+  color: var(--color-ink);
   font-size: var(--text-label);
-  font-weight: 700;
+  font-weight: 600;
   white-space: nowrap;
 }
 
-/* Sweets, your recipes, other cooks': one wide card each. */
+/* All recipes, sweets, your own: one quiet wide card each. */
 .banner {
   width: 100%;
+  min-height: var(--touch);
   display: flex;
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-feature);
-  background: var(--color-warning-soft);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
   text-align: left;
+  color: var(--color-ink);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.banner:active {
+  transform: scale(0.98);
+}
+
+.banner > svg {
+  flex: none;
+  color: var(--color-muted);
 }
 
 .bannerText {
@@ -144,25 +180,23 @@
   gap: 2px;
 }
 
-.banner[style*="surface)"] {
-  box-shadow: var(--shadow-card);
-}
-
 .shelfTop {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
 }
 
 .seeAll {
-  min-height: 40px;
-  font-weight: 700;
+  min-height: var(--touch);
+  padding: 0 var(--space-2);
+  margin-right: calc(var(--space-2) * -1);
+  font-weight: 600;
   font-size: var(--text-small);
   color: var(--color-action);
 }
 
-/* Other cooks' recipes: small cards in a row you swipe. */
+/* Other cooks' recipes: small quiet cards in a row you swipe. */
 .mini {
   flex: none;
   display: grid;
@@ -178,12 +212,18 @@
   text-align: center;
   color: inherit;
   text-decoration: none;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.mini:active {
+  transform: scale(0.98);
 }
 
 .miniTitle {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.9375rem;
+  letter-spacing: -0.02em;
   line-height: 1.25;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -191,20 +231,57 @@
   overflow: hidden;
 }
 
-/* An opened collection. */
+/* An opened collection: its header is the hero card. */
 .openHead {
   display: grid;
   justify-items: start;
   gap: var(--space-2);
-  padding: var(--space-5);
+  padding: var(--space-6);
   border-radius: var(--radius-feature);
   background: var(--color-surface);
   box-shadow: var(--shadow-card);
+  animation: enter var(--dur-base) var(--ease) both;
 }
 
+.openBowls {
+  justify-self: stretch;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-2) 0 var(--space-3);
+}
+
+/* "Make it once": a quiet oat area inside the hero, not a card of its own. */
 .once {
-  padding: var(--space-3);
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-input);
-  background: var(--color-surface);
+  background: var(--color-surface-subtle);
   font-size: var(--text-small);
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap > :nth-child(-n + 6),
+  .openHead {
+    animation-name: fade;
+    animation-duration: var(--dur-fade);
+  }
+  .deck:active .deckFront,
+  .tile:active,
+  .banner:active,
+  .mini:active {
+    transform: none;
+  }
 }

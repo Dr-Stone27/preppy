@@ -66,11 +66,12 @@ export function AtHome({ statuses, bases }: { statuses: Record<string, Stock>; b
 
       {!shown.length && <p className="t-small t-muted">Nothing called “{query.trim()}” here. Add it on the To buy list instead.</p>}
 
+      <div className={styles.groups}>
       {SHOP_ORDER.map((g) => {
         const list = shown.filter((p) => groupOf(p.group) === g);
         if (!list.length) return null;
         return (
-          <section key={g} className={styles.group}>
+          <section key={g} className={styles.groupOpen}>
             <GroupTitle group={g} />
             <ul className={styles.tiles}>
               {list.map((p) => {
@@ -91,6 +92,7 @@ export function AtHome({ statuses, bases }: { statuses: Record<string, Stock>; b
           </section>
         );
       })}
+      </div>
 
       {!q && !everything && items.length > TOP && (
         <Button variant="secondary" block onClick={() => setEverything(true)}>

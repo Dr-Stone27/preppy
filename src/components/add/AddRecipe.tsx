@@ -217,7 +217,7 @@ function AddRecipeForm() {
     const r = state.recipe;
     const w = ruleWarnings(r, data?.prefs.never);
     return (
-      <div className={styles.result}>
+      <section className={`${styles.hero} ${styles.result}`}>
         <BowlIllustration recipe={r} size="lg" decorative />
         <span className="t-eyebrow">{state.s === "saved" ? "Saved" : "Already in your library"}</span>
         <h2 className="t-h2">{r.title}</h2>
@@ -236,13 +236,13 @@ function AddRecipeForm() {
             Add another
           </Button>
         </div>
-      </div>
+      </section>
     );
   }
 
   if (state.s === "check") {
     return (
-      <div className={styles.wrap}>
+      <section className={styles.hero}>
         <div className={styles.checkHead}>
           <BowlIllustration recipe={state.recipe} size="sm" decorative />
           <div>
@@ -252,7 +252,7 @@ function AddRecipeForm() {
         </div>
         {state.recipe.note && <p className={styles.note}>{state.recipe.note}</p>}
         <RecipeForm initial={state.recipe} submitLabel="Save recipe" onSubmit={save} onCancel={reset} />
-      </div>
+      </section>
     );
   }
 
@@ -272,7 +272,9 @@ function AddRecipeForm() {
       </div>
 
       {mode === "type" ? (
-        <RecipeForm initial={{ source: link || undefined }} submitLabel="Save recipe" onSubmit={save} />
+        <section className={styles.hero} aria-label="Type it in">
+          <RecipeForm initial={{ source: link || undefined }} submitLabel="Save recipe" onSubmit={save} />
+        </section>
       ) : (
         <>
           {oldShortcut && (
@@ -289,6 +291,7 @@ function AddRecipeForm() {
               {arrived.text ? `Got the post from ${source}.` : `Got the link, but not the caption. Copy the caption in ${source} and paste it below.`}
             </p>
           )}
+          <section className={styles.hero} aria-label="From a post">
           <label className={styles.field}>
             <span>Instagram or TikTok link</span>
             <input type="url" inputMode="url" value={link} onChange={(e) => setLink(e.target.value)} placeholder="Paste the post link" />
@@ -304,8 +307,6 @@ function AddRecipeForm() {
             />
             <small>No caption on the post? A rough note works, like “gochujang chicken: thighs, gochujang, honey, soy, garlic”.</small>
           </label>
-
-
           {state.s === "reading" ? (
             <div className={styles.reading} role="status">
               <span className={styles.pulse}>
@@ -315,7 +316,7 @@ function AddRecipeForm() {
                 <p className={styles.readingTitle}>Reading the recipe…</p>
                 <p className="t-label t-muted">This can take up to a minute.</p>
               </div>
-              <Button variant="text" size="sm" onClick={() => ctl.current?.abort()}>
+              <Button variant="text" onClick={() => ctl.current?.abort()}>
                 Stop
               </Button>
             </div>
@@ -324,6 +325,7 @@ function AddRecipeForm() {
               Read recipe
             </Button>
           )}
+          </section>
 
           {state.s === "error" && (
             <div className={styles.errorBox} role="alert">
@@ -337,7 +339,7 @@ function AddRecipeForm() {
                 </div>
               )}
               {state.offerTyping && !state.signIn && (
-                <Button variant="secondary" size="sm" onClick={() => setMode("type")}>
+                <Button variant="secondary" onClick={() => setMode("type")}>
                   Type the recipe in instead
                 </Button>
               )}

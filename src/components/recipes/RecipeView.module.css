@@ -8,7 +8,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  min-height: 40px;
+  min-height: var(--touch);
   margin-left: -6px;
   padding-right: var(--space-2);
   font-size: var(--text-small);
@@ -17,12 +17,21 @@
   text-decoration: none;
 }
 
+/* The screen's one loud thing: bowl and dish name on the hero card. */
 .hero {
   display: grid;
-  place-items: center;
-  padding: var(--space-4) 0 var(--space-2);
-  margin: 0 calc(var(--gutter) * -1);
-  background: radial-gradient(60% 70% at 50% 45%, var(--color-accent-soft), transparent 75%);
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border-radius: var(--radius-feature);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  animation: enter var(--dur-base) var(--ease) both;
+}
+
+.heroBowl {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-2) 0 var(--space-1);
 }
 
 .head {
@@ -73,21 +82,23 @@
   gap: var(--space-2);
 }
 
+/* Supporting numbers: quiet oat fill, no border or shadow. */
 .macro {
   display: grid;
   gap: 2px;
   justify-items: center;
   padding: var(--space-3) var(--space-1);
-  background: var(--color-surface);
+  background: var(--color-surface-subtle);
   border-radius: var(--radius-input);
-  box-shadow: inset 0 0 0 1px var(--color-border);
 }
 
+/* Amounts and counts are always Jakarta. */
 .macroValue {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 500;
-  line-height: 1.2;
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
 }
 
 .macroValue small {
@@ -126,8 +137,8 @@
   width: 32px;
   height: 32px;
   border-radius: var(--radius-pill);
-  background: var(--color-action-soft);
-  color: var(--color-action);
+  background: var(--color-surface-subtle);
+  color: var(--color-ink);
   font-weight: 700;
   font-size: var(--text-small);
 }
@@ -148,6 +159,26 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  min-height: 44px;
+  min-height: var(--touch);
   justify-self: start;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+    animation-name: fade;
+    animation-duration: var(--dur-fade);
+  }
 }

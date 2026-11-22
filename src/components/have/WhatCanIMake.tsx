@@ -96,7 +96,7 @@ export function WhatCanIMake() {
 
       {groups.map(({ g, items }) => (
         <section key={g} className={styles.group}>
-          <h2 className="t-label t-muted">{g}</h2>
+          <h2 className="t-eyebrow">{g}</h2>
           <div className={styles.chips}>
             {items.map((p) => (
               <FilterChip key={p.id} selected={has.has(p.id)} onClick={() => toggle(p.id)}>
@@ -147,12 +147,14 @@ export function WhatCanIMake() {
               </p>
             )}
             <ul className={styles.list}>
-              {shown.map((m) => {
+              {shown.map((m, i) => {
                 const missing = m.needFresh.length + m.needShelf.length;
+                // The closest match is the screen's one loud thing: hero card, large bowl, the one primary button.
+                const hero = i === 0;
                 return (
-                  <li key={m.recipe.id} className={styles.card}>
-                    <Link href={recipeHref(m.recipe)} className={styles.cardHead}>
-                      <BowlIllustration recipe={m.recipe} size={56} decorative />
+                  <li key={m.recipe.id} className={hero ? styles.hero : styles.card}>
+                    <Link href={recipeHref(m.recipe)} className={hero ? styles.heroHead : styles.cardHead}>
+                      <BowlIllustration recipe={m.recipe} size={hero ? 160 : 56} decorative />
                       <span>
                         <span className={styles.title}>{m.recipe.title}</span>
                         <span className="t-label t-muted">{cardLabel(m.recipe)}</span>
@@ -183,11 +185,15 @@ export function WhatCanIMake() {
                       <p className="t-small t-muted">Also needs from the cupboard: {list(m.needShelf.map((x) => x.name))}</p>
                     )}
                     <div className={styles.actions}>
-                      <ButtonLink href={`/plan?build=${next.round.id}&add=${m.recipe.id}${next.ahead ? "&week=next" : ""}`} size="sm">
+                      <ButtonLink
+                        href={`/plan?build=${next.round.id}&add=${m.recipe.id}${next.ahead ? "&week=next" : ""}`}
+                        variant={hero ? "primary" : "secondary"}
+                        block={hero}
+                      >
                         Plan it for {cookName} cook
                       </ButtonLink>
                       {missing > 0 && (
-                        <Button variant="secondary" size="sm" onClick={() => addMissing(m)}>
+                        <Button variant="secondary" block={hero} onClick={() => addMissing(m)}>
                           Add {missing} to my list
                         </Button>
                       )}

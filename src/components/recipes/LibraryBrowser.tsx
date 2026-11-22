@@ -116,7 +116,7 @@ export function LibraryBrowser({ recipes: exported }: { recipes: Recipe[] }) {
               title="Couldn’t load them"
               body="Check your connection and try again."
               action={
-                <Button variant="secondary" size="sm" onClick={loadShared}>
+                <Button variant="secondary" onClick={loadShared}>
                   Try again
                 </Button>
               }

@@ -6,7 +6,7 @@ import { recipeHref } from "@/domain/recipes/library";
 import type { Recipe } from "@/domain/recipes/types";
 import styles from "./RecipeCard.module.css";
 
-/** Bowl-led recipe card. The whole card opens the recipe. */
+/** Bowl-led recipe card, quiet: the bowl carries the colour. The whole card opens the recipe. */
 export function RecipeCard({ recipe }: { recipe: Recipe }) {
   const m = recipe.macros;
   return (
@@ -14,7 +14,7 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
       <BowlIllustration recipe={recipe} size="md" decorative />
       <h3 className={styles.title}>{recipe.title}</h3>
       <div className={styles.meta}>
-        <Tag tone="accent">{cardLabel(recipe)}</Tag>
+        <Tag>{cardLabel(recipe)}</Tag>
         {m?.protein ? <span className="t-label t-muted">{m.protein} g protein</span> : null}
       </div>
     </Link>

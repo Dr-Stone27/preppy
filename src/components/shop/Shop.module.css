@@ -1,6 +1,6 @@
 .screen {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-5);
 }
 
 .loading {
@@ -22,7 +22,7 @@
 }
 
 .segment button {
-  min-height: 44px;
+  min-height: var(--touch);
   border-radius: var(--radius-pill);
   font-size: var(--text-small);
   font-weight: 600;
@@ -33,6 +33,16 @@
   background: var(--color-surface);
   color: var(--color-ink);
   box-shadow: var(--shadow-card);
+}
+
+.segment button,
+.rounds button {
+  transition: transform var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+
+.segment button:active,
+.rounds button:active {
+  transform: scale(0.98);
 }
 
 .rounds {
@@ -50,7 +60,7 @@
 
 .rounds button {
   flex: none;
-  min-height: 44px;
+  min-height: var(--touch);
   padding: 0 var(--space-4);
   border-radius: var(--radius-pill);
   font-size: var(--text-small);
@@ -60,48 +70,51 @@
   color: var(--color-ink);
 }
 
+/* A chosen cook is a selected state: teal, not orange. */
 .rounds button[aria-pressed="true"] {
-  background: var(--color-accent-soft);
-  color: var(--color-accent-ink);
-  box-shadow: inset 0 0 0 1.5px var(--color-accent);
+  background: var(--color-action-soft);
+  color: var(--color-action);
+  box-shadow: inset 0 0 0 1.5px var(--color-action);
 }
 
-/* Progress card */
+/* The screen's one loud thing: how much is left to buy (To buy) or what's in the kitchen (At home). */
 .summary {
   display: grid;
-  gap: var(--space-3);
-  padding: var(--space-5);
+  gap: var(--space-4);
+  padding: var(--space-6);
   border-radius: var(--radius-feature);
-  background: linear-gradient(var(--color-accent-soft), var(--color-surface) 85%);
+  background: var(--color-surface);
   box-shadow: var(--shadow-card);
+  animation: enter var(--dur-base) var(--ease) both;
 }
 
 .summaryRow {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: var(--space-3);
 }
 
+/* Counts are always Jakarta. */
 .big {
-  font-family: var(--font-display);
-  font-size: 2.25rem;
-  font-weight: 500;
+  margin-top: var(--space-1);
+  font-family: var(--font-body);
+  font-size: var(--text-h1);
+  font-weight: 700;
   line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 .big small {
-  font-size: 1.125rem;
+  font-size: var(--text-body);
+  font-weight: 600;
   color: var(--color-muted);
 }
-
-
 
 .bar {
   height: 8px;
   border-radius: var(--radius-pill);
-  background: var(--color-border);
+  background: var(--color-surface-subtle);
   overflow: hidden;
 }
 
@@ -113,15 +126,37 @@
   transition: width var(--dur-base) var(--ease);
 }
 
-/* Groups */
+/* Groups: one plain white card per aisle. */
+.groups {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
 .group {
   display: grid;
   gap: var(--space-2);
-  padding: var(--space-4) var(--space-5);
+  padding: var(--space-4);
   background: var(--color-surface);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
 }
+
+/* At home: tiles sit straight on the cream under their heading, so tiles aren't cards inside a card. */
+.groupOpen {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* Aisles rise in, 40ms apart, first 6 only. */
+.groups > :nth-child(-n + 6) {
+  animation: enter var(--dur-base) var(--ease) both;
+}
+.groups > :nth-child(2) { animation-delay: calc(var(--stagger) * 1); }
+.groups > :nth-child(3) { animation-delay: calc(var(--stagger) * 2); }
+.groups > :nth-child(4) { animation-delay: calc(var(--stagger) * 3); }
+.groups > :nth-child(5) { animation-delay: calc(var(--stagger) * 4); }
+.groups > :nth-child(6) { animation-delay: calc(var(--stagger) * 5); }
 
 .groupTitle {
   display: flex;
@@ -129,15 +164,16 @@
   gap: var(--space-2);
 }
 
+/* Every aisle has the same quiet oat badge: the icon tells them apart, not colour. */
 .groupIcon {
   display: inline-grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   flex: none;
   border-radius: 50%;
-  background: var(--color-accent-soft);
-  color: var(--color-accent-ink);
+  background: var(--color-surface-subtle);
+  color: var(--color-muted);
 }
 
 .groupHead {
@@ -150,7 +186,7 @@
 summary.groupHead {
   cursor: pointer;
   list-style: none;
-  min-height: 32px;
+  min-height: var(--touch);
   align-items: center;
 }
 
@@ -178,6 +214,11 @@ summary.groupHead::-webkit-details-marker {
   padding: var(--space-3) 0;
   text-align: left;
   color: var(--color-ink);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.line:active {
+  transform: scale(0.98);
 }
 
 .box {
@@ -195,11 +236,25 @@ summary.groupHead::-webkit-details-marker {
 li[data-done] .box {
   background: var(--color-success);
   box-shadow: none;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+/* Ticking off: the tick draws in once and settles. */
+li[data-done] .box svg {
+  animation: tick var(--dur-base) var(--ease) both;
+}
+
+@keyframes tick {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
 }
 
 li[data-done] .lineName {
   text-decoration: line-through;
   color: var(--color-muted);
+  font-weight: 500;
 }
 
 .lineText {
@@ -219,10 +274,6 @@ li[data-done] .lineName {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-
-
-
 
 .plain {
   display: grid;
@@ -327,12 +378,14 @@ li[data-done] .lineName {
 .finder button {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: var(--touch);
+  height: var(--touch);
+  margin-right: calc(var(--space-3) * -1);
   border-radius: 50%;
   color: var(--color-muted);
 }
 
+/* Adding what you typed: a secondary button, white with an outline. The screen's loud thing stays the count. */
 .addBtn {
   display: flex;
   align-items: center;
@@ -340,15 +393,23 @@ li[data-done] .lineName {
   gap: var(--space-2);
   min-height: var(--touch);
   padding: 0 var(--space-4);
-  border-radius: var(--radius-input);
-  background: var(--color-action);
-  color: var(--color-on-action);
-  font-weight: 700;
+  border-radius: var(--radius-button);
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1.5px var(--color-border-strong);
+  color: var(--color-ink);
+  font-weight: 600;
   text-align: left;
+  transition: transform var(--dur-fast) var(--ease);
+  animation: enter var(--dur-base) var(--ease) both;
+}
+
+.addBtn svg {
+  flex: none;
+  color: var(--color-action);
 }
 
 .addBtn:active {
-  background: var(--color-action-pressed);
+  transform: scale(0.98);
 }
 
 .note {
@@ -406,7 +467,7 @@ li[data-done] .lineName {
 }
 
 .tile:active {
-  transform: scale(0.96);
+  transform: scale(0.98);
 }
 
 .tileName {
@@ -433,6 +494,7 @@ li[data-done] .lineName {
 
 .legend {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-2);
 }
 
@@ -453,6 +515,7 @@ li[data-done] .lineName {
   display: grid;
   align-items: end;
   background: rgba(30, 27, 24, 0.35);
+  animation: fade var(--dur-base) var(--ease) both;
 }
 
 .sheet {
@@ -465,6 +528,7 @@ li[data-done] .lineName {
   border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
   background: var(--color-surface);
   box-shadow: var(--shadow-floating);
+  animation: sheetUp var(--dur-base) var(--ease) both;
 }
 
 .sheetHead {
@@ -476,12 +540,12 @@ li[data-done] .lineName {
 .sheetIcon {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   flex: none;
   border-radius: 50%;
-  background: var(--color-accent-soft);
-  color: var(--color-accent-ink);
+  background: var(--color-surface-subtle);
+  color: var(--color-muted);
 }
 
 .sheetLevels {
@@ -497,8 +561,13 @@ li[data-done] .lineName {
   padding: var(--space-4) 0;
   border-radius: var(--radius-card);
   font-weight: 700;
-  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+  box-shadow: inset 0 0 0 1.5px var(--color-border-strong);
   color: var(--color-muted);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.sheetLevel:active {
+  transform: scale(0.98);
 }
 
 .sheetLevel[aria-checked="true"] {
@@ -520,4 +589,44 @@ li[data-done] .lineName {
 
 li[data-done] .lineIcon {
   opacity: 0.5;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Reduced motion: nothing rises, slides or scales; things still fade in over 140ms. */
+@media (prefers-reduced-motion: reduce) {
+  .summary,
+  .addBtn,
+  .sheetBack,
+  .sheet,
+  .groups > :nth-child(-n + 6),
+  li[data-done] .box svg {
+    animation-name: fade;
+    animation-duration: var(--dur-fade);
+  }
+  .segment button:active,
+  .rounds button:active,
+  .line:active,
+  .tile:active,
+  .sheetLevel:active,
+  .addBtn:active {
+    transform: none;
+  }
 }

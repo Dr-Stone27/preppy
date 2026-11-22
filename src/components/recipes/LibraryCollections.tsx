@@ -11,17 +11,6 @@ import { CUISINE_LABEL, cuisinesIn } from "@/domain/recipes/search";
 import type { Recipe } from "@/domain/recipes/types";
 import styles from "./LibraryCollections.module.css";
 
-/** Each flavour base gets its own soft card colour, from the interface tokens. */
-const BASE_TINT: Record<BaseId, string> = {
-  pepper: "var(--color-danger-soft)",
-  palm: "var(--color-accent-soft)",
-  curry: "var(--color-warning-soft)",
-  "pepper-soup": "var(--color-surface-subtle)",
-  soy: "var(--color-action-soft)",
-  yogurt: "var(--color-success-soft)",
-  rub: "var(--color-accent-soft)",
-};
-
 /** A collection, as it appears in the address: "base:pepper", "cuisine:nigerian", "sweet", "you" or "shared". */
 export type CollectionKey = string;
 
@@ -68,6 +57,47 @@ export function CollectionsHome({
 
   return (
     <div className={styles.wrap}>
+      {/* The screen's one loud thing: flavour bases, the answer to "what should I cook?" for a batch cook. */}
+      <section className={`${styles.shelf} ${styles.heroShelf}`}>
+        <div className={styles.shelfHead}>
+          <h2 className="t-h2">Cook by flavour base</h2>
+          <p className="t-small t-muted">Dishes that start the same way. Make the base once, cook several.</p>
+        </div>
+        <div className={styles.rail}>
+          {basesIn(own).map((b) => {
+            const list = own.filter((r) => baseOf(r) === b.id);
+            return (
+              <button key={b.id} type="button" className={styles.deck} onClick={() => onOpen(`base:${b.id}`)}>
+                <span className={styles.deckBack} aria-hidden />
+                <span className={styles.deckMid} aria-hidden />
+                <span className={styles.deckFront}>
+                  <Fan recipes={list} size={72} />
+                  <span className={styles.deckTitle}>{b.name}</span>
+                  <span className="t-label t-muted">{count(list.length)}</span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className={styles.shelf}>
+        <h2 className="t-h3">By cuisine</h2>
+        <div className={styles.tiles}>
+          {cuisinesIn(own).map((c) => {
+            const list = mains.filter((r) => cuisineOf(r) === c);
+            return (
+              <button key={c} type="button" className={styles.tile} onClick={() => onOpen(`cuisine:${c}`)}>
+                <BowlIllustration recipe={covers(list)[0]} size={88} decorative />
+                <span className={styles.pill}>
+                  {CUISINE_LABEL[c]} <span className="t-muted">{list.length}</span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
       {shared !== null && (
         <section className={styles.shelf}>
           <div className={styles.shelfTop}>
@@ -101,58 +131,19 @@ export function CollectionsHome({
       )}
 
       <section className={styles.shelf}>
-        <div className={styles.shelfHead}>
-          <h2 className="t-h3">Cook by flavour base</h2>
-          <p className="t-small t-muted">Dishes that start the same way. Make the base once, cook several.</p>
-        </div>
-        <div className={styles.rail}>
-          {basesIn(own).map((b) => {
-            const list = own.filter((r) => baseOf(r) === b.id);
-            return (
-              <button key={b.id} type="button" className={styles.deck} onClick={() => onOpen(`base:${b.id}`)}>
-                <span className={styles.deckBack} aria-hidden />
-                <span className={styles.deckMid} aria-hidden />
-                <span className={styles.deckFront} style={{ background: BASE_TINT[b.id] }}>
-                  <Fan recipes={list} size={64} />
-                  <span className={styles.deckTitle}>{b.name}</span>
-                  <span className="t-label t-muted">{count(list.length)}</span>
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className={styles.shelf}>
-        <h2 className="t-h3">By cuisine</h2>
-        <div className={styles.tiles}>
-          {cuisinesIn(own).map((c) => {
-            const list = mains.filter((r) => cuisineOf(r) === c);
-            return (
-              <button key={c} type="button" className={styles.tile} onClick={() => onOpen(`cuisine:${c}`)}>
-                <BowlIllustration recipe={covers(list)[0]} size={88} decorative />
-                <span className={styles.pill}>
-                  {CUISINE_LABEL[c]} <span className="t-muted">{list.length}</span>
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className={styles.shelf}>
         <h2 className="t-h3">More to browse</h2>
-        <Banner title="All recipes" note={count(own.length)} recipes={mains} tint="var(--color-surface)" onClick={() => onOpen("all")} />
-        {sweets.length > 0 && <Banner title="Breakfast & sweets" note={count(sweets.length)} recipes={sweets} tint="var(--color-warning-soft)" onClick={() => onOpen("sweet")} />}
-        {yours.length > 0 && <Banner title="Saved by you" note={count(yours.length)} recipes={yours} tint="var(--color-action-soft)" onClick={() => onOpen("you")} />}
+        <Banner title="All recipes" note={count(own.length)} recipes={mains} onClick={() => onOpen("all")} />
+        {sweets.length > 0 && <Banner title="Breakfast & sweets" note={count(sweets.length)} recipes={sweets} onClick={() => onOpen("sweet")} />}
+        {yours.length > 0 && <Banner title="Saved by you" note={count(yours.length)} recipes={yours} onClick={() => onOpen("you")} />}
       </section>
     </div>
   );
 }
 
-function Banner({ title, note, recipes, tint, onClick }: { title: string; note: string; recipes: Recipe[]; tint: string; onClick: () => void }) {
+/** A quiet card: food carries the colour, the card doesn't. */
+function Banner({ title, note, recipes, onClick }: { title: string; note: string; recipes: Recipe[]; onClick: () => void }) {
   return (
-    <button type="button" className={styles.banner} style={{ background: tint }} onClick={onClick}>
+    <button type="button" className={styles.banner} onClick={onClick}>
       <Fan recipes={recipes} size={52} />
       <span className={styles.bannerText}>
         <span className={styles.deckTitle}>{title}</span>
@@ -163,13 +154,20 @@ function Banner({ title, note, recipes, tint, onClick }: { title: string; note: 
   );
 }
 
-/** The header of an opened collection: the fanned bowls, its name and count, and for a flavour base, how to make it once. */
+/**
+ * The header of an opened collection, on the hero card: the fanned bowls, its name and count, and for a flavour base,
+ * how to make it once.
+ */
 export function CollectionHead({ collectionKey, recipes }: { collectionKey: CollectionKey; recipes: Recipe[] }) {
   const c = collection(collectionKey, recipes);
   if (!c) return null;
   return (
-    <header className={styles.openHead} style={c.base ? { background: BASE_TINT[c.base.id] } : undefined}>
-      {c.list.length > 0 && <Fan recipes={c.list} size={80} />}
+    <header className={styles.openHead}>
+      {c.list.length > 0 && (
+        <div className={styles.openBowls}>
+          <Fan recipes={c.list} size={heroFanSize(c.list.length)} />
+        </div>
+      )}
       <h2 className="t-h1">{c.title}</h2>
       {c.list.length > 0 && <p className="t-label t-muted">{count(c.list.length)}</p>}
       {c.base && (
@@ -182,6 +180,16 @@ export function CollectionHead({ collectionKey, recipes }: { collectionKey: Coll
       )}
     </header>
   );
+}
+
+/**
+ * Fan size on a hero card: one or two bowls at 160px, three shrunk to fit a phone-width card (side bowls are 78% and
+ * overlap by 30%), never below 88px.
+ */
+function heroFanSize(n: number, width = 276) {
+  const k = Math.min(n, 3);
+  const span = 1 + (k - 1) * 0.78 * 0.7;
+  return Math.max(88, Math.min(160, Math.floor(width / span)));
 }
 
 /** Three bowls fanned out, the middle one in front: a collection at a glance. */

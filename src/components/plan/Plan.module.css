@@ -65,6 +65,7 @@
   .week[data-dir],
   .rounds > :nth-child(-n + 6) {
     animation-name: fade;
+    animation-duration: var(--dur-fade);
   }
 }
 
@@ -89,7 +90,7 @@
   gap: var(--space-2);
 }
 
-/* Day strip: one pill per day. Rounds alternate oat and white; status and accent colours stay out of it. */
+/* Day strip: one pill per day, tinted by the cook it belongs to (DESIGN.md: soft tints may group). */
 .strip {
   list-style: none;
   margin: 0;
@@ -119,12 +120,11 @@
 }
 
 .r1 {
-  background: var(--color-surface-subtle);
+  background: var(--color-accent-soft);
 }
 
 .r2 {
-  background: var(--color-surface);
-  box-shadow: inset 0 0 0 1px var(--color-border);
+  background: var(--color-action-soft);
 }
 
 .day[data-today] {
@@ -327,7 +327,7 @@
 
 .cellName {
   width: 100%;
-  font-family: var(--font-display);
+  font-weight: 600;
   font-size: 0.6875rem;
   line-height: 1.2;
   text-align: center;
@@ -416,7 +416,7 @@
 }
 
 .r3 {
-  background: var(--color-surface-subtle);
+  background: var(--color-warning-soft);
 }
 
 .sharedNote {
@@ -446,8 +446,7 @@
 }
 
 .r4 {
-  background: var(--color-surface);
-  box-shadow: inset 0 0 0 1px var(--color-border);
+  background: var(--color-success-soft, var(--color-accent-soft));
 }
 
 .warn {

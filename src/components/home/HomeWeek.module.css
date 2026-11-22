@@ -228,6 +228,7 @@
   .hero,
   .stagger > li:nth-child(-n + 6) {
     animation-name: fade;
+    animation-duration: var(--dur-fade);
   }
   .meal:active {
     transform: none;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ItemArt } from "@/components/shop/ItemArt";
 import { Icon } from "@/components/ui/Icon";
 import { scaleIngredients } from "@/domain/recipes/scale";
 import type { Ingredient } from "@/domain/recipes/types";
@@ -33,7 +34,10 @@ export function Ingredients({ ingredients, servings }: { ingredients: Ingredient
       <ul className={styles.list}>
         {rows.map((row, i) => (
           <li key={i}>
-            <span>{row.name}</span>
+            <span className={styles.name}>
+              <ItemArt name={row.name} size={28} />
+              {row.name}
+            </span>
             {row.amount && <span className={styles.amount}>{row.amount}</span>}
           </li>
         ))}

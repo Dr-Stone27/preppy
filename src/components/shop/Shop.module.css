@@ -461,7 +461,9 @@ li[data-done] .lineName {
   align-content: start;
   gap: 6px;
   width: 100%;
-  aspect-ratio: 1;
+  height: 100%;
+  /* Tall enough for the picture and a two-line name; tiles in a row match the tallest. */
+  min-height: 128px;
   padding: var(--space-3) var(--space-1) var(--space-2);
   border-radius: var(--radius-card);
   text-align: center;

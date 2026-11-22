@@ -7,7 +7,7 @@ import { allNeeded } from "@/domain/shop/list";
 import { groupOf, pantryItems, SHOP_ORDER, STOCK_LABEL, stockOf, type Stock } from "@/domain/shop/pantry";
 import { setStock } from "@/state/store";
 import { GroupTitle } from "./GroupTitle";
-import { itemIcon } from "./itemIcon";
+import { ItemArt } from "./ItemArt";
 import styles from "./Shop.module.css";
 
 const LEVELS: Stock[] = ["have", "low", "out"];
@@ -79,7 +79,7 @@ export function AtHome({ statuses, bases }: { statuses: Record<string, Stock>; b
                 return (
                   <li key={p.id}>
                     <button type="button" className={`${styles.tile} ${styles[s]}`} onClick={() => setOpen(p.id)} aria-haspopup="dialog" aria-label={`${p.name}: ${STOCK_LABEL[s]}`}>
-                      <Icon name={itemIcon(p.name, p.group)} size={28} strokeWidth={1.6} />
+                      <ItemArt name={p.name} group={p.group} size={44} />
                       <span className={styles.tileName}>{p.name}</span>
                       <span className={styles.tileState}>
                         <Icon name={LEVEL_ICON[s]} size={13} strokeWidth={2} /> {STOCK_LABEL[s]}
@@ -105,7 +105,7 @@ export function AtHome({ statuses, bases }: { statuses: Record<string, Stock>; b
           <div className={styles.sheet} role="dialog" aria-modal="true" aria-label={`${openItem.name}: how much you have`} onClick={(e) => e.stopPropagation()}>
             <div className={styles.sheetHead}>
               <span className={styles.sheetIcon}>
-                <Icon name={itemIcon(openItem.name, openItem.group)} size={26} strokeWidth={1.6} />
+                <ItemArt name={openItem.name} group={openItem.group} size={36} />
               </span>
               <span>
                 <span className="t-h3">{openItem.name}</span>

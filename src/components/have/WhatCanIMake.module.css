@@ -115,11 +115,13 @@
 
 /* The closest match: the hero card. */
 .hero {
+  --tag-on-hero: var(--color-surface);
+  --track-on-hero: var(--color-surface);
   display: grid;
   gap: var(--space-3);
   padding: var(--space-6);
   border-radius: var(--radius-feature);
-  background: var(--color-surface);
+  background: var(--color-hero);
   box-shadow: var(--shadow-card);
 }
 

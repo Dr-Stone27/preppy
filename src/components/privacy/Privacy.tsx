@@ -6,7 +6,7 @@ import styles from "./Privacy.module.css";
 /** What Preppy keeps, where, and how to remove it. */
 export function Privacy() {
   return (
-    <div className={prefs.page}>
+    <div className={`${prefs.page} ${prefs.screen}`}>
       <Link href="/" className={prefs.back}>
         <Icon name="back" size={20} />
         Home

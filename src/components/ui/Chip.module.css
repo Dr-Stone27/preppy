@@ -9,8 +9,9 @@
   font-weight: 600;
   white-space: nowrap;
 }
-.neutral { background: var(--color-surface-subtle); color: var(--color-ink); }
-.accent { background: var(--color-accent-soft); color: var(--color-accent-ink); }
+/* A peach hero card sets --tag-on-hero so its tags flip to white and stay visible (DESIGN.md). */
+.neutral { background: var(--tag-on-hero, var(--color-surface-subtle)); color: var(--color-ink); }
+.accent { background: var(--tag-on-hero, var(--color-accent-soft)); color: var(--color-accent-ink); }
 .success { background: var(--color-success-soft); color: var(--color-success); }
 .warning { background: var(--color-warning-soft); color: var(--color-warning-ink); }
 .danger { background: var(--color-danger-soft); color: var(--color-danger); }

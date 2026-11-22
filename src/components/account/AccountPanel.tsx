@@ -54,7 +54,7 @@ export function AccountPanel() {
         <p className="t-small t-muted" role="status">
           {STATUS[sync.status] ?? ""}
         </p>
-        <Button variant="secondary" size="sm" onClick={() => signOut().then(() => router.replace("/account"))}>
+        <Button variant="secondary" onClick={() => signOut().then(() => router.replace("/account"))}>
           Sign out
         </Button>
       </div>

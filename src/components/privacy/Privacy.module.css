@@ -1,15 +1,19 @@
+/* A reading page: quiet, one column, comfortable line length. */
 .body {
   display: grid;
   gap: var(--space-3);
+  max-width: 62ch;
   line-height: 1.55;
 }
 
+/* 12px of margin plus the 12px gap gives 24px between groups. */
 .body h2 {
-  margin-top: var(--space-4);
+  margin-top: var(--space-3);
 }
 
 .body a {
   font-weight: 600;
+  color: var(--color-action);
   text-decoration: underline;
   text-underline-offset: 3px;
 }

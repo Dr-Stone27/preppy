@@ -41,7 +41,6 @@ export function Profile() {
         </div>
         <Button
           variant="secondary"
-          size="sm"
           disabled={leaving}
           onClick={async () => {
             setLeaving(true);
@@ -60,7 +59,6 @@ export function Profile() {
             {failed && <p className={styles.failed}>That didn’t work. Check your connection and try again.</p>}
             <div className={styles.dangerActions}>
               <Button
-                size="sm"
                 variant="danger"
                 disabled={deleting}
                 onClick={async () => {
@@ -77,7 +75,7 @@ export function Profile() {
               >
                 {deleting ? "Deleting…" : "Delete everything"}
               </Button>
-              <Button size="sm" variant="text" disabled={deleting} onClick={() => setConfirm(false)}>
+              <Button variant="text" disabled={deleting} onClick={() => setConfirm(false)}>
                 Keep my account
               </Button>
             </div>
@@ -103,7 +101,7 @@ export function Profile() {
       {open ? (
         <AccountPanel />
       ) : (
-        <Button size="sm" onClick={() => setOpen(true)}>
+        <Button onClick={() => setOpen(true)}>
           Sign in
         </Button>
       )}

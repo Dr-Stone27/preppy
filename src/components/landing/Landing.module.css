@@ -1,13 +1,11 @@
-/* Landing: a full-screen layer over the app frame, with its own scroll. */
+/* Landing: a full-screen layer over the app frame, with its own scroll. Plain cream canvas; the warmth is on the hero card. */
 .page {
   position: fixed;
   inset: 0;
   z-index: 60;
   overflow-y: auto;
   overflow-x: hidden;
-  background:
-    radial-gradient(120% 60% at 50% -10%, var(--color-accent-soft) 0%, transparent 60%),
-    var(--color-canvas);
+  background: var(--color-canvas);
   padding: calc(var(--safe-top) + var(--space-4)) var(--gutter) calc(var(--safe-bottom) + var(--space-8));
   -webkit-overflow-scrolling: touch;
 }
@@ -24,6 +22,7 @@
   align-items: center;
   justify-content: space-between;
   min-height: var(--touch);
+  margin-bottom: var(--space-4);
 }
 
 .brand {
@@ -32,78 +31,86 @@
   gap: var(--space-2);
   font-family: var(--font-display);
   font-size: 1.375rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 
+/* Secondary button: white, 1.5px outline, ink text. */
 .signIn {
   display: inline-flex;
   align-items: center;
-  min-height: 40px;
-  padding: 0 var(--space-4);
-  border-radius: var(--radius-pill);
+  min-height: var(--touch);
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-button);
+  background: var(--color-surface);
   font-size: var(--text-small);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-ink);
   box-shadow: inset 0 0 0 1.5px var(--color-border-strong);
-  transition: transform var(--dur-fast) var(--ease), background var(--dur-base) var(--ease);
-}
-
-.signIn:hover {
-  background: var(--color-surface);
+  transition: transform var(--dur-fast) var(--ease);
 }
 
 .signIn:active {
-  transform: scale(0.96);
+  transform: scale(0.98);
 }
 
-/* Hero */
+/* Hero: the one loud thing. What Preppy is and the one primary button, on the warm peach card. */
 .hero {
   display: grid;
   justify-items: center;
   text-align: center;
   gap: var(--space-5);
-  padding: var(--space-6) 0 var(--space-12);
+  margin-bottom: var(--space-6);
+  padding: var(--space-6);
+  border-radius: var(--radius-feature);
+  background: var(--color-hero);
+  box-shadow: var(--shadow-card);
 }
 
+/* The bowl group: one 160px bowl with steam, two smaller bowls tucked beside it. */
 .art {
   position: relative;
-  width: 300px;
-  height: 290px;
-  margin-bottom: var(--space-2);
+  width: 264px;
+  max-width: 100%;
+  height: 224px;
+  animation: enter var(--dur-base) var(--ease) both;
 }
 
-.spin {
+.main {
   position: absolute;
-  left: 40px;
-  top: 50px;
-  filter: drop-shadow(0 18px 28px rgba(30, 27, 24, 0.12));
-  animation: spin 60s linear infinite, rise 900ms var(--ease) both;
+  left: 0;
+  right: 0;
+  top: 44px;
+  width: fit-content;
+  margin: 0 auto;
 }
 
 .orbit {
   position: absolute;
-  filter: drop-shadow(0 10px 16px rgba(30, 27, 24, 0.1));
+  animation: enter var(--dur-base) var(--ease) both;
 }
 
 .orbit1 {
-  right: -6px;
-  top: 6px;
-  animation: bob 5s ease-in-out infinite, pop 700ms 300ms var(--ease) both;
+  right: 0;
+  top: 0;
+  animation-delay: calc(var(--stagger) * 1);
 }
 
 .orbit2 {
-  left: -10px;
-  bottom: -4px;
-  animation: bob 6s 1.2s ease-in-out infinite, pop 700ms 450ms var(--ease) both;
+  left: 0;
+  bottom: 0;
+  animation-delay: calc(var(--stagger) * 2);
 }
 
+/* Steam reads as part of the bowl drawing: still, faint wisps above it. */
 .steam {
   position: absolute;
-  left: 90px;
-  top: -14px;
+  left: 0;
+  right: 0;
+  top: -16px;
   width: 120px;
   height: 90px;
+  margin: 0 auto;
   overflow: visible;
 }
 
@@ -112,70 +119,28 @@
   stroke: var(--color-border-strong);
   stroke-width: 3;
   stroke-linecap: round;
-  stroke-dasharray: 60 140;
-  opacity: 0;
-  animation: steam 3.2s ease-in-out infinite;
-}
-
-/* Scattered ingredients: chilli seeds and herb leaves */
-.dot,
-.leaf {
-  position: absolute;
-  animation: float 7s ease-in-out infinite;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--color-accent);
-}
-
-.dot1 {
-  left: 18px;
-  top: 40px;
-}
-
-.dot2 {
-  right: 30px;
-  bottom: 70px;
-  width: 7px;
-  height: 7px;
-  background: var(--color-warning);
-  animation-delay: 1.5s;
-}
-
-.leaf {
-  width: 16px;
-  height: 9px;
-  border-radius: 0 100% 0 100%;
-  background: var(--color-success);
-}
-
-.leaf1 {
-  right: 70px;
-  top: 2px;
-  transform: rotate(-30deg);
-  animation-delay: 0.8s;
-}
-
-.leaf2 {
-  left: 70px;
-  bottom: 10px;
-  transform: rotate(20deg);
-  animation-delay: 2.4s;
+  stroke-dasharray: 54 140;
+  opacity: 0.8;
 }
 
 .title {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(2.25rem, 9vw, 3.75rem);
-  line-height: 1.05;
+  font-size: var(--text-display);
+  line-height: 1.12;
   letter-spacing: -0.02em;
+  text-wrap: balance;
   max-width: 14ch;
-  animation: rise 800ms 150ms var(--ease) both;
+  animation: enter var(--dur-base) calc(var(--stagger) * 1) var(--ease) both;
 }
 
+@media (min-width: 720px) {
+  .title {
+    font-size: 3rem;
+  }
+}
+
+/* Orange-ink text at display size, with the hero's one orange element: the drawn underline. */
 .underline {
   position: relative;
   display: inline-block;
@@ -199,55 +164,62 @@
   stroke-linecap: round;
   stroke-dasharray: 320;
   stroke-dashoffset: 320;
-  animation: draw 900ms 900ms var(--ease) forwards;
+  animation: draw 300ms 240ms var(--ease) forwards;
 }
 
 .lede {
   max-width: 34ch;
-  font-size: 1.0625rem;
+  font-size: var(--text-body);
   line-height: 1.5;
   color: var(--color-muted);
-  animation: rise 800ms 300ms var(--ease) both;
+  animation: enter var(--dur-base) calc(var(--stagger) * 2) var(--ease) both;
 }
 
 .actions {
   display: grid;
   justify-items: center;
-  gap: var(--space-3);
-  animation: rise 800ms 450ms var(--ease) both;
+  gap: var(--space-1);
+  width: 100%;
+  max-width: 360px;
+  animation: enter var(--dur-base) calc(var(--stagger) * 3) var(--ease) both;
 }
 
-.cta {
+/* Primary button: teal, white Jakarta 600, 52px, 16px radius. */
+.cta,
+.ctaSecondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  min-height: 56px;
-  padding: 0 var(--space-8);
-  border-radius: var(--radius-pill);
+  width: 100%;
+  min-height: 52px;
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-button);
+  font-weight: 600;
+  font-size: var(--text-body);
+  transition: transform var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+
+.cta {
   background: var(--color-action);
   color: var(--color-on-action);
-  font-weight: 700;
-  font-size: 1.0625rem;
-  box-shadow: 0 10px 24px rgba(47, 77, 82, 0.25);
-  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-base) var(--ease);
-}
-
-.cta svg {
-  transition: transform var(--dur-base) var(--ease);
-}
-
-.cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(47, 77, 82, 0.3);
-}
-
-.cta:hover svg {
-  transform: translateX(3px);
 }
 
 .cta:active {
-  transform: scale(0.97);
+  background: var(--color-action-pressed);
+}
+
+/* The closing band repeats the same link as a secondary button: one primary per screen. */
+.ctaSecondary {
+  max-width: 360px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: inset 0 0 0 1.5px var(--color-border-strong);
+}
+
+.cta:active,
+.ctaSecondary:active {
+  transform: scale(0.98);
 }
 
 .already {
@@ -256,25 +228,27 @@
 }
 
 .already a {
-  font-weight: 700;
-  color: var(--color-ink);
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+  padding: 0 var(--space-1);
+  font-weight: 600;
+  color: var(--color-action);
   text-decoration: underline;
-  text-decoration-color: var(--color-accent);
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
 }
 
-/* Features */
+/* Features: quiet white cards, each with a small demo on oat. */
 .features {
   display: grid;
   gap: var(--space-4);
-  padding-bottom: var(--space-12);
+  padding-bottom: var(--space-6);
 }
 
 @media (min-width: 720px) {
   .features {
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-5);
   }
 }
 
@@ -282,23 +256,18 @@
   display: grid;
   align-content: start;
   gap: var(--space-2);
-  padding: var(--space-5);
-  border-radius: var(--radius-feature);
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
   background: var(--color-surface);
   box-shadow: var(--shadow-card);
-  transition: transform var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
 }
 
-.feature:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-floating);
-}
-
+/* Scroll reveal: rise 8px and fade in, 40ms apart, capped at the sixth. */
 .page [data-reveal] {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
-  transition-delay: calc(var(--i, 0) * 90ms);
+  transform: translateY(8px);
+  transition: opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+  transition-delay: calc(min(var(--i, 0), 5) * var(--stagger));
 }
 
 .page [data-reveal][data-in] {
@@ -312,7 +281,7 @@
   align-content: center;
   margin-bottom: var(--space-2);
   padding: var(--space-4);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-input);
   background: var(--color-surface-subtle);
   overflow: hidden;
 }
@@ -321,7 +290,8 @@
   font-family: var(--font-display);
   font-weight: 500;
   font-size: var(--text-h2);
-  line-height: 1.15;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
 }
 
 .featureBody {
@@ -329,7 +299,7 @@
   line-height: 1.5;
 }
 
-/* Demo 1: the week */
+/* Demo 1: the week. Soft tints mark which days belong to which cook. */
 .week {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -341,11 +311,11 @@
   justify-items: center;
   gap: 6px;
   padding: var(--space-2) 0;
-  border-radius: 12px;
+  border-radius: var(--radius-chip);
   background: var(--color-surface);
   color: var(--color-ink);
-  transition: background 500ms var(--ease);
-  transition-delay: calc(var(--d) * 110ms + 300ms);
+  transition: background var(--dur-base) var(--ease);
+  transition-delay: calc(min(var(--d), 5) * var(--stagger) + 200ms);
 }
 
 .dayPill small {
@@ -371,24 +341,20 @@
   background: var(--color-action-soft);
 }
 
-[data-in] .dayPill svg {
-  animation: flicker 1.6s ease-in-out infinite;
-}
-
-/* Demo 2: a shelf of bowls drifting past */
+/* Demo 2: a shelf of bowls, one per cuisine. */
 .shelf {
   margin: 0 calc(-1 * var(--space-4));
-  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  padding: 0 var(--space-4);
+  overflow: hidden;
 }
 
 .shelfTrack {
   display: flex;
   gap: var(--space-3);
   width: max-content;
-  animation: drift 32s linear infinite;
 }
 
-/* Demo 3: a list that ticks itself off */
+/* Demo 3: a list that ticks itself off (basil = got it). */
 .list {
   display: grid;
   gap: var(--space-2);
@@ -438,14 +404,14 @@
 }
 
 [data-in] .list .box {
-  animation: tickBox 6s calc(var(--t) * 0.9s + 0.4s) infinite;
+  animation: tickBox 6s calc(var(--t) * 0.9s + 0.4s) var(--ease) infinite;
 }
 
 [data-in] .list .item::after {
-  animation: strike 6s calc(var(--t) * 0.9s + 0.4s) infinite;
+  animation: strike 6s calc(var(--t) * 0.9s + 0.4s) var(--ease) infinite;
 }
 
-/* Demo 4: the cook order */
+/* Demo 4: the cook order. The current step is teal, the selected state. */
 .steps {
   position: relative;
   display: grid;
@@ -494,7 +460,7 @@
 }
 
 [data-in] .stepDot {
-  animation: stepOn 5.4s calc(var(--t) * 1.2s + 0.3s) infinite;
+  animation: stepOn 5.4s calc(var(--t) * 1.2s + 0.3s) var(--ease) infinite;
 }
 
 .store {
@@ -505,12 +471,14 @@
 }
 
 .store span {
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 2px 10px;
+  border-radius: var(--radius-chip);
   font-size: var(--text-label);
-  font-weight: 700;
+  font-weight: 600;
   opacity: 0;
-  transform: scale(0.8);
 }
 
 .fridge {
@@ -524,22 +492,112 @@
 }
 
 [data-in] .store span {
-  animation: pop 500ms 3.9s var(--ease) forwards;
+  animation: enter var(--dur-base) 3.9s var(--ease) forwards;
 }
 
 [data-in] .store .freezer {
-  animation-delay: 4.2s;
+  animation-delay: calc(3.9s + var(--stagger));
 }
 
-/* Closing band */
+/* Keep it on your phone */
+.phone {
+  display: grid;
+  gap: var(--space-5);
+  align-items: center;
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+@media (min-width: 720px) {
+  .phone {
+    grid-template-columns: auto 1fr;
+    gap: var(--space-8);
+    padding: var(--space-6) var(--space-8);
+  }
+}
+
+.homeScreen {
+  justify-self: center;
+  display: grid;
+  grid-template-columns: repeat(3, 62px);
+  grid-auto-rows: 62px;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-subtle);
+}
+
+.otherApp {
+  border-radius: 15px;
+  background: var(--color-border);
+}
+
+/* Preppy's own icon: the bowl on its peach tile. */
+.appIcon {
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: var(--color-accent-soft);
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+}
+
+.page [data-in] .appIcon {
+  animation: enter var(--dur-base) 240ms var(--ease) forwards;
+}
+
+.phoneText {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.phoneTitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-h2);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.howTo {
+  display: grid;
+  gap: var(--space-2);
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+}
+
+.howTo li {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: var(--space-3);
+  align-items: baseline;
+  font-size: var(--text-small);
+  line-height: 1.45;
+}
+
+.howTo b {
+  font-weight: 700;
+}
+
+.phoneNote {
+  margin-top: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+/* Closing band: a quiet oat card, so the peach stays the hero's alone. */
 .close {
   display: grid;
   justify-items: center;
   gap: var(--space-5);
   text-align: center;
   padding: var(--space-10) var(--space-5);
-  border-radius: var(--radius-sheet);
-  background: var(--color-accent-soft);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-subtle);
 }
 
 .closeArt {
@@ -551,98 +609,61 @@
 }
 
 .closeArt .steam {
-  left: 0;
   top: -40px;
 }
 
 .closeTitle {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(1.75rem, 6vw, 2.5rem);
-  line-height: 1.1;
+  font-size: var(--text-h1);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
   max-width: 16ch;
 }
 
 .foot {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: var(--space-2);
-  padding-top: var(--space-8);
+  padding-top: var(--space-6);
   font-size: var(--text-small);
   color: var(--color-muted);
 }
 
 .foot a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
   color: var(--color-ink);
   font-weight: 600;
 }
 
-/* Motion */
-@keyframes spin {
-  to {
-    rotate: 360deg;
-  }
-}
-
-@keyframes rise {
+/* Motion: the house curve. Enter rises 8px and fades in over 200ms. */
+@keyframes enter {
   from {
     opacity: 0;
-    transform: translateY(18px);
-  }
-}
-
-@keyframes pop {
-  from {
-    opacity: 0;
-    transform: scale(0.6);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: none;
   }
 }
 
-@keyframes bob {
-  50% {
-    translate: 0 -10px;
-  }
-}
-
-@keyframes float {
-  50% {
-    translate: 4px -12px;
-  }
-}
-
-@keyframes steam {
-  0% {
+@keyframes fade {
+  from {
     opacity: 0;
-    stroke-dashoffset: 0;
   }
-  30% {
-    opacity: 0.7;
-  }
-  100% {
-    opacity: 0;
-    stroke-dashoffset: -120;
+  to {
+    opacity: 1;
   }
 }
 
 @keyframes draw {
   to {
     stroke-dashoffset: 0;
-  }
-}
-
-@keyframes flicker {
-  50% {
-    transform: scale(1.18) rotate(-6deg);
-  }
-}
-
-@keyframes drift {
-  to {
-    transform: translateX(-50%);
   }
 }
 
@@ -656,7 +677,7 @@
   14%,
   80% {
     background: var(--color-success);
-    color: #fff;
+    color: var(--color-on-action);
     box-shadow: none;
   }
   90%,
@@ -690,8 +711,8 @@
   }
   12%,
   82% {
-    background: var(--color-accent);
-    box-shadow: 0 0 0 5px var(--color-accent-soft);
+    background: var(--color-action);
+    box-shadow: 0 0 0 4px var(--color-action-soft);
   }
   92%,
   100% {
@@ -700,122 +721,45 @@
   }
 }
 
+/* Reduced motion: no rise, slide, scale or looping demos. Content still fades in. */
 @media (prefers-reduced-motion: reduce) {
-  .page *,
-  .page *::before,
-  .page *::after {
-    animation: none !important;
-    transition: none !important;
+  .art,
+  .orbit,
+  .title,
+  .lede,
+  .actions {
+    animation-name: fade;
+    animation-duration: var(--dur-fade);
   }
 
   .page [data-reveal] {
-    opacity: 1;
     transform: none;
+    transition: opacity var(--dur-fade) var(--ease);
+  }
+
+  .dayPill {
+    transition-duration: var(--dur-fade);
   }
 
   .underline path {
+    animation: none;
     stroke-dashoffset: 0;
   }
 
-  .store span {
-    opacity: 1;
-    transform: none;
+  [data-in] .list .box,
+  [data-in] .list .item::after,
+  [data-in] .stepDot {
+    animation: none;
   }
-}
 
-/* Keep it on your phone */
-.phone {
-  display: grid;
-  gap: var(--space-5);
-  align-items: center;
-  margin-bottom: var(--space-4);
-  padding: var(--space-5);
-  border-radius: var(--radius-feature);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-card);
-}
-
-@media (min-width: 720px) {
-  .phone {
-    grid-template-columns: auto 1fr;
-    gap: var(--space-8);
-    padding: var(--space-6) var(--space-8);
+  [data-in] .store span,
+  .page [data-in] .appIcon {
+    animation: fade var(--dur-fade) var(--ease) forwards;
   }
-}
 
-.homeScreen {
-  justify-self: center;
-  display: grid;
-  grid-template-columns: repeat(3, 62px);
-  grid-auto-rows: 62px;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  border-radius: var(--radius-sheet);
-  background: var(--color-surface-subtle);
-}
-
-.otherApp {
-  border-radius: 15px;
-  background: var(--color-border);
-  opacity: 0.8;
-}
-
-.appIcon {
-  display: grid;
-  place-items: center;
-  border-radius: 15px;
-  background: var(--color-accent-soft);
-  box-shadow: 0 6px 14px rgba(30, 27, 24, 0.14);
-  opacity: 0;
-  transform: scale(0.6);
-}
-
-.page [data-in] .appIcon {
-  animation: pop 600ms 500ms var(--ease) forwards, bob 4s 1.4s ease-in-out infinite;
-}
-
-.phoneText {
-  display: grid;
-  gap: var(--space-2);
-}
-
-.phoneTitle {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: var(--text-h2);
-  line-height: 1.15;
-}
-
-.howTo {
-  display: grid;
-  gap: var(--space-2);
-  list-style: none;
-  margin: var(--space-2) 0 0;
-  padding: 0;
-}
-
-.howTo li {
-  display: grid;
-  grid-template-columns: 76px 1fr;
-  gap: var(--space-3);
-  align-items: baseline;
-  font-size: var(--text-small);
-  line-height: 1.45;
-}
-
-.howTo b {
-  font-weight: 700;
-}
-
-.phoneNote {
-  margin-top: var(--space-2);
-  font-size: var(--text-small);
-  color: var(--color-muted);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .appIcon {
-    opacity: 1;
+  .signIn:active,
+  .cta:active,
+  .ctaSecondary:active {
     transform: none;
   }
 }

@@ -11,6 +11,17 @@ import { CUISINE_LABEL, cuisinesIn } from "@/domain/recipes/search";
 import type { Recipe } from "@/domain/recipes/types";
 import styles from "./LibraryCollections.module.css";
 
+/** Each flavour base keeps its own soft card colour (DESIGN.md: collections carry their own soft tint). */
+const BASE_TINT: Record<BaseId, string> = {
+  pepper: "var(--color-danger-soft)",
+  palm: "var(--color-accent-soft)",
+  curry: "var(--color-warning-soft)",
+  "pepper-soup": "var(--color-surface-subtle)",
+  soy: "var(--color-action-soft)",
+  yogurt: "var(--color-success-soft)",
+  rub: "var(--color-accent-soft)",
+};
+
 /** A collection, as it appears in the address: "base:pepper", "cuisine:nigerian", "sweet", "you" or "shared". */
 export type CollectionKey = string;
 
@@ -70,7 +81,7 @@ export function CollectionsHome({
               <button key={b.id} type="button" className={styles.deck} onClick={() => onOpen(`base:${b.id}`)}>
                 <span className={styles.deckBack} aria-hidden />
                 <span className={styles.deckMid} aria-hidden />
-                <span className={styles.deckFront}>
+                <span className={styles.deckFront} style={{ background: BASE_TINT[b.id] }}>
                   <Fan recipes={list} size={72} />
                   <span className={styles.deckTitle}>{b.name}</span>
                   <span className="t-label t-muted">{count(list.length)}</span>
@@ -132,18 +143,18 @@ export function CollectionsHome({
 
       <section className={styles.shelf}>
         <h2 className="t-h3">More to browse</h2>
-        <Banner title="All recipes" note={count(own.length)} recipes={mains} onClick={() => onOpen("all")} />
-        {sweets.length > 0 && <Banner title="Breakfast & sweets" note={count(sweets.length)} recipes={sweets} onClick={() => onOpen("sweet")} />}
-        {yours.length > 0 && <Banner title="Saved by you" note={count(yours.length)} recipes={yours} onClick={() => onOpen("you")} />}
+        <Banner title="All recipes" note={count(own.length)} recipes={mains} tint="var(--color-surface)" onClick={() => onOpen("all")} />
+        {sweets.length > 0 && <Banner title="Breakfast & sweets" note={count(sweets.length)} recipes={sweets} tint="var(--color-warning-soft)" onClick={() => onOpen("sweet")} />}
+        {yours.length > 0 && <Banner title="Saved by you" note={count(yours.length)} recipes={yours} tint="var(--color-action-soft)" onClick={() => onOpen("you")} />}
       </section>
     </div>
   );
 }
 
-/** A quiet card: food carries the colour, the card doesn't. */
-function Banner({ title, note, recipes, onClick }: { title: string; note: string; recipes: Recipe[]; onClick: () => void }) {
+/** A collection card on its own soft tint. */
+function Banner({ title, note, recipes, tint, onClick }: { title: string; note: string; recipes: Recipe[]; tint: string; onClick: () => void }) {
   return (
-    <button type="button" className={styles.banner} onClick={onClick}>
+    <button type="button" className={styles.banner} style={{ background: tint }} onClick={onClick}>
       <Fan recipes={recipes} size={52} />
       <span className={styles.bannerText}>
         <span className={styles.deckTitle}>{title}</span>
@@ -162,7 +173,7 @@ export function CollectionHead({ collectionKey, recipes }: { collectionKey: Coll
   const c = collection(collectionKey, recipes);
   if (!c) return null;
   return (
-    <header className={styles.openHead}>
+    <header className={styles.openHead} style={{ background: c.base ? BASE_TINT[c.base.id] : "var(--color-hero)" }}>
       {c.list.length > 0 && (
         <div className={styles.openBowls}>
           <Fan recipes={c.list} size={heroFanSize(c.list.length)} />

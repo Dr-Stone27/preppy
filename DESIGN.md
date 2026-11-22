@@ -126,7 +126,7 @@ components:
     rounded: "{rounded.card}"
     padding: 16px
   card-hero:
-    backgroundColor: "{colors.surface}"
+    backgroundColor: "{colors.tertiary-soft}"
     rounded: "{rounded.feature}"
     padding: 24px
   tag:
@@ -213,7 +213,7 @@ It is a phone-first web app installed to the home screen, used one-handed, often
 The feeling is **warm, calm, kitchen-table**. It should feel like a well-kept recipe notebook, not a dashboard. It looks considered because every choice is deliberate and repeated, not because of effects. Three rules drive everything below:
 
 1. **One screen, one idea.** Every screen answers one question. Home: *what's my next cook?* Plan: *what am I cooking, and when?* Cook day: *what do I do right now?* Anything that doesn't serve that question moves down the page, into a sheet, or goes away.
-2. **One loud thing.** The background is quiet. Each screen gets exactly one hero card that answers its question, usually holding a bowl and the next action. The screen's one primary button and its one orange element (if it has one) both sit inside that hero card. Everything else is ink on cream or white.
+2. **One loud thing, and it is warm.** The background is quiet. Each screen gets exactly one hero card that answers its question, usually holding a bowl and the next action. The hero card sits on the warm peach tint (`tertiary-soft`), so every screen has one warm surface that draws the eye. The screen's one primary button and its one orange element (if it has one) both sit inside that hero card. Everything else is ink on cream or white.
 3. **Room to breathe.** The main object sits with generous space around it. If a screen feels full, take something out rather than make things smaller.
 
 ## Colors
@@ -228,6 +228,7 @@ The palette is cream and ink with one action colour, one warm accent, and three 
 - **Primary, deep teal (#2F4D52):** the action colour, used for primary buttons, the active tab, links and selected states. White text on it is 9.1:1.
 - **Tertiary, pepper orange (#FF6B35):** the warm accent. **Fills only, never small text** (white on it is only 2.8:1). Use `tertiary-ink` (#B5461C) for orange-family text. At most one orange element per screen.
 - **Status:** basil (#4C7656) means done or have. Saffron (#FF9F1C, fill only) means low, with `warning-ink` for text. Red (#B23A21) means out or danger. The strong status colours never decorate; they only report state.
+- **Warmth comes from soft tints, never from gradients.** Preppy should feel like a warm kitchen, not a white form. Beyond the peach hero card, collections carry their own soft tint (each flavour base its own colour, Breakfast & sweets in saffron-soft), and group icons (aisles, pantry groups) sit on soft-tinted circles. A screen that is only white cards on cream has lost its warmth.
 - **Soft tints group things that belong together.** The soft fills (`tertiary-soft`, `primary-soft`, `warning-soft`, `success-soft`) may mark which items share a group, such as which days on the Plan day strip belong to which cook. That is information, not decoration, and it does not count as the screen's orange element. Always as a background fill, never on text.
 
 The bowl illustrations have their own palette (rice golds, stew reds, efo greens). It is kept separate from the interface tokens on purpose: food carries colour, the interface does not.
@@ -288,8 +289,9 @@ Motion is short, eased, and explains where things went. Nothing moves linearly, 
 
 - **Primary button:** teal fill, white Jakarta 600, 52px tall, 16px radius. One primary button per screen.
 - **Secondary button:** white with a 1.5px `border-strong` outline and ink text.
-- **Card:** white, 20px radius, card shadow, 16px padding. A **hero card** (24px radius, 24px padding) holds the screen's one main object.
-- **Tag:** 24px tall, 10px radius, oat fill, ink label text. The accent tag (orange-soft fill, orange-ink text) is reserved for the single most important tag on a screen, such as "Start the day before".
+- **Card:** white, 20px radius, card shadow, 16px padding. A **hero card** (peach `tertiary-soft`, 24px radius, 24px padding) holds the screen's one main object. Inputs and inner rows inside it stay white.
+- **Collection card:** a feature card for a group of dishes (a flavour base, Breakfast & sweets), on that group's own soft tint.
+- **Tag:** 24px tall, 10px radius, oat fill, ink label text. The accent tag (orange-soft fill, orange-ink text) is reserved for the single most important tag on a screen, such as "Start the day before". Inside the peach hero card, tags flip to a white fill (the accent tag keeps its orange-ink text) so they stay visible.
 - **Timer pill:** ink fill, cream text, floating shadow, 36px tall with a 48px tap area. It stays pinned at the top of cook day while running. When a timer finishes it turns orange; if two finish together, both may be orange, since each needs action.
 - **Sheet:** white, 28px top radius, slides up.
 - **Eyebrow:** a small uppercase sage label above a group ("SUNDAY COOK", "NEXT UP").
@@ -299,13 +301,14 @@ Motion is short, eased, and explains where things went. Nothing moves linearly, 
 
 **Do**
 - Give each screen one question to answer, and one loud element that answers it.
-- Keep the canvas plain cream. Let bowls and the single orange accent carry the colour.
+- Keep the canvas plain cream. Put the warmth on the hero card and the collections, and let bowls carry the rest of the colour.
 - Repeat the same patterns screen to screen. Consistency is what reads as quality.
 - Show the main object without scrolling.
 - After building a screen, review it and remove anything that doesn't help the user cook, plan or shop.
 
 **Don't**
 - Don't use gradients, glows, glassmorphism, blurs or decorative patterns.
+- Don't leave a screen as white cards on cream with no warm surface.
 - Don't put orange on small text, or use more than one orange element per screen (soft group tints and finished timers aside).
 - Don't put bright on bright. Colour sits on cream, white or ink.
 - Don't use food photos inside the app. Bowls only.

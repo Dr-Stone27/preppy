@@ -9,16 +9,16 @@
   gap: var(--space-2);
 }
 
+/* A word you added is a picked option, so it looks like a selected filter chip: teal, not orange. */
 .removable {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  min-height: 40px;
-  padding: 0 4px 0 var(--space-4);
+  min-height: var(--touch);
+  padding: 0 0 0 var(--space-4);
   border-radius: var(--radius-pill);
-  background: var(--color-accent-soft);
-  color: var(--color-accent-ink);
-  box-shadow: inset 0 0 0 1.5px var(--color-accent);
+  background: var(--color-action-soft);
+  color: var(--color-action);
+  box-shadow: inset 0 0 0 1.5px var(--color-action);
   font-size: var(--text-small);
   font-weight: 600;
 }
@@ -26,10 +26,15 @@
 .removable button {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: var(--touch);
+  height: var(--touch);
   border-radius: var(--radius-pill);
   color: inherit;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.removable button:active {
+  transform: scale(0.94);
 }
 
 .add {
@@ -58,11 +63,17 @@
 
 .add button {
   min-height: var(--touch);
+  transition: transform var(--dur-fast) var(--ease);
   padding: 0 var(--space-5);
   border-radius: var(--radius-input);
   background: var(--color-action-soft);
   color: var(--color-action);
   font-weight: 700;
+}
+
+.add button:active,
+.stepper button:active {
+  transform: scale(0.98);
 }
 
 .add button:disabled {
@@ -86,6 +97,7 @@
   font-size: 1.25rem;
   color: var(--color-ink);
   cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease);
 }
 
 .stepper button:disabled {
@@ -97,4 +109,12 @@
   min-width: 6.5em;
   text-align: center;
   font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .add button:active,
+  .stepper button:active,
+  .removable button:active {
+    transform: none;
+  }
 }

@@ -1,10 +1,11 @@
+/* Top of Settings, and its one warm card: who's signed in, or sign in. */
 .card {
   display: grid;
   gap: var(--space-4);
   justify-items: start;
-  padding: var(--space-5);
-  background: var(--color-surface);
-  border-radius: var(--radius-card);
+  padding: var(--space-6);
+  background: var(--color-hero);
+  border-radius: var(--radius-feature);
   box-shadow: var(--shadow-card);
 }
 
@@ -33,18 +34,19 @@
 
 .deleteLink {
   align-self: flex-start;
-  min-height: 44px;
+  min-height: var(--touch);
   font-size: var(--text-small);
   font-weight: 600;
   color: var(--color-danger);
 }
 
+/* Inner panel inside the hero stays white; red is for the state (an irreversible action), on the button and the words only. */
 .danger {
   display: grid;
   gap: var(--space-3);
   padding: var(--space-4);
   border-radius: var(--radius-card);
-  background: var(--color-danger-soft);
+  background: var(--color-surface);
 }
 
 .dangerActions {
@@ -55,5 +57,6 @@
 
 .failed {
   font-size: var(--text-small);
+  font-weight: 600;
   color: var(--color-danger);
 }

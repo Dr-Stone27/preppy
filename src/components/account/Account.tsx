@@ -21,13 +21,13 @@ export function Account() {
   const signedOut = !sync.email && sync.status !== "loading";
 
   return (
-    <div className={prefs.page}>
+    <div className={`${prefs.page} ${prefs.screen}`}>
       <Link href="/" className={prefs.back}>
         <Icon name="back" size={20} />
         Home
       </Link>
       <h1 className="t-h1">{sync.email ? "Your account" : back ? "Welcome back" : "Sign in"}</h1>
-      <section className={prefs.section}>
+      <section className={`${prefs.section} ${prefs.hero}`}>
         <div>
           <h2 className="t-h3">{sync.email ? "Signed in" : back ? "Sign in to get your plans back" : "Keep your plans on every device"}</h2>
           {!sync.email && <p className="t-small t-muted">We’ll email you a sign-in code. No password needed.</p>}

@@ -20,7 +20,7 @@ export function Preferences() {
   if (!data) return <div style={{ minHeight: "60vh" }} aria-busy="true" />;
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} ${styles.screen}`}>
       <Link href="/" className={styles.back}>
         <Icon name="back" size={20} />
         Home
@@ -66,7 +66,7 @@ export function Preferences() {
           <h2 className="t-h3">Setup</h2>
           <p className="t-small t-muted">Go through the first-run questions again.</p>
         </div>
-        <ButtonLink href="/welcome" variant="secondary" size="sm">
+        <ButtonLink href="/welcome" variant="secondary">
           Run setup again
         </ButtonLink>
       </section>

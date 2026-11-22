@@ -3,13 +3,29 @@
   gap: var(--space-5);
 }
 
+/* Settings, Account and Privacy: 24px between groups, and the groups rise in 40ms apart (first 6 only). */
+.screen {
+  gap: var(--space-6);
+}
+
+.screen > :nth-child(-n + 6) {
+  animation: enter var(--dur-base) var(--ease) both;
+}
+.screen > :nth-child(2) { animation-delay: calc(var(--stagger) * 1); }
+.screen > :nth-child(3) { animation-delay: calc(var(--stagger) * 2); }
+.screen > :nth-child(4) { animation-delay: calc(var(--stagger) * 3); }
+.screen > :nth-child(5) { animation-delay: calc(var(--stagger) * 4); }
+.screen > :nth-child(6) { animation-delay: calc(var(--stagger) * 5); }
+
+/* Same look as before, with a 48px tap area. */
 .back {
   justify-self: start;
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  min-height: 40px;
+  min-height: var(--touch);
   margin-left: -6px;
+  padding-right: var(--space-2);
   font-size: var(--text-small);
   font-weight: 600;
   color: var(--color-ink);
@@ -20,10 +36,18 @@
   display: grid;
   gap: var(--space-4);
   justify-items: stretch;
-  padding: var(--space-5);
+  padding: var(--space-4);
   background: var(--color-surface);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
+}
+
+/* The screen's one warm card (Account: the sign-in form or who's signed in). Inputs inside stay white. */
+.hero {
+  gap: var(--space-5);
+  padding: var(--space-6);
+  border-radius: var(--radius-feature);
+  background: var(--color-hero);
 }
 
 .section > div:first-child {
@@ -33,4 +57,24 @@
 
 .section > a {
   justify-self: start;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen > :nth-child(-n + 6) {
+    animation-name: fade;
+    animation-duration: var(--dur-fade);
+  }
 }

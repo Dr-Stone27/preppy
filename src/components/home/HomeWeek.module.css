@@ -4,11 +4,13 @@
 
 /* The screen's one loud thing: the next cook, on the hero card, with its bowls large. */
 .hero {
+  --tag-on-hero: var(--color-surface);
+  --track-on-hero: var(--color-surface);
   display: grid;
   gap: var(--space-4);
   padding: var(--space-6);
   border-radius: var(--radius-feature);
-  background: var(--color-surface);
+  background: var(--color-hero);
   box-shadow: var(--shadow-card);
   animation: enter var(--dur-base) var(--ease) both;
 }
@@ -147,7 +149,7 @@
 .bar {
   height: 8px;
   border-radius: var(--radius-pill);
-  background: var(--color-border);
+  background: var(--track-on-hero, var(--color-border));
   overflow: hidden;
 }
 

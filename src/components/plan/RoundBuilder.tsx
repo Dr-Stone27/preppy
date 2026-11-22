@@ -9,7 +9,7 @@ import { FilterChip } from "@/components/ui/Chip";
 import { lastCookFresh, dishesUsingLeftovers } from "@/domain/plan/useup";
 import { cardLabel, CUISINE_LABEL, cuisinesIn, filterRecipes } from "@/domain/recipes/search";
 import type { CuisineFamily } from "@/domain/bowl/types";
-import { BowlCollage } from "@/components/bowl/BowlCollage";
+import { BowlCollage, heroBowlSize } from "@/components/bowl/BowlCollage";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink, IconButton } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Chip";
@@ -36,6 +36,9 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
   const [done, setDone] = useState(false);
   const urlStep = Number(params.get("step"));
   const step: Step = done ? "done" : urlStep === 2 || urlStep === 3 ? urlStep : 1;
+  // Which way the last step change went, so the new step slides in from that side (DESIGN.md motion).
+  const [shown, setShown] = useState<{ step: Step; dir?: "next" | "prev" }>({ step });
+  if (shown.step !== step) setShown({ step, dir: stepOrder(step) > stepOrder(shown.step) ? "next" : "prev" });
   const setStep = (n: Step) => {
     if (n === "done") return setDone(true);
     router.push(`/plan?build=${R.id}&step=${n}`, { scroll: false });
@@ -213,29 +216,31 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
           <h1 className="t-h1">Check your cook</h1>
           <p className="t-muted">{roundRange(weekStart, R)}</p>
         </div>
-        <div className={styles.hero}>
-          <BowlCollage recipes={dishes} size={84} />
-        </div>
-        <dl className={styles.stats}>
-          {kcal != null && (
-            <div>
-              <dt>kcal a day{partial ? "*" : ""}</dt>
-              <dd>{kcal.toLocaleString()}</dd>
-            </div>
-          )}
-          {protein != null && (
-            <div>
-              <dt>g protein a day{partial ? "*" : ""}</dt>
-              <dd>{protein}</dd>
-            </div>
-          )}
-          <div>
-            <dt>meals {forPeople()}</dt>
-            <dd>{Object.keys(cells).length}</dd>
+        <section className={styles.hero} aria-label="This cook">
+          <div className={styles.heroBowls}>
+            <BowlCollage recipes={dishes} size={heroBowlSize(dishes.length)} />
           </div>
-        </dl>
-        {partial && <p className="t-label t-muted">* Some dishes have no nutrition info, so the real numbers are higher.</p>}
-        {kcal == null && <p className="t-label t-muted">{known ? "Too few of these dishes have nutrition info to add up a day." : "None of these dishes have nutrition info."}</p>}
+          <dl className={styles.stats}>
+            {kcal != null && (
+              <div>
+                <dt>kcal a day{partial ? "*" : ""}</dt>
+                <dd>{kcal.toLocaleString()}</dd>
+              </div>
+            )}
+            {protein != null && (
+              <div>
+                <dt>g protein a day{partial ? "*" : ""}</dt>
+                <dd>{protein}</dd>
+              </div>
+            )}
+            <div>
+              <dt>meals {forPeople()}</dt>
+              <dd>{Object.keys(cells).length}</dd>
+            </div>
+          </dl>
+          {partial && <p className="t-label t-muted">* Some dishes have no nutrition info, so the real numbers are higher.</p>}
+          {kcal == null && <p className="t-label t-muted">{known ? "Too few of these dishes have nutrition info to add up a day." : "None of these dishes have nutrition info."}</p>}
+        </section>
         <ul className={styles.review}>
           {dishes.map((r) => (
             <li key={r.id}>
@@ -262,9 +267,9 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
 
   if (step === "done") {
     body = (
-      <div className={styles.done}>
-        <div className={styles.hero}>
-          <BowlCollage recipes={recipesFor(mains)} size={90} />
+      <div className={`${styles.hero} ${styles.done}`}>
+        <div className={styles.heroBowls}>
+          <BowlCollage recipes={recipesFor(mains)} size={heroBowlSize(mains.length)} />
         </div>
         <h1 className="t-h1">Cook planned</h1>
         <p className="t-muted">
@@ -300,7 +305,9 @@ export function RoundBuilder({ weekKey, weekStart, round: R, prefs, onClose }: P
         <span className={`t-label t-muted ${styles.which}`}>{roundLabel(R, weekStart)}</span>
       </div>
       <div id="builder-scroll" className={styles.scroll}>
-        <div className={styles.body}>{body}</div>
+        <div key={String(step)} className={styles.body} data-dir={shown.dir}>
+          {body}
+        </div>
       </div>
       <div className={styles.foot}>{foot}</div>
     </div>
@@ -313,15 +320,13 @@ function PickCard({ recipe: r, never, selected, onToggle, note }: { recipe: Reci
   return (
     <div className={styles.pickWrap}>
       <button type="button" className={styles.pick} aria-pressed={selected} onClick={onToggle}>
-        {selected && (
-          <span className={styles.tick} aria-hidden>
-            <Icon name="check" size={16} strokeWidth={2.4} />
-          </span>
-        )}
+        <span className={styles.tick} aria-hidden>
+          {selected && <Icon name="check" size={16} strokeWidth={2.4} />}
+        </span>
         <BowlIllustration recipe={r} size={88} decorative />
         <span className={styles.pickTitle}>{r.title}</span>
         <span className={styles.pickMeta}>
-          <Tag tone="accent">{cardLabel(r)}</Tag>
+          <Tag>{cardLabel(r)}</Tag>
           {m?.protein ? <span className="t-label t-muted">{m.protein} g protein</span> : null}
         </span>
         {note && <span className={styles.pickNote}>{note}</span>}
@@ -332,6 +337,10 @@ function PickCard({ recipe: r, never, selected, onToggle, note }: { recipe: Reci
       </Link>
     </div>
   );
+}
+
+function stepOrder(s: Step) {
+  return s === "done" ? 4 : s;
 }
 
 type Draft = { mains: string[]; sweets: string[] };

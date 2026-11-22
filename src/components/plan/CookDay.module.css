@@ -18,10 +18,12 @@
 
 /* Before you start: what's being cooked, on the hero card. */
 .hero {
+  --tag-on-hero: var(--color-surface);
+  --track-on-hero: var(--color-surface);
   display: grid;
   gap: var(--space-4);
   padding: var(--space-6);
-  background: var(--color-surface);
+  background: var(--color-hero);
   border-radius: var(--radius-feature);
   box-shadow: var(--shadow-card);
 }

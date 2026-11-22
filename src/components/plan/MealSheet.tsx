@@ -81,7 +81,6 @@ export function MealSheet({ weekKey, week, prefs, meal, onClose }: Props) {
           {cell && (
             <Button
               variant="text"
-              size="sm"
               onClick={() => {
                 set(() => undefined);
                 onClose();
@@ -90,9 +89,7 @@ export function MealSheet({ weekKey, week, prefs, meal, onClose }: Props) {
               Clear this meal
             </Button>
           )}
-          <Button size="sm" onClick={onClose}>
-            Done
-          </Button>
+          <Button onClick={onClose}>Done</Button>
         </div>
       }
     >

@@ -30,6 +30,7 @@
   --color-accent: #ff6b35; /* espresso text on it 6.0:1; white only 2.8:1 */
   --color-accent-soft: #fff0e8;
   --color-accent-ink: #b5461c; /* orange-family text, 5.4:1 on canvas */
+  --color-hero: var(--color-accent-soft); /* the one warm surface per screen (DESIGN.md) */
 
   /* Status */
   --color-success: #4c7656; /* basil, 5.2:1 on canvas */

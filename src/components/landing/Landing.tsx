@@ -108,8 +108,9 @@ export function Landing() {
   const dishes = shelf();
   const count = libraryRecipes().length;
 
-  const start = (
-    <Link href="/welcome?step=start" className={styles.cta} onClick={() => track("landing_get_started")}>
+  // The hero carries the one primary button; the closing band repeats it as a secondary one.
+  const start = (className: string) => (
+    <Link href="/welcome?step=start" className={className} onClick={() => track("landing_get_started")}>
       Get started
       <Icon name="chevron" size={18} strokeWidth={2.4} />
     </Link>
@@ -129,12 +130,8 @@ export function Landing() {
 
       <section className={styles.hero}>
         <div className={styles.art} aria-hidden>
-          <span className={`${styles.dot} ${styles.dot1}`} />
-          <span className={`${styles.dot} ${styles.dot2}`} />
-          <span className={`${styles.leaf} ${styles.leaf1}`} />
-          <span className={`${styles.leaf} ${styles.leaf2}`} />
           <Steam />
-          <div className={styles.spin}>{hero && <BowlIllustration recipe={hero} size={220} decorative />}</div>
+          <div className={styles.main}>{hero && <BowlIllustration recipe={hero} size={160} decorative />}</div>
           {orbit.map((r, i) => (
             <div key={r.id} className={`${styles.orbit} ${styles[`orbit${i + 1}`]}`}>
               <BowlIllustration recipe={r} size={84} decorative />
@@ -153,7 +150,7 @@ export function Landing() {
         </h1>
         <p className={styles.lede}>Preppy plans your meal prep around the days you cook, builds your shopping list, and tells you what to cook first.</p>
         <div className={styles.actions}>
-          {start}
+          {start(styles.cta)}
           <p className={styles.already}>
             Already use Preppy? <Link href="/account">Sign in</Link>
           </p>
@@ -183,8 +180,8 @@ export function Landing() {
         >
           <div className={styles.shelf}>
             <div className={styles.shelfTrack}>
-              {[...dishes, ...dishes].map((r, i) => (
-                <BowlIllustration key={`${r.id}-${i}`} recipe={r} size={64} decorative />
+              {dishes.map((r) => (
+                <BowlIllustration key={r.id} recipe={r} size={64} decorative />
               ))}
             </div>
           </div>
@@ -253,7 +250,7 @@ export function Landing() {
           {orbit[0] && <BowlIllustration recipe={orbit[0]} size={96} decorative />}
         </div>
         <h2 className={styles.closeTitle}>Your first week takes a minute to plan.</h2>
-        {start}
+        {start(styles.ctaSecondary)}
       </section>
 
       <footer className={styles.foot}>

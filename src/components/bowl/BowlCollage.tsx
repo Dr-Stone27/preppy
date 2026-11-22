@@ -21,5 +21,6 @@ export function BowlCollage({ recipes, size = 56 }: { recipes: Recipe[]; size?: 
  */
 export function heroBowlSize(count: number, width = 276) {
   const n = Math.max(1, Math.min(count, 4));
-  return Math.min(160, Math.floor(width / (1 + 0.72 * (n - 1))));
+  // DESIGN.md: one or two bowls at 160px; more overlap and shrink to fit, never below 88px.
+  return Math.max(88, Math.min(160, Math.floor(width / (1 + 0.72 * (n - 1)))));
 }

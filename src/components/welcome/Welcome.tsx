@@ -4,7 +4,7 @@ import { track } from "@/lib/analytics";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
-import { BowlCollage } from "@/components/bowl/BowlCollage";
+import { BowlCollage, heroBowlSize } from "@/components/bowl/BowlCollage";
 import { CookDaysEditor, KitchenEditor, NeverEditor, PeopleEditor, SidesEditor } from "@/components/prefs/PrefEditors";
 import { Button, IconButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -29,7 +29,13 @@ export function Welcome() {
   const router = useRouter();
   const params = useSearchParams();
   // Arriving from the landing page starts at the first question; from the emailed link partway through, at the end.
-  const [step, setStep] = useState(() => (params.get("step") === "done" ? DONE : params.get("step") === "start" ? COOK : 0));
+  const [step, setStepState] = useState(() => (params.get("step") === "done" ? DONE : params.get("step") === "start" ? COOK : 0));
+  // Which way the last step change went, so the next step slides in from that side.
+  const [dir, setDir] = useState<"forward" | "back">("forward");
+  const setStep = (n: number) => {
+    setDir(n < step ? "back" : "forward");
+    setStepState(n);
+  };
   const sync = useSync();
 
   useEffect(() => {
@@ -55,11 +61,11 @@ export function Welcome() {
   if (step === 0) {
     body = (
       <>
-        <div className={builder.hero}>
-          <BowlCollage recipes={["party-jollof-rice-chicken", "efo-riro-beef", "banana-bread-loaf"].map(recipeById).filter((r) => r !== undefined)} size={92} />
-        </div>
-        <h1 className="t-display">Meal prep, planned for you</h1>
-        <p className="t-muted">Save recipes, plan the week around the days you cook, and shop from one list.</p>
+        <section className={styles.hero}>
+          <BowlCollage recipes={["party-jollof-rice-chicken", "efo-riro-beef", "banana-bread-loaf"].map(recipeById).filter((r) => r !== undefined)} size={heroBowlSize(3)} />
+          <h1 className="t-display">Meal prep, planned for you</h1>
+          <p className="t-muted">Save recipes, plan the week around the days you cook, and shop from one list.</p>
+        </section>
         <ul className={styles.how}>
           {HOW.map((h, i) => (
             <li key={h.title}>
@@ -161,13 +167,11 @@ export function Welcome() {
       );
   } else {
     body = (
-      <div className={builder.done}>
-        <div className={builder.hero}>
-          <BowlCollage recipes={["suya-jollof-rice-with-beef-suya-npq6", "korean-sweet-chili-minced-beef", "vanilla-caramel-flan-cup"].map(recipeById).filter((r) => r !== undefined)} size={84} />
-        </div>
+      <section className={`${styles.hero} ${styles.done}`}>
+        <BowlCollage recipes={["suya-jollof-rice-with-beef-suya-npq6", "korean-sweet-chili-minced-beef", "vanilla-caramel-flan-cup"].map(recipeById).filter((r) => r !== undefined)} size={heroBowlSize(3)} />
         <h1 className="t-h1">You’re set</h1>
         <p className="t-muted">The library has {libraryRecipes().length} dishes to plan with. You can change any of this in Settings.</p>
-      </div>
+      </section>
     );
     foot = (
       <>
@@ -216,7 +220,9 @@ export function Welcome() {
         )}
       </div>
       <div id="welcome-scroll" className={builder.scroll}>
-        <div className={builder.body}>{body}</div>
+        <div key={step} className={`${builder.body} ${styles.step}`} data-dir={dir}>
+          {body}
+        </div>
       </div>
       <div className={builder.foot}>{foot}</div>
     </div>

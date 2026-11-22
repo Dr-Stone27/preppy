@@ -1,6 +1,6 @@
 "use client";
 
-import { BowlCollage } from "@/components/bowl/BowlCollage";
+import { BowlCollage, heroBowlSize } from "@/components/bowl/BowlCollage";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Chip";
@@ -19,9 +19,11 @@ type Props = {
   weekStart: Date;
   onPlan: () => void;
   onMeal: (day: number, slot: SlotId) => void;
+  /** The screen's main cook: hero card, large bowls, the screen's one primary button and its one accent tag. */
+  hero?: boolean;
 };
 
-export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) {
+export function RoundCard({ round: R, week, weekStart, onPlan, onMeal, hero = false }: Props) {
   const status = roundStatus(R);
   const mains = recipesFor(roundMains(R, week.cells));
   const avg = roundAverage(R, week.cells);
@@ -34,7 +36,7 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
   const dayBefore = R.cooked ? [] : startTheDayBefore(mains);
 
   return (
-    <section className={styles.round} aria-label={roundLabel(R, weekStart)}>
+    <section className={hero ? `${styles.round} ${styles.roundHero}` : styles.round} aria-label={roundLabel(R, weekStart)}>
       <div className={styles.roundHead}>
         <div>
           <span className="t-eyebrow">
@@ -42,7 +44,7 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
           </span>
           <h2 className="t-h2">{roundRange(weekStart, R)}</h2>
         </div>
-        <Tag tone={R.cooked ? "success" : R.confirmed ? "accent" : "neutral"}>{status}</Tag>
+        <Tag tone={R.cooked ? "success" : "neutral"}>{status}</Tag>
       </div>
 
       {empty ? (
@@ -50,13 +52,15 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
           <p className="t-small t-muted">
             Pick what to cook on {dayName(weekStart, R.cook, true)} for {R.days.length === 1 ? "this day" : `these ${R.days.length} days`}.
           </p>
-          <Button onClick={onPlan}>Plan this cook</Button>
+          <Button variant={hero ? "primary" : "secondary"} onClick={onPlan}>
+            Plan this cook
+          </Button>
         </div>
       ) : (
         <>
-          <div className={styles.roundDishes}>
-            <BowlCollage recipes={mains} size={52} />
-            <ul className="t-small">
+          <div className={hero ? `${styles.roundDishes} ${styles.heroDishes}` : styles.roundDishes}>
+            <BowlCollage recipes={mains} size={hero ? heroBowlSize(mains.length) : 52} />
+            <ul className={styles.dishNames}>
               {mains.map((r) => (
                 <li key={r.id}>{r.title}</li>
               ))}
@@ -68,14 +72,20 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
               <b>{r.title}.</b> {warningSentence(items)}
             </p>
           ))}
-          {dayBefore.length > 0 && (
+          {dayBefore.length > 0 && hero && (
+            <div className={styles.dayBefore}>
+              <Tag tone="accent">Start the day before</Tag>
+              <p className="t-small t-muted">{dayBefore.join(" and ")} marinates best overnight.</p>
+            </div>
+          )}
+          {dayBefore.length > 0 && !hero && (
             <p className="t-small t-muted">Start the day before: {dayBefore.join(" and ")} marinates best overnight.</p>
           )}
 
           {avg && (
             <div className={styles.chips}>
               {avg && (
-                <Tag tone="warning">
+                <Tag>
                   About {avg.kcal.toLocaleString()} kcal · {avg.protein} g protein a day{avg.partial ? " +" : ""}
                 </Tag>
               )}
@@ -121,14 +131,14 @@ export function RoundCard({ round: R, week, weekStart, onPlan, onMeal }: Props) 
           </div>
 
           <div className={styles.roundActions}>
-            <Button variant="secondary" size="sm" onClick={onPlan}>
-              Edit this cook
-            </Button>
             {R.confirmed && (
-              <ButtonLink href={`/plan/cook?week=${weekKey(weekStart)}&round=${R.id}`} size="sm" variant={R.cooked ? "secondary" : "primary"}>
+              <ButtonLink href={`/plan/cook?week=${weekKey(weekStart)}&round=${R.id}`} variant={hero && !R.cooked ? "primary" : "secondary"}>
                 {R.cooked ? "View cook day" : "Cook day"}
               </ButtonLink>
             )}
+            <Button variant="secondary" onClick={onPlan}>
+              Edit this cook
+            </Button>
           </div>
         </>
       )}

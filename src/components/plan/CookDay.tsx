@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { AccountPanel } from "@/components/account/AccountPanel";
 import { useSync } from "@/state/sync";
-import { BowlCollage } from "@/components/bowl/BowlCollage";
+import { BowlCollage, heroBowlSize } from "@/components/bowl/BowlCollage";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink, IconButton } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Chip";
@@ -79,7 +79,10 @@ export function CookDay() {
   const router = useRouter();
   // The step lives in the address, so a reload or the phone's back button keeps your place.
   const stepParam = Number(params.get("step") ?? -1);
+  // Which way the last step change went, so the next step slides in from that side.
+  const [dir, setDir] = useState(0);
   const setI = (n: number) => {
+    setDir(n > stepParam ? 1 : n < stepParam ? -1 : 0);
     const q = new URLSearchParams(params.toString());
     if (n < 0) q.delete("step");
     else q.set("step", String(n));
@@ -225,58 +228,19 @@ export function CookDay() {
     body = (
       <>
         <h1 className="t-h1">Ready to cook?</h1>
-        <div className={builder.hero}>
-          <BowlCollage recipes={dishes.map((d) => d.recipe)} size={84} />
-        </div>
-        <ul className={builder.review}>
-          {dishes.map(({ recipe: r, portions }) => (
-            <li key={r.id}>
-              <BowlIllustration recipe={r} size={44} decorative />
-              <span>
-                <span className={builder.reviewTitle}>{r.title}</span>
+        <section className={styles.hero} aria-label="Today’s dishes">
+          <div className={styles.heroBowls}>
+            <BowlCollage recipes={dishes.map((d) => d.recipe)} size={heroBowlSize(dishes.length)} />
+          </div>
+          <ul className={styles.dishes}>
+            {dishes.map(({ recipe: r, portions }) => (
+              <li key={r.id}>
+                <span className={styles.dishName}>{r.title}</span>
                 <span className="t-label t-muted">{mealsAndPortions(portions / householdSize())}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-        {fresh.length > 0 && (
-          <section className={styles.card}>
-            <h2 className="t-h3">Fresh things to have ready</h2>
-            <div className={styles.chips}>
-              {fresh.map((l) => (
-                <Tag key={l.key} tone={l.done ? "success" : "warning"}>
-                  {l.item?.name ?? l.name}
-                </Tag>
-              ))}
-            </div>
-            {fresh.some((l) => !l.done) && <p className="t-label t-muted">The orange ones aren’t ticked off your shopping list yet.</p>}
-          </section>
-        )}
-        {startTheDayBefore(dishes.map((d) => d.recipe)).length > 0 && (
-          <section className={styles.card}>
-            <h2 className="t-h3">Needs starting the day before</h2>
-            <p className="t-small">
-              {startTheDayBefore(dishes.map((d) => d.recipe)).join(" and ")} marinates best overnight. If you haven’t started it, marinate it first and give it as long as you can.
-            </p>
-          </section>
-        )}
-        {sharedBases(dishes.map((d) => d.recipe)).map(({ base, dishes: titles }) => (
-          <section key={base.id} className={styles.card}>
-            <h2 className="t-h3">Shared base: {base.name}</h2>
-            <p className="t-small">
-              {titles.length > 2 ? `${titles.slice(0, -1).join(", ")} and ${titles.at(-1)} all` : `${titles.join(" and ")} both`} start from it. {base.once}
-            </p>
-          </section>
-        ))}
-        {sides.length > 0 && (
-          <section className={styles.card}>
-            <h2 className="t-h3">Sides</h2>
-            <p className="t-small">
-              {listWords(sides.map((s, k) => `${k ? s.name.toLowerCase() : s.name} for ${s.meals === 1 ? "1 meal" : `${s.meals} meals`}`))}, to go with the mains.
-            </p>
-          </section>
-        )}
-        <p className="t-small t-muted">Breakfast & sweets aren’t part of the batch. Make them fresh each day.</p>
+              </li>
+            ))}
+          </ul>
+        </section>
         {signInNeeded && <WhenSignedIn run={workOut} />}
         {signInNeeded && !sync.email && (
           <section className={styles.card} aria-label="Sign in for one combined order">
@@ -288,6 +252,44 @@ export function CookDay() {
             </Button>
           </section>
         )}
+        {startTheDayBefore(dishes.map((d) => d.recipe)).length > 0 && (
+          <section className={styles.subtle}>
+            <h2 className="t-h3">Needs starting the day before</h2>
+            <p className="t-small">
+              {startTheDayBefore(dishes.map((d) => d.recipe)).join(" and ")} marinates best overnight. If you haven’t started it, marinate it first and give it as long as you can.
+            </p>
+          </section>
+        )}
+        {fresh.length > 0 && (
+          <section className={styles.subtle}>
+            <h2 className="t-h3">Fresh things to have ready</h2>
+            <div className={styles.chips}>
+              {fresh.map((l) => (
+                <Tag key={l.key} tone={l.done ? "success" : "warning"}>
+                  {l.item?.name ?? l.name}
+                </Tag>
+              ))}
+            </div>
+            {fresh.some((l) => !l.done) && <p className="t-label t-muted">The orange ones aren’t ticked off your shopping list yet.</p>}
+          </section>
+        )}
+        {sharedBases(dishes.map((d) => d.recipe)).map(({ base, dishes: titles }) => (
+          <section key={base.id} className={styles.subtle}>
+            <h2 className="t-h3">Shared base: {base.name}</h2>
+            <p className="t-small">
+              {titles.length > 2 ? `${titles.slice(0, -1).join(", ")} and ${titles.at(-1)} all` : `${titles.join(" and ")} both`} start from it. {base.once}
+            </p>
+          </section>
+        ))}
+        {sides.length > 0 && (
+          <section className={styles.subtle}>
+            <h2 className="t-h3">Sides</h2>
+            <p className="t-small">
+              {listWords(sides.map((s, k) => `${k ? s.name.toLowerCase() : s.name} for ${s.meals === 1 ? "1 meal" : `${s.meals} meals`}`))}, to go with the mains.
+            </p>
+          </section>
+        )}
+        <p className="t-small t-muted">Breakfast & sweets aren’t part of the batch. Make them fresh each day.</p>
       </>
     );
     foot = plan ? (
@@ -341,12 +343,12 @@ export function CookDay() {
           <span className="t-eyebrow">
             Step {i + 1} of {steps.length}
           </span>
-          {s.appliance && <Tag tone="warning">{s.appliance}</Tag>}
+          {s.appliance && <Tag>{s.appliance}</Tag>}
         </div>
         {(r || s.recipe) && (
           <div className={styles.dish}>
             {r && <BowlIllustration recipe={r} size={40} decorative />}
-            <span className="t-small t-muted">{r?.title ?? s.recipe}</span>
+            <span className={styles.stepDish}>{r?.title ?? s.recipe}</span>
           </div>
         )}
         {s.title ? <h1 className="t-h1">{s.title}</h1> : <h1 className="visually-hidden">Step {i + 1}</h1>}
@@ -372,12 +374,12 @@ export function CookDay() {
             </span>
             <span className="t-small t-muted">{mine ? (left ? "Running. It stays at the top while you carry on." : "Time’s up") : `${minutes} minute timer`}</span>
             {mine ? (
-              <Button variant="secondary" size="sm" onClick={() => setTimers(timers.filter((t) => t !== mine))}>
+              <Button variant="secondary" onClick={() => setTimers(timers.filter((t) => t !== mine))}>
                 {left ? "Stop" : "Clear"}
               </Button>
             ) : (
               <Button
-                size="sm"
+                variant="secondary"
                 onClick={() => startTimer(i, shortName(r?.title ?? s.recipe ?? "Timer"), minutes)}
               >
                 Start
@@ -407,7 +409,7 @@ export function CookDay() {
           <section key={r.id} className={styles.card}>
             <div className={styles.dish}>
               <BowlIllustration recipe={r} size={44} decorative />
-              <h2 className="t-h3">{r.title}</h2>
+              <h2 className={styles.dishName}>{r.title}</h2>
             </div>
             <p className="t-small">
               <b>Fridge{eachHolds}:</b> {fridge.join(", ") || "none"}
@@ -422,7 +424,7 @@ export function CookDay() {
           </section>
         ))}
         {plan && plan.storeTips.length > 0 && (
-          <section className={styles.card}>
+          <section className={styles.subtle}>
             <h2 className="t-h3">Tips</h2>
             {plan.storeTips.map((t) => (
               <p key={t} className="t-small">
@@ -457,7 +459,9 @@ export function CookDay() {
         <span className={`t-label t-muted ${builder.which}`}>Cook day · {roundLabel(R, weekStart)}</span>
       </div>
       <div id="cook-scroll" className={builder.scroll}>
-        <div className={builder.body}>{body}</div>
+        <div key={i} className={`${builder.body} ${styles.enter}`} data-dir={dir > 0 ? "next" : dir < 0 ? "prev" : undefined}>
+          {body}
+        </div>
       </div>
       {foot && <div className={builder.foot}>{foot}</div>}
     </div>

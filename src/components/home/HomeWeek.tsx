@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
-import { BowlCollage } from "@/components/bowl/BowlCollage";
+import { BowlCollage, heroBowlSize } from "@/components/bowl/BowlCollage";
 import { BowlIllustration } from "@/components/bowl/BowlIllustration";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Tag } from "@/components/ui/Chip";
@@ -69,19 +69,31 @@ export function HomeWeek() {
     const when = n === 0 ? "Today" : n === 1 ? "Tomorrow" : `In ${n} days`;
     const { buy } = shopLines(R, rWeek, data.pantry);
     const shop = { got: buy.filter((l) => l.done).length, total: buy.length };
+    // When a cook was missed, "cook today" is the next cook, so this card steps back to a quiet one.
+    const hero = !missed;
+    const mains = recipesFor(roundMains(R, rWeek.cells));
     next = (
-      <section className={styles.next}>
+      <section className={hero ? styles.hero : styles.quiet}>
+        {hero &&
+          (R.confirmed && mains.length ? (
+            <div className={styles.heroBowls}>
+              <BowlCollage recipes={mains} size={heroBowlSize(mains.length)} />
+            </div>
+          ) : (
+            <div className={styles.heroBowls}>
+              <span className={styles.heroEmpty} aria-hidden />
+            </div>
+          ))}
         <div className={styles.nextHead}>
           <div>
             <span className="t-eyebrow">Next cook</span>
             <h2 className="t-h2">
               {dayName(rStart, R.cook, true)} {dateLabel(cook)}
             </h2>
-            <p className="t-small t-muted">
-              {when} · for {roundRange(rStart, R)}
-            </p>
+            <p className="t-small t-muted">for {roundRange(rStart, R)}</p>
           </div>
-          {R.confirmed && <BowlCollage recipes={recipesFor(roundMains(R, rWeek.cells))} size={48} />}
+          {hero ? <Tag tone="accent">{when}</Tag> : <Tag>{when}</Tag>}
+          {!hero && R.confirmed && <BowlCollage recipes={mains} size={48} />}
         </div>
         {R.confirmed ? (
           <>
@@ -98,15 +110,15 @@ export function HomeWeek() {
             </div>
             <div className={styles.actions}>
               {n === 0 ? (
-                <ButtonLink href={`/plan/cook?week=${rKey}&round=${R.id}`} block>
+                <ButtonLink href={`/plan/cook?week=${rKey}&round=${R.id}`} variant={hero ? "primary" : "secondary"} block>
                   Start cooking
                 </ButtonLink>
               ) : (
-                <ButtonLink href={`/shop?week=${rKey}&round=${R.id}`} block>
+                <ButtonLink href={`/shop?week=${rKey}&round=${R.id}`} variant={hero ? "primary" : "secondary"} block>
                   Go shopping
                 </ButtonLink>
               )}
-              <ButtonLink href={thisR ? "/plan" : "/plan?week=next"} variant="secondary" block>
+              <ButtonLink href={thisR ? "/plan" : "/plan?week=next"} variant="text" block className={styles.textLink}>
                 See the plan
               </ButtonLink>
             </div>
@@ -114,7 +126,7 @@ export function HomeWeek() {
         ) : (
           <>
             <p className="t-small">Nothing picked for {dayName(rStart, R.cook, true)}’s cook yet.</p>
-            <ButtonLink href={thisR ? `/plan?build=${R.id}` : `/plan?week=next&build=${R.id}`} block>
+            <ButtonLink href={thisR ? `/plan?build=${R.id}` : `/plan?week=next&build=${R.id}`} variant={hero ? "primary" : "secondary"} block>
               Plan this cook
             </ButtonLink>
           </>
@@ -125,13 +137,13 @@ export function HomeWeek() {
     const afterStart = stepWeek(data.weeks, data.prefs, nextStart, 1);
     const nextCook = defaultWeekFirstCook(data, afterStart);
     next = (
-      <section className={styles.next}>
+      <section className={missed ? styles.quiet : styles.hero}>
         <span className="t-eyebrow">Next cook</span>
         <h2 className="t-h2">
           {dayName(nextCook, 0, true)} {dateLabel(nextCook)}
         </h2>
         <p className="t-small t-muted">Every cook until then is done.</p>
-        <ButtonLink href="/plan" block>
+        <ButtonLink href="/plan" variant={missed ? "secondary" : "primary"} block>
           See the plan
         </ButtonLink>
       </section>
@@ -141,9 +153,9 @@ export function HomeWeek() {
   return (
     <>
       {missed && (
-        <section className={styles.next}>
+        <section className={styles.hero}>
           <span className="t-eyebrow">Starting today</span>
-          <h2 className="t-h3">Cook today for the rest of this week</h2>
+          <h2 className="t-h2">Cook today for the rest of this week</h2>
           <p className="t-small t-muted">
             {dayName(weekStart, missed.cook, true)}’s cook has passed. Plan a cook for today to cover {dayName(weekStart, dayIndex, true)}
             {missed.days.at(-1)! > dayIndex ? ` to ${dayName(weekStart, missed.days.at(-1)!, true)}` : ""}.
@@ -166,12 +178,12 @@ export function HomeWeek() {
         <div className={styles.todayHead}>
           <h2 className="t-h3">Today</h2>
           {m.known > 0 && (
-            <Tag tone="warning">
+            <Tag>
               {m.kcal.toLocaleString()} kcal · {m.protein} g protein{m.unknown ? " +" : ""}
             </Tag>
           )}
         </div>
-        <ul className={styles.meals}>
+        <ul className={`${styles.meals} ${styles.stagger}`}>
           {SLOTS.map((s) => {
             const c = week.cells[cellKey(dayIndex, s.id)];
             const r = c && recipeById(c.r);
@@ -181,7 +193,7 @@ export function HomeWeek() {
                   {r ? <BowlIllustration recipe={r} size={44} decorative /> : <span className={styles.emptyBowl} />}
                   <span className={styles.mealText}>
                     <span className="t-label t-muted">{s.label}</span>
-                    <span className={r ? styles.mealTitle : `${styles.mealTitle} t-muted`}>{r ? r.title : "Nothing planned"}</span>
+                    <span className={r ? styles.dishTitle : `${styles.mealTitle} t-muted`}>{r ? r.title : "Nothing planned"}</span>
                     {c?.base && <span className="t-label t-muted">with {c.base.toLowerCase()}</span>}
                   </span>
                   <Icon name="chevron" size={18} />

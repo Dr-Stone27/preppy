@@ -1,10 +1,113 @@
 .card {
   display: grid;
   gap: var(--space-3);
-  padding: var(--space-4) var(--space-5);
+  padding: var(--space-4);
   background: var(--color-surface);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
+}
+
+/* Supporting notes: quiet oat fill, no shadow, so the main object stays the loud one. */
+.subtle {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface-subtle);
+  border-radius: var(--radius-card);
+}
+
+/* Before you start: what's being cooked, on the hero card. */
+.hero {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border-radius: var(--radius-feature);
+  box-shadow: var(--shadow-card);
+}
+
+.heroBowls {
+  display: flex;
+  justify-content: center;
+}
+
+.dishes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dishes li {
+  display: grid;
+  gap: 2px;
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.dishes li:nth-child(-n + 6) {
+  animation: enter var(--dur-base) var(--ease) both;
+}
+.dishes li:nth-child(2) { animation-delay: calc(var(--stagger) * 1); }
+.dishes li:nth-child(3) { animation-delay: calc(var(--stagger) * 2); }
+.dishes li:nth-child(4) { animation-delay: calc(var(--stagger) * 3); }
+.dishes li:nth-child(5) { animation-delay: calc(var(--stagger) * 4); }
+.dishes li:nth-child(6) { animation-delay: calc(var(--stagger) * 5); }
+
+/* Dish names are always Fraunces. */
+.dishName {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.stepDish {
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--color-muted);
+}
+
+/* Each screen of cook day rises in; moving between steps slides in from the direction of travel. */
+.enter {
+  animation: enter var(--dur-base) var(--ease) both;
+}
+
+.enter[data-dir="next"] {
+  animation-name: fromRight;
+}
+
+.enter[data-dir="prev"] {
+  animation-name: fromLeft;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes fromRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+@keyframes fromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
 }
 
 .chips {
@@ -49,41 +152,63 @@
   gap: var(--space-3);
 }
 
-/* The step itself: big enough to read from the stove. */
+/* The step itself, the screen's loud thing: big enough to read from the stove. */
 .detail {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: var(--text-h2);
+  font-weight: 500;
+  letter-spacing: -0.01em;
   line-height: 1.4;
 }
 
-/* Times, heat and amounts inside a step. */
+/* Times, heat and amounts inside a step: Jakarta 600, tinted primary. */
 .key {
-  padding: 0 3px;
-  border-radius: 6px;
-  background: var(--color-accent-soft);
-  color: var(--color-accent-ink);
+  background: none;
+  font-family: var(--font-body);
   font-weight: 600;
+  letter-spacing: 0;
+  color: var(--color-action);
 }
 
 /* Every running timer, kept at the top whichever step you're on. Tap one to go back to its step. */
 .pills {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: var(--space-3) var(--space-2);
+  margin: calc(var(--space-2) * -1) calc(var(--gutter) * -1) 0;
+  padding: var(--space-2) var(--gutter);
+  background: var(--color-canvas);
 }
 
+/* Timer pill: ink fill, cream label, floating, 36px tall; an invisible margin makes the tap area 48px. */
 .pill {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   max-width: 100%;
   min-height: 36px;
-  padding: 0 var(--space-3) 0 6px;
+  padding: 0 var(--space-4) 0 var(--space-2);
   border-radius: var(--radius-pill);
-  background: var(--color-action);
-  color: var(--color-on-action);
-  font-size: var(--text-small);
-  font-weight: 700;
+  background: var(--color-ink);
+  color: var(--color-canvas);
+  box-shadow: var(--shadow-floating);
+  font-size: var(--text-label);
+  font-weight: 600;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.pill::after {
+  content: "";
+  position: absolute;
+  inset: -6px 0;
+}
+
+.pill:active {
+  transform: scale(0.97);
 }
 
 .pillName {
@@ -98,31 +223,30 @@
 }
 
 .pillHere {
-  box-shadow: 0 0 0 2px var(--color-canvas), 0 0 0 4px var(--color-action);
+  box-shadow: var(--shadow-floating), 0 0 0 2px var(--color-canvas), 0 0 0 4px var(--color-action);
 }
 
+/* A finished timer is the step's one orange element: accent fill, ink text, no pulsing. */
 .pillDone {
   background: var(--color-accent);
   color: var(--color-ink);
-  animation: pulse 1.2s var(--ease) infinite;
-}
-
-@keyframes pulse {
-  50% {
-    transform: scale(1.05);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pillDone {
-    animation: none;
+  .enter,
+  .enter[data-dir],
+  .dishes li:nth-child(-n + 6) {
+    animation-name: fade;
+  }
+  .pill:active {
+    transform: none;
   }
 }
 
 .meanwhile {
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-input);
-  background: var(--color-action-soft);
+  background: var(--color-surface-subtle);
   font-size: var(--text-small);
 }
 
@@ -140,10 +264,12 @@
   flex: 1;
 }
 
+/* Times are always Jakarta. */
 .clock {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 500;
+  font-family: var(--font-body);
+  font-size: var(--text-h1);
+  font-weight: 700;
+  line-height: 1.1;
   font-variant-numeric: tabular-nums;
 }
 

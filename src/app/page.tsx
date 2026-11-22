@@ -14,15 +14,15 @@ export default function Home() {
   const featured = FEATURED.map(recipeById).filter((r) => r !== undefined);
 
   return (
-    <Stack gap={4}>
+    <Stack gap={6}>
       <ScreenHeader
         title="This week"
         action={
           <AvatarLink />
         }
       />
-      <GettingStarted />
       <HomeWeek />
+      <GettingStarted />
       <Link href="/what-can-i-make" className={styles.library}>
         <span className={styles.haveIcon} aria-hidden>
           <Icon name="search" size={22} />

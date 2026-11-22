@@ -21,6 +21,8 @@ export function PlanScreen() {
   const [picked, setPicked] = useState<number | null>(() => (params.get("week") === "next" ? 1 : null));
   const [meal, setMeal] = useState<{ day: number; slot: SlotId } | null>(null);
   const [copied, setCopied] = useState("");
+  // Which way the last week change went, so the new week slides in from that side.
+  const [dir, setDir] = useState(0);
   const building = params.get("build") as RoundId | null;
 
   if (!data) return <div className={styles.loading} aria-busy="true" />;
@@ -33,7 +35,11 @@ export function PlanScreen() {
   const missed = missedCook(getWeek(data, nowKey), nowStart, today);
   // A cook that can still happen today keeps the screen on this week.
   const offset = picked ?? (open.moved && !missed ? 1 : 0);
-  const setOffset = (fn: (o: number) => number) => setPicked(fn(offset));
+  const setOffset = (fn: (o: number) => number) => {
+    const to = fn(offset);
+    setDir(Math.sign(to - offset));
+    setPicked(to);
+  };
   let weekStart = weekStartFor(data.weeks, data.prefs, today);
   for (let n = 0; n < Math.abs(offset); n++) weekStart = stepWeek(data.weeks, data.prefs, weekStart, offset > 0 ? 1 : -1);
   const key = weekKey(weekStart);
@@ -51,6 +57,8 @@ export function PlanScreen() {
     setPicked(0);
     router.replace(`/plan?build=${id}`, { scroll: false });
   };
+  // The screen's one loud thing: the first cook still to do. A missed cook takes that place when it's showing.
+  const heroId = missed && thisWeek ? null : (shown.find((R) => !R.cooked)?.id ?? null);
   const build = (id: RoundId | null) => router.replace(id ? `/plan?build=${id}` : "/plan", { scroll: false });
 
   return (
@@ -70,6 +78,7 @@ export function PlanScreen() {
         </div>
       </header>
 
+      <div key={key} className={styles.week} data-dir={dir > 0 ? "next" : dir < 0 ? "prev" : undefined}>
       <ol className={styles.strip} aria-label="Days">
         {Array.from({ length: 7 }, (_, d) => {
           const name = dayName(weekStart, d);
@@ -89,12 +98,12 @@ export function PlanScreen() {
       {picked === null && open.moved && !missed && <p className="t-small t-muted">This week’s cook days have passed, so here’s next week.</p>}
 
       {missed && thisWeek && (
-        <div className={styles.repeat}>
+        <div className={`${styles.repeat} ${styles.missed}`}>
           <p className="t-small">
             {roundLabel(missed, nowStart)} has passed. Cook today to cover {dayName(nowStart, daysBetween(nowStart, today), true)}
             {missed.days.at(-1)! > daysBetween(nowStart, today) ? ` to ${dayName(nowStart, missed.days.at(-1)!, true)}` : ""}.
           </p>
-          <Button size="sm" onClick={startToday}>
+          <Button block onClick={startToday}>
             Plan a cook for today
           </Button>
         </div>
@@ -117,7 +126,6 @@ export function PlanScreen() {
           <p className="t-small">Last week’s cooks are planned. Use them again?</p>
           <Button
             variant="secondary"
-            size="sm"
             onClick={() => {
               const n = repeatWeek(prevKey, key);
               setCopied(
@@ -137,9 +145,20 @@ export function PlanScreen() {
         </p>
       )}
 
-      {shown.map((R) => (
-        <RoundCard key={R.id} round={R} week={week} weekStart={weekStart} onPlan={() => build(R.id)} onMeal={(day, slot) => setMeal({ day, slot })} />
-      ))}
+      <div className={styles.rounds}>
+        {shown.map((R) => (
+          <RoundCard
+            key={R.id}
+            round={R}
+            week={week}
+            weekStart={weekStart}
+            hero={R.id === heroId}
+            onPlan={() => build(R.id)}
+            onMeal={(day, slot) => setMeal({ day, slot })}
+          />
+        ))}
+      </div>
+      </div>
 
       <MealSheet weekKey={key} week={week} prefs={data.prefs} meal={meal} onClose={() => setMeal(null)} />
 

@@ -1,6 +1,71 @@
 .screen {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-6);
+}
+
+/* Everything that belongs to the week shown. A new week slides in from the side you moved towards. */
+.week {
+  display: grid;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+.week[data-dir="next"] {
+  animation: fromRight var(--dur-base) var(--ease) both;
+}
+
+.week[data-dir="prev"] {
+  animation: fromLeft var(--dur-base) var(--ease) both;
+}
+
+@keyframes fromRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+@keyframes fromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
+/* Round cards rise in, 40ms apart, first 6 only. */
+.rounds {
+  display: grid;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+.rounds > :nth-child(-n + 6) {
+  animation: enter var(--dur-base) var(--ease) both;
+}
+.rounds > :nth-child(2) { animation-delay: calc(var(--stagger) * 1); }
+.rounds > :nth-child(3) { animation-delay: calc(var(--stagger) * 2); }
+.rounds > :nth-child(4) { animation-delay: calc(var(--stagger) * 3); }
+.rounds > :nth-child(5) { animation-delay: calc(var(--stagger) * 4); }
+.rounds > :nth-child(6) { animation-delay: calc(var(--stagger) * 5); }
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .week[data-dir],
+  .rounds > :nth-child(-n + 6) {
+    animation-name: fade;
+  }
 }
 
 .loading {
@@ -24,7 +89,7 @@
   gap: var(--space-2);
 }
 
-/* Day strip: one pill per day, tinted by the round it belongs to. */
+/* Day strip: one pill per day. Rounds alternate oat and white; status and accent colours stay out of it. */
 .strip {
   list-style: none;
   margin: 0;
@@ -54,11 +119,12 @@
 }
 
 .r1 {
-  background: var(--color-accent-soft);
+  background: var(--color-surface-subtle);
 }
 
 .r2 {
-  background: var(--color-action-soft);
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1px var(--color-border);
 }
 
 .day[data-today] {
@@ -78,7 +144,7 @@
 
 .link {
   justify-self: start;
-  min-height: 40px;
+  min-height: var(--touch);
   font-size: var(--text-small);
   font-weight: 600;
   color: var(--color-action);
@@ -90,12 +156,18 @@
 .round {
   display: grid;
   gap: var(--space-4);
-  padding: var(--space-5);
+  padding: var(--space-4);
   background: var(--color-surface);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  border: 1px solid rgba(234, 229, 220, 0.65);
   min-width: 0;
+}
+
+/* The next cook to do: the hero card. */
+.roundHero {
+  gap: var(--space-5);
+  padding: var(--space-6);
+  border-radius: var(--radius-feature);
 }
 
 .round > button {
@@ -134,6 +206,31 @@
   display: grid;
   gap: 2px;
   min-width: 0;
+}
+
+.heroDishes {
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.heroDishes ul {
+  justify-items: center;
+  text-align: center;
+  max-width: 100%;
+}
+
+/* Dish names are always Fraunces. */
+.dishNames {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.dayBefore {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
 }
 
 .roundDishes li {
@@ -182,6 +279,7 @@
 }
 
 .cell {
+  transition: transform var(--dur-fast) var(--ease);
   display: grid;
   justify-items: center;
   align-content: start;
@@ -191,6 +289,16 @@
   border-radius: var(--radius-input);
   background: var(--color-canvas);
   min-width: 0;
+}
+
+.cell:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell:active {
+    transform: none;
+  }
 }
 
 .cell[data-empty] {
@@ -211,7 +319,7 @@
   line-height: 1.2;
   text-align: center;
   font-weight: 600;
-  color: var(--color-accent);
+  color: var(--color-muted);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -219,6 +327,7 @@
 
 .cellName {
   width: 100%;
+  font-family: var(--font-display);
   font-size: 0.6875rem;
   line-height: 1.2;
   text-align: center;
@@ -307,7 +416,7 @@
 }
 
 .r3 {
-  background: var(--color-warning-soft);
+  background: var(--color-surface-subtle);
 }
 
 .sharedNote {
@@ -321,13 +430,24 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4);
   border-radius: var(--radius-card);
   background: var(--color-surface-subtle);
 }
 
+/* A missed cook that can still happen today is the screen's main question when it shows. */
+.missed {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border-radius: var(--radius-feature);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
 .r4 {
-  background: var(--color-success-soft, var(--color-accent-soft));
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1px var(--color-border);
 }
 
 .warn {
